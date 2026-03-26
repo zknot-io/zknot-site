@@ -19,6 +19,3 @@
 /about                       /about.html              200
 /docs                        /docs.html               200
 /verify                      /verify.html             200
-
-# www → apex canonical redirect
-https://www.zknot.io/*       https://zknot.io/:splat  301
