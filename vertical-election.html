@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Election Integrity — ZKNOT™</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#080a0c;--surface:#0d1117;--border:#1a2030;--border-bright:#263040;
+    --text:#e8edf5;--text-muted:#5a6880;--text-dim:#3a4860;
+    --accent:#00e676;--accent-dim:#00e67618;--accent-glow:#00e67640;
+    --amber:#ffab00;--amber-dim:#ffab0018;--blue:#448aff;--blue-dim:#448aff18;
+    --red:#ff5252;--white:#ffffff;
+    --mono:'DM Mono',monospace;--display:'Syne',sans-serif;--body:'DM Sans',sans-serif;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.6;min-height:100vh;overflow-x:hidden}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:40px 40px;opacity:0.35;pointer-events:none;z-index:0}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:60px;background:rgba(8,10,12,.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+  .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}
+  .nav-logo svg{width:28px;height:28px}
+  .nav-brand{font-family:var(--display);font-weight:700;font-size:16px;letter-spacing:.05em}
+  .nav-brand span{font-family:var(--mono);font-size:10px;font-weight:400;color:var(--text-muted);margin-left:6px;letter-spacing:.12em;vertical-align:middle}
+  .nav-links{display:flex;align-items:center;gap:28px;list-style:none}
+  .nav-links a{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--text-muted);text-decoration:none;text-transform:uppercase;transition:color .2s}
+  .nav-links a:hover{color:var(--text)}
+  .nav-cta{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#000;background:var(--accent);padding:8px 16px;text-decoration:none;transition:background .15s}
+  .nav-cta:hover{background:#33ff8a}
+  .hero{position:relative;z-index:1;padding:160px 40px 100px;max-width:1100px;margin:0 auto}
+  .breadcrumb{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-bottom:32px;animation:fadeUp .5s ease both}
+  .breadcrumb a{color:var(--text-dim);text-decoration:none;transition:color .2s}
+  .breadcrumb a:hover{color:var(--text-muted)}
+  .breadcrumb span{margin:0 8px}
+  .vertical-tag{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:20px;display:flex;align-items:center;gap:10px;animation:fadeUp .5s .05s ease both}
+  .vertical-tag::before{content:'';display:block;width:24px;height:1px;background:var(--accent);opacity:.5}
+  .hero-title{font-family:var(--display);font-size:clamp(40px,5.5vw,72px);font-weight:800;letter-spacing:-.025em;line-height:1.0;color:var(--white);margin-bottom:28px;animation:fadeUp .5s .1s ease both}
+  .hero-title em{font-style:normal;color:var(--accent)}
+  .hero-sub{font-family:var(--body);font-size:18px;font-weight:300;color:var(--text-muted);max-width:600px;line-height:1.75;margin-bottom:48px;animation:fadeUp .5s .15s ease both}
+  .hero-ctas{display:flex;gap:16px;align-items:center;animation:fadeUp .5s .2s ease both}
+  .btn-primary{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#000;background:var(--accent);padding:14px 28px;text-decoration:none;transition:background .15s}
+  .btn-primary:hover{background:#33ff8a}
+  .btn-secondary{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);border:1px solid var(--border-bright);padding:14px 28px;text-decoration:none;transition:border-color .15s,color .15s}
+  .btn-secondary:hover{border-color:var(--text-muted);color:var(--text)}
+  .stat-bar{position:relative;z-index:1;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--surface);display:grid;grid-template-columns:repeat(4,1fr);animation:fadeUp .5s .25s ease both}
+  .stat-cell{padding:28px 40px;border-right:1px solid var(--border)}
+  .stat-cell:last-child{border-right:none}
+  .stat-num{font-family:var(--display);font-size:32px;font-weight:800;color:var(--accent);letter-spacing:-.02em;margin-bottom:4px}
+  .stat-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim)}
+  .section{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:80px 40px}
+  .section+.section{padding-top:0}
+  .section-label{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:32px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+  .section-title{font-family:var(--display);font-size:clamp(28px,3vw,40px);font-weight:700;letter-spacing:-.02em;color:var(--white);margin-bottom:16px}
+  .section-body{font-family:var(--body);font-size:16px;font-weight:300;color:var(--text-muted);line-height:1.8;max-width:680px;margin-bottom:40px}
+  .threat-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border-bright)}
+  .threat-cell{background:var(--surface);padding:28px 32px}
+  .threat-label{font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:10px}
+  .threat-label.problem{color:#ff5252}
+  .threat-label.solution{color:var(--accent)}
+  .threat-title{font-family:var(--display);font-size:16px;font-weight:600;color:var(--text);margin-bottom:8px}
+  .threat-desc{font-family:var(--body);font-size:13px;font-weight:300;color:var(--text-muted);line-height:1.7}
+  .workflow{border:1px solid var(--border-bright);background:var(--surface);overflow:hidden}
+  .workflow-step{display:grid;grid-template-columns:64px 1fr auto;align-items:start;gap:0;border-bottom:1px solid var(--border);padding:24px 32px}
+  .workflow-step:last-child{border-bottom:none}
+  .step-num{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--text-dim);padding-top:2px}
+  .step-title{font-family:var(--display);font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px}
+  .step-desc{font-family:var(--body);font-size:13px;font-weight:300;color:var(--text-muted);line-height:1.7}
+  .step-badge{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border:1px solid;align-self:start;white-space:nowrap}
+  .badge-green{color:var(--accent);border-color:var(--accent);background:var(--accent-dim)}
+  .badge-amber{color:var(--amber);border-color:var(--amber);background:var(--amber-dim)}
+  .badge-blue{color:var(--blue);border-color:var(--blue);background:var(--blue-dim)}
+  .guarantees{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border-bright)}
+  .guarantee-cell{background:var(--surface);padding:28px 32px;display:flex;flex-direction:column;gap:8px}
+  .g-num{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--accent)}
+  .g-claim{font-family:var(--display);font-size:15px;font-weight:600;color:var(--text);line-height:1.3}
+  .g-proof{font-family:var(--mono);font-size:11px;color:var(--text-dim);line-height:1.6}
+  .products-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border-bright)}
+  .product-cell{background:var(--surface);padding:24px;text-decoration:none;display:flex;flex-direction:column;gap:8px;transition:background .2s}
+  .product-cell:hover{background:rgba(255,255,255,.03)}
+  .product-name{font-family:var(--display);font-size:14px;font-weight:700;color:var(--text)}
+  .product-role{font-family:var(--mono);font-size:10px;color:var(--text-dim);letter-spacing:.08em;line-height:1.5}
+  .cta-section{position:relative;z-index:1;border-top:1px solid var(--border);padding:80px 40px;text-align:center;background:var(--surface)}
+  .cta-title{font-family:var(--display);font-size:clamp(28px,3vw,44px);font-weight:800;letter-spacing:-.02em;color:var(--white);margin-bottom:16px}
+  .cta-sub{font-family:var(--body);font-size:16px;font-weight:300;color:var(--text-muted);max-width:480px;margin:0 auto 40px;line-height:1.7}
+  .cta-buttons{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+  footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:24px 40px;display:flex;align-items:center;justify-content:space-between}
+  .footer-left{font-family:var(--mono);font-size:10px;color:var(--text-dim);letter-spacing:.08em}
+  .footer-right{display:flex;align-items:center;gap:24px}
+  .footer-right a{font-family:var(--mono);font-size:10px;color:var(--text-dim);text-decoration:none;letter-spacing:.08em;transition:color .2s}
+  .footer-right a:hover{color:var(--text)}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  @media(max-width:768px){nav{padding:0 20px}.nav-links{display:none}.hero{padding:120px 24px 60px}.stat-bar{grid-template-columns:1fr 1fr}.section{padding:60px 24px}.threat-grid,.guarantees{grid-template-columns:1fr}.products-strip{grid-template-columns:1fr 1fr}footer{flex-direction:column;gap:12px}.workflow-step{grid-template-columns:48px 1fr}.step-badge{display:none}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="nav-logo">
+    <svg viewBox="0 0 28 28" fill="none"><path d="M4 4L14 14M14 14L24 4M14 14L4 24M14 14L24 24" stroke="#00e676" stroke-width="2" stroke-linecap="square"/><rect x="12.5" y="12.5" width="3" height="3" fill="#00e676"/></svg>
+    <span class="nav-brand">ZKNOT™ <span>VERTICALS</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li><li><a href="/protocol">Protocol</a></li><li><a href="/products/zkkey">Products</a></li><li><a href="/about">About</a></li>
+  </ul>
+  <a href="mailto:ops@zknot.io" class="nav-cta">Contact</a>
+</nav>
+
+<div class="hero">
+  <div class="breadcrumb"><a href="/">zknot.io</a><span>/</span>Verticals<span>/</span>Election Integrity</div>
+  <div class="vertical-tag">Vertical — Election Integrity</div>
+  <h1 class="hero-title">Every ballot image.<br><em>Chain-attested.</em><br>Publicly verifiable.</h1>
+  <p class="hero-sub">Election directors face an impossible standard: prove a negative. Prove no image was altered, no timestamp was backdated, no file was substituted. ZKNOT™ makes that proof physical and mathematical — not a policy claim.</p>
+  <div class="hero-ctas">
+    <a href="mailto:ops@zknot.io?subject=Election%20Integrity%20Pilot" class="btn-primary">Request pilot briefing</a>
+    <a href="/verify" class="btn-secondary">Verify a record</a>
+  </div>
+</div>
+
+<div class="stat-bar">
+  <div class="stat-cell"><div class="stat-num">0</div><div class="stat-label">Software failure modes in capture path</div></div>
+  <div class="stat-cell"><div class="stat-num">100%</div><div class="stat-label">Publicly verifiable without login</div></div>
+  <div class="stat-cell"><div class="stat-num">&lt;3s</div><div class="stat-label">Public verification lookup time</div></div>
+  <div class="stat-cell"><div class="stat-num">∞</div><div class="stat-label">Audit requests the chain can handle</div></div>
+</div>
+
+<div class="section">
+  <div class="section-label">The problem — why claims aren't enough</div>
+  <div class="section-title">Post-election challenges don't accept "our systems are secure."</div>
+  <p class="section-body">Every contested election produces the same document: a vendor attestation letter. A statement that systems were not compromised. That logs are intact. That images match originals. These are claims. They require trust in the vendor. ZKNOT™ replaces the claim with a proof any court, journalist, or citizen can independently run.</p>
+  <div class="threat-grid">
+    <div class="threat-cell"><div class="threat-label problem">Problem</div><div class="threat-title">Ballot image provenance is unverifiable</div><div class="threat-desc">Scanned ballot images exist as files on a server. A file can be overwritten, backdated, or substituted. The only proof of authenticity is the vendor's word.</div></div>
+    <div class="threat-cell"><div class="threat-label solution">ZKNOT™ Solution</div><div class="threat-title">Physical capture with chain attestation</div><div class="threat-desc">PowerVerify™ eliminates the software data path at scan time. The resulting image is signed by ZKKey™, chain-recorded, and resolvable at verifyknot.io by anyone.</div></div>
+    <div class="threat-cell"><div class="threat-label problem">Problem</div><div class="threat-title">Audit logs can be altered by the systems they audit</div><div class="threat-desc">Software logs are written by the same software being audited. An adversary with system access can modify both the evidence and the record of the evidence simultaneously.</div></div>
+    <div class="threat-cell"><div class="threat-label solution">ZKNOT™ Solution</div><div class="threat-title">Append-only offline chain, independently verifiable</div><div class="threat-desc">ZK-LocalChain™ is hardware-enforced append-only. No entry can be removed or reordered. The chain itself is publicly auditable without connecting to any ZKNOT server.</div></div>
+    <div class="threat-cell"><div class="threat-label problem">Problem</div><div class="threat-title">Physical seals don't prove sequence</div><div class="threat-desc">Tamper-evident seals record physical intrusion. They cannot prove the seal was applied before the evidence was altered — only that the box was opened.</div></div>
+    <div class="threat-cell"><div class="threat-label solution">ZKNOT™ Solution</div><div class="threat-title">TrustSeal™ cryptographically bound at application moment</div><div class="threat-desc">TrustSeal™ is applied while ZKKey™ is signing. The seal ID appears in the chain entry. Any attempt to reseal after the fact produces a different chain position — detectable immediately.</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-label">Deployment workflow — polling place to canvass</div>
+  <div class="section-title">How ZKNOT™ integrates with existing election operations</div>
+  <p class="section-body">ZKNOT™ does not replace voting systems, scanners, or tabulation software. It wraps the evidence capture layer with physics-enforced attestation — the moment a physical ballot becomes a digital record.</p>
+  <div class="workflow">
+    <div class="workflow-step"><div class="step-num">01</div><div class="step-body"><div class="step-title">Ballot extraction and staging</div><div class="step-desc">Poll workers remove sealed ballot boxes under chain-of-custody protocol. PowerVerify™ is staged at the scanning station. Physical continuity is confirmed before first scan.</div></div><div class="step-badge badge-amber">Physics</div></div>
+    <div class="workflow-step"><div class="step-num">02</div><div class="step-body"><div class="step-title">Scan capture through PowerVerify™</div><div class="step-desc">Each ballot passes through the PowerVerify™ optical path. The digital data path to the scanner's onboard processor is physically eliminated. Images are captured directly to the ZKKey™ signing session.</div></div><div class="step-badge badge-amber">Physics</div></div>
+    <div class="workflow-step"><div class="step-num">03</div><div class="step-body"><div class="step-title">Human review and ZKKey™ sign</div><div class="step-desc">The designated election official reviews the session summary on ZKKey™. Physical button press initiates post-nonce signing. The official's review is hardware-attested — not a software checkbox.</div></div><div class="step-badge badge-blue">Human Gate</div></div>
+    <div class="workflow-step"><div class="step-num">04</div><div class="step-body"><div class="step-title">TrustSeal™ application and chain record</div><div class="step-desc">TrustSeal™ is applied to the ballot box simultaneously with signing. Seal ID is included in the chain entry. ZK-LocalChain™ records the entry with full SHA-256 hash and chain position.</div></div><div class="step-badge badge-green">Chain</div></div>
+    <div class="workflow-step"><div class="step-num">05</div><div class="step-body"><div class="step-title">Canvass and audit — public verification</div><div class="step-desc">Any auditor, observer, attorney, or citizen enters the short code at verifyknot.io. The chain entry resolves instantly. No ZKNOT account required. The math verifies itself.</div></div><div class="step-badge badge-green">Public Verify</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-label">Guarantees — what is provable and exactly how</div>
+  <div class="guarantees">
+    <div class="guarantee-cell"><div class="g-num">01</div><div class="g-claim">This image was not modified after signing</div><div class="g-proof">SHA-256 hash of the image matches the chain entry. Any single-pixel change produces a different hash. Test: rehash the file yourself.</div></div>
+    <div class="guarantee-cell"><div class="g-num">02</div><div class="g-claim">The timestamp cannot be backdated</div><div class="g-proof">Timestamp is set at ZKKey™ signing time, hardware-clocked, post-nonce. Backdating requires forging the signing key — computationally infeasible.</div></div>
+    <div class="guarantee-cell"><div class="g-num">03</div><div class="g-claim">No entries were added or removed from the chain</div><div class="g-proof">Each entry contains the hash of the previous entry. Any gap or insertion breaks the hash chain at that position — detectable by anyone with the chain export.</div></div>
+    <div class="guarantee-cell"><div class="g-num">04</div><div class="g-claim">The seal was applied before this entry was signed</div><div class="g-proof">TrustSeal™ ID appears in the signed payload. A seal applied after signing produces no chain entry. The only valid seal for this entry is the one in the record.</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-label">Products in this deployment</div>
+  <div class="products-strip">
+    <a href="/products/powerverify" class="product-cell"><div class="product-name">PowerVerify™</div><div class="product-role">Physical data-path elimination at scan capture</div></a>
+    <a href="/products/zkkey" class="product-cell"><div class="product-name">ZKKey™</div><div class="product-role">Human-gated signing — official review gate</div></a>
+    <a href="/products/zk-localchain" class="product-cell"><div class="product-name">ZK-LocalChain™</div><div class="product-role">Offline append-only ledger for intermittently-connected environments</div></a>
+    <a href="/products/trustseal" class="product-cell"><div class="product-name">TrustSeal™</div><div class="product-role">Cryptographically bound physical tamper evidence</div></a>
+  </div>
+</div>
+
+<div class="cta-section">
+  <div class="cta-title">Ready to run a pilot?</div>
+  <p class="cta-sub">ZKNOT™ is actively seeking election directors and county clerks for a pre-election pilot program. SDVOSB set-aside eligible.</p>
+  <div class="cta-buttons">
+    <a href="mailto:ops@zknot.io?subject=Election%20Integrity%20Pilot" class="btn-primary">Contact ops@zknot.io</a>
+    <a href="/protocol" class="btn-secondary">Read the full protocol</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-left">ZKNOT, Inc. · UEI: C4SKW13JPEL5 · SAM.gov Active · SDVOSB · Utah</div>
+  <div class="footer-right"><a href="/">Home</a><a href="/verify">Verify</a><a href="/about">About</a><a href="mailto:ops@zknot.io">ops@zknot.io</a></div>
+</footer>
+</body>
+</html>
