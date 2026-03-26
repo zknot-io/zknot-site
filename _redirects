@@ -18,4 +18,4 @@
 # /v/:code               https://api.zknot.io/v1/verify/:code  200
 
 # www → apex (no-www canonical)
-https://www.zknot.io/*   https://zknot.io/:splat  301
+https://www.zknot.io/*    /:splat    301
