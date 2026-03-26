@@ -1,5 +1,6 @@
 # ZKNOT.io — Cloudflare Pages routing
 # Product pages
+/products    /products.html    200
 /products/zkkey          /zkkey.html          200
 /products/powerverify    /powerverify.html    200
 /products/zk-localchain  /zk-localchain.html  200
