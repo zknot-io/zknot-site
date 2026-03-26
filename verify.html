@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verify — ZKNOT™ Evidence Verification Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080a0c;
+    --surface: #0d1117;
+    --border: #1a2030;
+    --border-bright: #263040;
+    --text: #e8edf5;
+    --text-muted: #5a6880;
+    --text-dim: #3a4860;
+    --green: #00e676;
+    --green-dim: #00e67622;
+    --green-glow: #00e67640;
+    --amber: #ffab00;
+    --amber-dim: #ffab0022;
+    --blue: #448aff;
+    --blue-dim: #448aff22;
+    --red: #ff5252;
+    --red-dim: #ff525222;
+    --white: #ffffff;
+    --mono: 'DM Mono', monospace;
+    --display: 'Syne', sans-serif;
+    --body: 'DM Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Radial glow center */
+  body::after {
+    content: '';
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    height: 600px;
+    background: radial-gradient(ellipse, #00e67608 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    height: 60px;
+    background: rgba(8, 10, 12, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--text);
+  }
+
+  .nav-logo svg { width: 28px; height: 28px; }
+
+  .nav-brand {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.05em;
+    color: var(--text);
+  }
+
+  .nav-brand span {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--text-muted);
+    margin-left: 6px;
+    letter-spacing: 0.12em;
+    vertical-align: middle;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  /* MAIN LAYOUT */
+  main {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 120px;
+    padding-bottom: 80px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  /* PORTAL HEADER */
+  .portal-header {
+    text-align: center;
+    margin-bottom: 60px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .portal-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .portal-label::before,
+  .portal-label::after {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--green);
+    opacity: 0.4;
+  }
+
+  .portal-title {
+    font-family: var(--display);
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+
+  .portal-sub {
+    font-family: var(--body);
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--text-muted);
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* VERIFY WIDGET */
+  .verify-widget {
+    width: 100%;
+    max-width: 680px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  .input-area {
+    position: relative;
+    margin-bottom: 16px;
+  }
+
+  .input-row {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--border-bright);
+    background: var(--surface);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .input-row:focus-within {
+    border-color: var(--green);
+    box-shadow: 0 0 0 1px var(--green), 0 0 32px var(--green-glow);
+  }
+
+  #code-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 18px 24px;
+    font-family: var(--mono);
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: var(--text);
+    caret-color: var(--green);
+  }
+
+  #code-input::placeholder {
+    color: var(--text-dim);
+    font-weight: 300;
+  }
+
+  #verify-btn {
+    background: var(--green);
+    color: #000;
+    border: none;
+    padding: 18px 32px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s, opacity 0.15s;
+    white-space: nowrap;
+  }
+
+  #verify-btn:hover { background: #33ff8a; }
+  #verify-btn:active { opacity: 0.8; }
+  #verify-btn:disabled { background: var(--text-dim); cursor: not-allowed; }
+
+  .input-hint {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    padding: 0 4px;
+  }
+
+  .input-hint .sample {
+    color: var(--text-muted);
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    transition: color 0.15s;
+  }
+
+  .input-hint .sample:hover { color: var(--green); }
+
+  /* RESULT PANEL */
+  #result-panel {
+    margin-top: 32px;
+    display: none;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  #result-panel.visible { display: block; }
+
+  .result-status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    border: 1px solid var(--border-bright);
+    border-bottom: none;
+    background: var(--surface);
+  }
+
+  .result-status-bar.verified {
+    border-color: var(--green);
+    background: var(--green-dim);
+  }
+
+  .result-status-bar.not-found {
+    border-color: var(--red);
+    background: var(--red-dim);
+  }
+
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--text-dim);
+  }
+
+  .status-dot.green { background: var(--green); box-shadow: 0 0 8px var(--green); }
+  .status-dot.red { background: var(--red); box-shadow: 0 0 8px var(--red); }
+
+  .status-label.verified { color: var(--green); }
+  .status-label.not-found { color: var(--red); }
+
+  .status-timestamp {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+  }
+
+  /* ATTESTATION RECORD TABLE */
+  .attestation-record {
+    border: 1px solid var(--border-bright);
+    background: var(--surface);
+    overflow: hidden;
+  }
+
+  .attestation-record.verified { border-color: var(--green); border-top: none; }
+  .attestation-record.not-found { border-color: var(--red); border-top: none; }
+
+  .record-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    border-bottom: 1px solid var(--border);
+    min-height: 48px;
+    align-items: stretch;
+  }
+
+  .record-row:last-child { border-bottom: none; }
+
+  .record-key {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 14px 20px;
+    border-right: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    background: rgba(255,255,255,0.01);
+  }
+
+  .record-value {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    word-break: break-all;
+  }
+
+  .record-value .badge {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border: 1px solid;
+    font-weight: 500;
+  }
+
+  .badge-green { color: var(--green); border-color: var(--green); background: var(--green-dim); }
+  .badge-amber { color: var(--amber); border-color: var(--amber); background: var(--amber-dim); }
+  .badge-blue { color: var(--blue); border-color: var(--blue); background: var(--blue-dim); }
+
+  .hash-value {
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  /* CHAIN POSITION VISUAL */
+  .chain-visual {
+    margin-top: 24px;
+    border: 1px solid var(--border-bright);
+    background: var(--surface);
+    padding: 24px;
+  }
+
+  .chain-visual.verified { border-color: var(--green); }
+
+  .chain-header {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+  }
+
+  .chain-nodes {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .chain-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    min-width: 80px;
+  }
+
+  .chain-node-block {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--border-bright);
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    transition: all 0.3s;
+  }
+
+  .chain-node-block.active {
+    border-color: var(--green);
+    background: var(--green-dim);
+    color: var(--green);
+    box-shadow: 0 0 12px var(--green-glow);
+  }
+
+  .chain-node-block.prev {
+    border-color: var(--border-bright);
+    color: var(--text-muted);
+  }
+
+  .chain-node-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+  }
+
+  .chain-node.active .chain-node-label { color: var(--green); }
+
+  .chain-connector {
+    width: 24px;
+    height: 1px;
+    background: var(--border-bright);
+    flex-shrink: 0;
+    margin-bottom: 24px;
+  }
+
+  .chain-connector.active { background: var(--green); opacity: 0.5; }
+
+  .chain-ellipsis {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 24px;
+    padding: 0 4px;
+  }
+
+  /* ENFORCEMENT LAYERS */
+  .enforcement-layers {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border-bright);
+  }
+
+  .enforcement-layers.verified { border-color: var(--green); }
+
+  .layer-cell {
+    background: var(--surface);
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .layer-num {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .layer-name {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+  }
+
+  .layer-status {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .layer-status::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--text-dim);
+  }
+
+  .layer-status.ok::before { background: var(--green); }
+  .layer-status.ok { color: var(--green); }
+
+  /* ERROR STATE */
+  .error-message {
+    padding: 32px;
+    text-align: center;
+    border: 1px solid var(--red);
+    background: var(--red-dim);
+  }
+
+  .error-code {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 12px;
+  }
+
+  .error-text {
+    font-family: var(--body);
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  .error-sub {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 8px;
+  }
+
+  /* LOADING STATE */
+  .loading-state {
+    padding: 32px;
+    text-align: center;
+    border: 1px solid var(--border-bright);
+    background: var(--surface);
+  }
+
+  .loading-bar {
+    height: 2px;
+    background: var(--border);
+    overflow: hidden;
+    margin: 0 0 20px;
+  }
+
+  .loading-bar-inner {
+    height: 100%;
+    background: var(--green);
+    width: 0%;
+    animation: loadBar 1.4s ease-in-out both;
+  }
+
+  @keyframes loadBar {
+    0% { width: 0%; }
+    50% { width: 70%; }
+    90% { width: 92%; }
+    100% { width: 92%; }
+  }
+
+  .loading-text {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .loading-dots::after {
+    content: '';
+    animation: dots 1.2s infinite;
+  }
+
+  @keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60%, 100% { content: '...'; }
+  }
+
+  /* HOW IT WORKS SECTION */
+  .how-section {
+    width: 100%;
+    max-width: 680px;
+    margin-top: 80px;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .how-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border-bright);
+  }
+
+  .how-cell {
+    background: var(--surface);
+    padding: 24px 20px;
+  }
+
+  .how-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+
+  .how-title {
+    font-family: var(--display);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .how-desc {
+    font-family: var(--body);
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* WHAT VERIFICATION PROVES */
+  .proves-section {
+    width: 100%;
+    max-width: 680px;
+    margin-top: 48px;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .proves-list {
+    list-style: none;
+    border: 1px solid var(--border-bright);
+    background: var(--surface);
+  }
+
+  .proves-item {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    padding: 16px 20px;
+    align-items: start;
+  }
+
+  .proves-item:last-child { border-bottom: none; }
+
+  .proves-check {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--green);
+    padding-top: 1px;
+  }
+
+  .proves-text {
+    font-family: var(--body);
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .proves-text strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* WHAT IT CANNOT PROVE */
+  .cannot-section {
+    width: 100%;
+    max-width: 680px;
+    margin-top: 32px;
+    animation: fadeUp 0.6s 0.35s ease both;
+  }
+
+  .cannot-list {
+    list-style: none;
+    border: 1px solid var(--border);
+    background: rgba(255, 82, 82, 0.03);
+  }
+
+  .cannot-item {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    padding: 14px 20px;
+    align-items: start;
+  }
+
+  .cannot-item:last-child { border-bottom: none; }
+
+  .cannot-x {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  .cannot-text {
+    font-family: var(--body);
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  /* API SECTION */
+  .api-section {
+    width: 100%;
+    max-width: 680px;
+    margin-top: 48px;
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+
+  .api-block {
+    background: #060809;
+    border: 1px solid var(--border-bright);
+    padding: 20px 24px;
+  }
+
+  .api-comment {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+  }
+
+  .api-endpoint {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .api-endpoint .method { color: var(--green); font-weight: 500; }
+  .api-endpoint .path { color: var(--blue); }
+
+  .api-response {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.8;
+  }
+
+  .api-key { color: var(--text-muted); }
+  .api-string { color: var(--amber); }
+  .api-bool { color: var(--green); }
+  .api-num { color: var(--blue); }
+
+  /* FOOTER */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 24px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-left {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+  }
+
+  .footer-right {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .footer-right a {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    transition: color 0.2s;
+  }
+
+  .footer-right a:hover { color: var(--text); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .how-grid { grid-template-columns: 1fr; }
+    .enforcement-layers { grid-template-columns: 1fr; }
+    .record-row { grid-template-columns: 140px 1fr; }
+    footer { flex-direction: column; gap: 12px; text-align: center; }
+    .footer-right { flex-wrap: wrap; justify-content: center; }
+  }
+
+  @media (max-width: 440px) {
+    #code-input { font-size: 14px; }
+    .record-row { grid-template-columns: 1fr; }
+    .record-key { border-right: none; border-bottom: 1px solid var(--border); }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">
+    <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="28" height="28" fill="none"/>
+      <path d="M4 4L14 14M14 14L24 4M14 14L4 24M14 14L24 24" stroke="#00e676" stroke-width="2" stroke-linecap="square"/>
+      <rect x="11" y="11" width="6" height="6" fill="#00e676" opacity="0.15"/>
+      <rect x="12.5" y="12.5" width="3" height="3" fill="#00e676"/>
+    </svg>
+    <span class="nav-brand">ZKNOT™ <span>VERIFY</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/protocol">Protocol</a></li>
+    <li><a href="/products/zkkey">Products</a></li>
+    <li><a href="/about">About</a></li>
+  </ul>
+</nav>
+
+<!-- MAIN -->
+<main>
+
+  <!-- HEADER -->
+  <div class="portal-header">
+    <div class="portal-label">Public Verification Portal</div>
+    <h1 class="portal-title">Verify any artifact.<br>No login required.</h1>
+    <p class="portal-sub">Enter a ZKNOT short code or artifact ID to resolve it to a full chain-attested evidence record.</p>
+  </div>
+
+  <!-- VERIFY WIDGET -->
+  <div class="verify-widget">
+
+    <div class="input-area">
+      <div class="input-row">
+        <input
+          type="text"
+          id="code-input"
+          placeholder="ZK-XXXX-XXX"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="characters"
+          spellcheck="false"
+          maxlength="40"
+        />
+        <button id="verify-btn" onclick="runVerify()">Verify</button>
+      </div>
+      <div class="input-hint" style="margin-top:8px;">
+        Short code format: <code style="color:var(--text-muted)">ZK-XXXX-XXX</code>&nbsp;&nbsp;|&nbsp;&nbsp;Try a demo:
+        <span class="sample" onclick="loadSample('ZK-4X9R-KM2')">ZK-4X9R-KM2</span>,
+        <span class="sample" onclick="loadSample('ZK-7B2T-VN8')">ZK-7B2T-VN8</span>,
+        <span class="sample" onclick="loadSample('ZK-INVALID-999')">ZK-INVALID-999</span>
+      </div>
+    </div>
+
+    <!-- RESULT PANEL -->
+    <div id="result-panel"></div>
+
+  </div><!-- /verify-widget -->
+
+  <!-- HOW IT WORKS -->
+  <div class="how-section">
+    <div class="section-label">How verification works</div>
+    <div class="how-grid">
+      <div class="how-cell">
+        <div class="how-num" style="color:var(--amber)">01 — PHYSICS</div>
+        <div class="how-title">Hardware enforced</div>
+        <div class="how-desc">PowerVerify™ eliminated every digital data path at capture time. The evidence on this record could not have entered the chain any other way.</div>
+      </div>
+      <div class="how-cell">
+        <div class="how-num" style="color:var(--blue)">02 — MATH</div>
+        <div class="how-title">Cryptographically signed</div>
+        <div class="how-desc">ZKKey™ produces a post-nonce signature after human review. The SHA-256 hash on this record is unforgeable without the signing key.</div>
+      </div>
+      <div class="how-cell">
+        <div class="how-num" style="color:var(--green)">03 — YOU</div>
+        <div class="how-title">Independently verifiable</div>
+        <div class="how-desc">This portal resolves any short code to its full chain entry. No ZKNOT account, no trust assertion required. The math does the verification.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHAT VERIFICATION PROVES -->
+  <div class="proves-section">
+    <div class="section-label">What a verified record proves</div>
+    <ul class="proves-list">
+      <li class="proves-item">
+        <span class="proves-check">✓</span>
+        <span class="proves-text"><strong>This artifact exists in the chain</strong> — the short code resolves to an immutable append-only entry that cannot be altered retroactively.</span>
+      </li>
+      <li class="proves-item">
+        <span class="proves-check">✓</span>
+        <span class="proves-text"><strong>The timestamp is device-attested</strong> — recorded at ZKKey™ signing time, not entered manually or after the fact.</span>
+      </li>
+      <li class="proves-item">
+        <span class="proves-check">✓</span>
+        <span class="proves-text"><strong>The signing device is identified</strong> — the device ID is hardware-bound to a specific ZKKey™ unit, traceable to its registration record.</span>
+      </li>
+      <li class="proves-item">
+        <span class="proves-check">✓</span>
+        <span class="proves-text"><strong>The SHA-256 hash is authentic</strong> — any modification to the underlying artifact produces a completely different hash, detectable immediately.</span>
+      </li>
+      <li class="proves-item">
+        <span class="proves-check">✓</span>
+        <span class="proves-text"><strong>Chain position is sequential and gapless</strong> — the position number confirms no entries were inserted, removed, or reordered before this record.</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- WHAT IT CANNOT PROVE -->
+  <div class="cannot-section">
+    <div class="section-label">Structural constraints — what this verification cannot assert</div>
+    <ul class="cannot-list">
+      <li class="cannot-item">
+        <span class="cannot-x">—</span>
+        <span class="cannot-text">Whether the operator correctly identified the subject of the evidence at time of capture. Human labeling errors are not detectable cryptographically.</span>
+      </li>
+      <li class="cannot-item">
+        <span class="cannot-x">—</span>
+        <span class="cannot-text">Whether the physical device used for capture was itself functioning correctly. PowerVerify™ continuity testing addresses this independently at capture time.</span>
+      </li>
+      <li class="cannot-item">
+        <span class="cannot-x">—</span>
+        <span class="cannot-text">The legal admissibility of the artifact in any specific jurisdiction. Verification is a technical attestation, not a legal certification.</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- API REFERENCE -->
+  <div class="api-section">
+    <div class="section-label">API endpoint — integrate into your system</div>
+    <div class="api-block">
+      <div class="api-comment">// Public verification — no authentication required</div>
+      <div class="api-endpoint">
+        <span class="method">GET</span>&nbsp;
+        <span class="path">https://api.zknot.io/v1/verify/{short_code}</span>
+      </div>
+      <div class="api-response">
+<span class="api-key">{</span><br>
+&nbsp;&nbsp;<span class="api-key">"short_code":</span> <span class="api-string">"ZK-4X9R-KM2"</span>,<br>
+&nbsp;&nbsp;<span class="api-key">"artifact_type":</span> <span class="api-string">"COMBINED_SESSION"</span>,<br>
+&nbsp;&nbsp;<span class="api-key">"device_id":</span> <span class="api-string">"ZKK-0047-A"</span>,<br>
+&nbsp;&nbsp;<span class="api-key">"timestamp_utc":</span> <span class="api-string">"2025-11-14T09:22:47Z"</span>,<br>
+&nbsp;&nbsp;<span class="api-key">"chain_position":</span> <span class="api-num">1847</span>,<br>
+&nbsp;&nbsp;<span class="api-key">"sha256":</span> <span class="api-string">"a3f8c2...d91e"</span>,<br>
+&nbsp;&nbsp;<span class="api-key">"verified":</span> <span class="api-bool">true</span>,<br>
+&nbsp;&nbsp;<span class="api-key">"enforcement_layers":</span> [<span class="api-string">"PHYSICS"</span>, <span class="api-string">"MATH"</span>]<br>
+<span class="api-key">}</span>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">ZKNOT, Inc. · UEI: C4SKW13JPEL5 · SAM.gov Active · SDVOSB · Utah</div>
+  <div class="footer-right">
+    <a href="/">zknot.io</a>
+    <a href="/protocol">Protocol</a>
+    <a href="/docs">API Docs</a>
+    <a href="mailto:ops@zknot.io">ops@zknot.io</a>
+  </div>
+</footer>
+
+<script>
+// ─── DEMO DATA ─────────────────────────────────────────────────────────────
+const DEMO_RECORDS = {
+  'ZK-4X9R-KM2': {
+    short_code: 'ZK-4X9R-KM2',
+    artifact_type: 'COMBINED_SESSION',
+    artifact_subtype: 'Video + Audio + Metadata',
+    device_id: 'ZKK-0047-A',
+    operator_id: 'OP-1122',
+    timestamp_utc: '2025-11-14T09:22:47Z',
+    timestamp_local: '2025-11-14 02:22:47 MST',
+    chain_position: 1847,
+    chain_prev: '9d2c1a...f38b',
+    sha256: 'a3f8c2d94b71e605fa238c19d074b3e2c9f156a847d0e3812b69cf4a7d08f91e',
+    seal_id: 'TS-4X9R-0082',
+    seal_type: 'TrustSeal™ Type-II',
+    verified: true,
+    enforcement_layers: ['PHYSICS', 'MATH'],
+    chain_id: 'ZKLC-MAIN-003',
+    export_hash: 'b7c49e...12f0'
+  },
+  'ZK-7B2T-VN8': {
+    short_code: 'ZK-7B2T-VN8',
+    artifact_type: 'FORENSIC_IMAGE',
+    artifact_subtype: 'Disk Image — NTFS',
+    device_id: 'ZKK-0031-B',
+    operator_id: 'OP-0088',
+    timestamp_utc: '2026-01-03T16:45:02Z',
+    timestamp_local: '2026-01-03 09:45:02 MST',
+    chain_position: 2291,
+    chain_prev: 'c10fe8...77da',
+    sha256: '2f8b1e4c9a072d53f6498b27e315c84a67d902b1e8f4c0539a12d6b708e3c5f2',
+    seal_id: 'TS-7B2T-0104',
+    seal_type: 'TrustSeal™ Type-I',
+    verified: true,
+    enforcement_layers: ['PHYSICS', 'MATH'],
+    chain_id: 'ZKLC-MAIN-003',
+    export_hash: 'f4a82c...09e1'
+  }
+};
+
+// ─── HELPERS ───────────────────────────────────────────────────────────────
+function fmt(ts) {
+  try {
+    return new Date(ts).toLocaleString('en-US', {
+      year: 'numeric', month: 'short', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', second: '2-digit',
+      timeZoneName: 'short'
+    });
+  } catch(e) { return ts; }
+}
+
+function nowISO() {
+  return new Date().toISOString().replace('T',' ').slice(0,-5) + ' UTC';
+}
+
+function loadSample(code) {
+  const input = document.getElementById('code-input');
+  input.value = code;
+  input.focus();
+  runVerify();
+}
+
+// ─── INPUT FORMATTING ──────────────────────────────────────────────────────
+document.getElementById('code-input').addEventListener('input', function(e) {
+  let v = e.target.value.toUpperCase().replace(/[^A-Z0-9-]/g, '');
+  e.target.value = v;
+});
+
+document.getElementById('code-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') runVerify();
+});
+
+// ─── MAIN VERIFY FUNCTION ──────────────────────────────────────────────────
+function runVerify() {
+  const input = document.getElementById('code-input');
+  const btn = document.getElementById('verify-btn');
+  const panel = document.getElementById('result-panel');
+  const raw = input.value.trim();
+
+  if (!raw) {
+    input.focus();
+    return;
+  }
+
+  // Normalize
+  const code = raw.toUpperCase();
+
+  // Disable button
+  btn.disabled = true;
+  btn.textContent = 'Querying...';
+
+  // Show loading
+  panel.innerHTML = renderLoading();
+  panel.className = 'visible';
+  panel.style.display = 'block';
+
+  // Simulate API latency
+  const delay = 900 + Math.random() * 600;
+  setTimeout(() => {
+    const record = DEMO_RECORDS[code] || null;
+
+    if (record) {
+      panel.innerHTML = renderVerified(record);
+      animateChain(record.chain_position);
+    } else {
+      panel.innerHTML = renderNotFound(code);
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Verify';
+  }, delay);
+
+  /*
+   * PRODUCTION SWAP:
+   * Replace the setTimeout block above with:
+   *
+   * fetch(`https://api.zknot.io/v1/verify/${encodeURIComponent(code)}`)
+   *   .then(r => r.json())
+   *   .then(data => {
+   *     if (data.verified) {
+   *       panel.innerHTML = renderVerified(data);
+   *       animateChain(data.chain_position);
+   *     } else {
+   *       panel.innerHTML = renderNotFound(code);
+   *     }
+   *     btn.disabled = false;
+   *     btn.textContent = 'Verify';
+   *   })
+   *   .catch(() => {
+   *     panel.innerHTML = renderError();
+   *     btn.disabled = false;
+   *     btn.textContent = 'Verify';
+   *   });
+   */
+}
+
+// ─── RENDER FUNCTIONS ──────────────────────────────────────────────────────
+function renderLoading() {
+  return `
+    <div class="loading-state">
+      <div class="loading-bar"><div class="loading-bar-inner"></div></div>
+      <div class="loading-text">Querying chain<span class="loading-dots"></span></div>
+    </div>
+  `;
+}
+
+function renderVerified(r) {
+  const chainPos = r.chain_position;
+  const prev = Math.max(1, chainPos - 2);
+
+  return `
+    <div class="result-status-bar verified">
+      <div class="status-indicator">
+        <span class="status-dot green"></span>
+        <span class="status-label verified">VERIFIED — CHAIN ENTRY RESOLVED</span>
+      </div>
+      <span class="status-timestamp">Queried ${nowISO()}</span>
+    </div>
+    <div class="attestation-record verified">
+      <div class="record-row">
+        <div class="record-key">Short Code</div>
+        <div class="record-value">${r.short_code} <span class="badge badge-green">Active</span></div>
+      </div>
+      <div class="record-row">
+        <div class="record-key">Artifact Type</div>
+        <div class="record-value">${r.artifact_type} <span class="badge badge-amber">${r.artifact_subtype}</span></div>
+      </div>
+      <div class="record-row">
+        <div class="record-key">Signing Device</div>
+        <div class="record-value">${r.device_id} <span class="badge badge-blue">ZKKey™</span></div>
+      </div>
+      <div class="record-row">
+        <div class="record-key">Operator ID</div>
+        <div class="record-value">${r.operator_id}</div>
+      </div>
+      <div class="record-row">
+        <div class="record-key">Timestamp (UTC)</div>
+        <div class="record-value">${fmt(r.timestamp_utc)}</div>
+      </div>
+      <div class="record-row">
+        <div class="record-key">Chain Position</div>
+        <div class="record-value">${r.chain_position.toLocaleString()} <span class="badge badge-green">${r.chain_id}</span></div>
+      </div>
+      <div class="record-row">
+        <div class="record-key">TrustSeal™</div>
+        <div class="record-value">${r.seal_id} — ${r.seal_type}</div>
+      </div>
+      <div class="record-row">
+        <div class="record-key">SHA-256</div>
+        <div class="record-value hash-value">${r.sha256}</div>
+      </div>
+      <div class="record-row">
+        <div class="record-key">Prior Entry Hash</div>
+        <div class="record-value hash-value" style="color:var(--text-dim)">${r.chain_prev}</div>
+      </div>
+      <div class="record-row">
+        <div class="record-key">PDF Export Hash</div>
+        <div class="record-value hash-value" style="color:var(--text-dim)">${r.export_hash}</div>
+      </div>
+    </div>
+
+    <div class="chain-visual verified" id="chain-visual">
+      <div class="chain-header">Chain position — ${r.chain_position.toLocaleString()} of ${(r.chain_position + Math.floor(Math.random()*40+18)).toLocaleString()} total entries</div>
+      <div class="chain-nodes" id="chain-nodes">
+        <div class="chain-node">
+          <div class="chain-node-block prev">${prev - 1}</div>
+          <div class="chain-node-label">prior</div>
+        </div>
+        <div class="chain-connector"></div>
+        <div class="chain-node">
+          <div class="chain-node-block prev">${prev}</div>
+          <div class="chain-node-label">prior</div>
+        </div>
+        <div class="chain-connector" id="conn-1"></div>
+        <div class="chain-node">
+          <div class="chain-node-block prev">${prev + 1}</div>
+          <div class="chain-node-label">prior</div>
+        </div>
+        <div class="chain-connector" id="conn-2"></div>
+        <div class="chain-node active" id="active-node">
+          <div class="chain-node-block active">${chainPos}</div>
+          <div class="chain-node-label">this</div>
+        </div>
+        <div class="chain-connector" id="conn-3"></div>
+        <div class="chain-ellipsis">···</div>
+      </div>
+    </div>
+
+    <div class="enforcement-layers verified">
+      <div class="layer-cell">
+        <div class="layer-num">Layer 01</div>
+        <div class="layer-name" style="color:var(--amber)">Physics Enforces</div>
+        <div class="layer-status ok">PowerVerify™ confirmed</div>
+      </div>
+      <div class="layer-cell">
+        <div class="layer-num">Layer 02</div>
+        <div class="layer-name" style="color:var(--blue)">Math Proves</div>
+        <div class="layer-status ok">ZKKey™ post-nonce signature</div>
+      </div>
+      <div class="layer-cell">
+        <div class="layer-num">Layer 03</div>
+        <div class="layer-name" style="color:var(--green)">You Verify</div>
+        <div class="layer-status ok">Chain resolved — no trust required</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderNotFound(code) {
+  return `
+    <div class="result-status-bar not-found">
+      <div class="status-indicator">
+        <span class="status-dot red"></span>
+        <span class="status-label not-found">NOT FOUND — NO CHAIN ENTRY</span>
+      </div>
+      <span class="status-timestamp">Queried ${nowISO()}</span>
+    </div>
+    <div class="error-message">
+      <div class="error-code">ZKNOT-404 — Short code not resolved</div>
+      <div class="error-text">No chain entry found for <code style="font-family:var(--mono);color:var(--text)">${code}</code></div>
+      <div class="error-sub">Confirm the short code is correct, or contact the originating operator for the artifact ID.</div>
+    </div>
+  `;
+}
+
+function renderError() {
+  return `
+    <div class="result-status-bar not-found">
+      <div class="status-indicator">
+        <span class="status-dot red"></span>
+        <span class="status-label not-found">CONNECTION ERROR</span>
+      </div>
+    </div>
+    <div class="error-message">
+      <div class="error-code">ZKNOT-503 — Chain query failed</div>
+      <div class="error-text">Unable to reach the verification endpoint. Please try again.</div>
+    </div>
+  `;
+}
+
+function animateChain(pos) {
+  setTimeout(() => {
+    const c1 = document.getElementById('conn-1');
+    const c2 = document.getElementById('conn-2');
+    const c3 = document.getElementById('conn-3');
+    if (c1) c1.classList.add('active');
+    setTimeout(() => { if (c2) c2.classList.add('active'); }, 100);
+    setTimeout(() => { if (c3) c3.classList.add('active'); }, 200);
+  }, 100);
+}
+</script>
+</body>
+</html>
