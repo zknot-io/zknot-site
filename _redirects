@@ -18,4 +18,3 @@
 # verifyknot.io short-code passthrough (future)
 # /v/:code               https://api.zknot.io/v1/verify/:code  200
 
-g
