@@ -1,0 +1,21 @@
+# ZKNOT.io — Cloudflare Pages routing
+# Product pages
+/products/zkkey          /zkkey.html          200
+/products/powerverify    /powerverify.html    200
+/products/zk-localchain  /zk-localchain.html  200
+/products/trustseal      /trustseal.html      200
+
+# Protocol page
+/protocol                /protocol.html       200
+/evidence-protocol       /protocol.html       200
+
+# Utility pages (stubs — add html files when ready)
+/about                   /about.html          200
+/docs                    /docs.html           200
+/verify                  /verify.html         200
+
+# verifyknot.io short-code passthrough (future)
+# /v/:code               https://api.zknot.io/v1/verify/:code  200
+
+# www → apex (no-www canonical)
+https://www.zknot.io/*   https://zknot.io/:splat  301
