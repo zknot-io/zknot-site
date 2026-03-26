@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EvidenceProtocol™ — The Complete Chain of Custody Workflow | ZKNOT™</title>
+  <meta name="description" content="EvidenceProtocol™ is the end-to-end ZKNOT™ workflow: PowerVerify → capture → TrustSeal → ZKKey sign → chain record → PDF report. Physics enforces. Math proves. You verify." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0b0d;
+      --bg-1: #0f1114;
+      --bg-2: #141720;
+      --bg-card: #111318;
+      --border: rgba(255,255,255,0.07);
+      --border-active: rgba(255,255,255,0.18);
+      --text: #e8eaed;
+      --text-muted: #6b7280;
+      --text-dim: #9ca3af;
+      --green: #22c55e;
+      --amber: #f59e0b;
+      --blue: #3b82f6;
+      --purple: #a855f7;
+      --red: #ef4444;
+      --mono: 'DM Mono', monospace;
+      --sans: 'DM Sans', sans-serif;
+      --display: 'Syne', sans-serif;
+
+      /* Step colors */
+      --s1: #f59e0b;
+      --s2: #22c55e;
+      --s3: #a855f7;
+      --s4: #3b82f6;
+      --s5: #22c55e;
+      --s6: #e8eaed;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999; opacity: 0.4;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px; height: 64px;
+      background: rgba(10,11,13,0.88); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-text { font-family: var(--display); font-size: 18px; font-weight: 800; letter-spacing: 0.05em; color: var(--text); }
+    .nav-logo-text sup { font-size: 10px; font-weight: 400; color: var(--text-muted); vertical-align: super; }
+    .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+    .nav-links a { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta { color: var(--green) !important; border: 1px solid rgba(34,197,94,0.3); padding: 6px 16px; border-radius: 2px; }
+    .nav-cta:hover { color: #000 !important; background: var(--green) !important; }
+
+    .breadcrumb {
+      position: fixed; top: 64px; left: 0; right: 0; z-index: 99;
+      padding: 10px 40px;
+      background: rgba(10,11,13,0.7); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 8px;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--text-muted);
+    }
+    .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+    .breadcrumb .sep { opacity: 0.3; }
+    .breadcrumb .current { color: var(--green); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 140px 40px 80px;
+      position: relative; overflow: hidden;
+    }
+    .hero-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, black 20%, transparent 100%);
+    }
+    .hero-glow {
+      position: absolute; top: -200px; left: 50%; transform: translateX(-50%);
+      width: 900px; height: 700px;
+      background: radial-gradient(ellipse, rgba(34,197,94,0.05) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-inner { position: relative; max-width: 900px; margin: 0 auto; width: 100%; text-align: center; }
+
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--green); margin-bottom: 28px;
+      opacity: 0; animation: fadeUp 0.5s 0.1s ease forwards;
+    }
+    .hero-eyebrow::before { content: ''; width: 20px; height: 1px; background: var(--green); }
+    .hero-eyebrow::after { content: ''; width: 20px; height: 1px; background: var(--green); }
+
+    h1 {
+      font-family: var(--display); font-size: clamp(44px, 7vw, 88px);
+      font-weight: 800; letter-spacing: -0.025em; line-height: 1.0;
+      margin-bottom: 28px;
+      opacity: 0; animation: fadeUp 0.6s 0.2s ease forwards;
+    }
+    h1 .tm { font-size: 0.35em; font-weight: 400; color: var(--text-muted); vertical-align: super; }
+
+    .hero-sub {
+      font-size: clamp(16px, 2vw, 19px); color: var(--text-muted);
+      line-height: 1.7; max-width: 640px; margin: 0 auto 48px;
+      opacity: 0; animation: fadeUp 0.6s 0.35s ease forwards;
+    }
+
+    /* ── FLOW PILLS ── */
+    .flow-pills {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0; flex-wrap: nowrap; overflow-x: auto;
+      padding: 0 0 4px;
+      opacity: 0; animation: fadeUp 0.6s 0.5s ease forwards;
+    }
+    .flow-pill {
+      display: flex; align-items: center; gap: 6px;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+      padding: 8px 14px; border-radius: 2px; white-space: nowrap;
+      border: 1px solid transparent;
+    }
+    .flow-pill.s1 { color: var(--s1); background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.2); }
+    .flow-pill.s2 { color: var(--s2); background: rgba(34,197,94,0.08); border-color: rgba(34,197,94,0.2); }
+    .flow-pill.s3 { color: var(--s3); background: rgba(168,85,247,0.08); border-color: rgba(168,85,247,0.2); }
+    .flow-pill.s4 { color: var(--s4); background: rgba(59,130,246,0.08); border-color: rgba(59,130,246,0.2); }
+    .flow-pill.s5 { color: var(--s5); background: rgba(34,197,94,0.08); border-color: rgba(34,197,94,0.2); }
+    .flow-pill.s6 { color: var(--text-dim); background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); }
+    .flow-arrow { font-family: var(--mono); font-size: 14px; color: var(--text-muted); padding: 0 4px; opacity: 0.4; }
+
+    .hero-scroll-hint {
+      margin-top: 56px;
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--text-muted); opacity: 0; animation: fadeUp 0.6s 0.7s ease forwards;
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+    }
+    .hero-scroll-hint::after {
+      content: '';
+      width: 1px; height: 40px;
+      background: linear-gradient(var(--text-muted), transparent);
+      animation: scrollLine 1.5s ease infinite;
+    }
+    @keyframes scrollLine { 0% { height: 0; opacity: 0; } 50% { height: 40px; opacity: 1; } 100% { height: 40px; opacity: 0; } }
+
+    /* ── STEP SECTIONS ── */
+    .steps-wrapper { position: relative; }
+
+    /* Vertical timeline line */
+    .steps-wrapper::before {
+      content: '';
+      position: absolute;
+      left: 50%; transform: translateX(-50%);
+      top: 0; bottom: 0; width: 1px;
+      background: linear-gradient(
+        var(--border),
+        rgba(245,158,11,0.3) 15%,
+        rgba(34,197,94,0.3) 30%,
+        rgba(168,85,247,0.3) 48%,
+        rgba(59,130,246,0.3) 64%,
+        rgba(34,197,94,0.3) 80%,
+        rgba(255,255,255,0.15) 95%,
+        var(--border)
+      );
+    }
+
+    .step-section {
+      padding: 80px 40px;
+      position: relative;
+    }
+    .step-section:nth-child(even) { background: var(--bg-1); }
+
+    .step-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 64px 1fr;
+      gap: 0; align-items: start;
+    }
+
+    /* Alternate layout for even steps */
+    .step-section:nth-child(even) .step-inner { direction: rtl; }
+    .step-section:nth-child(even) .step-inner > * { direction: ltr; }
+
+    /* Step node in center */
+    .step-node {
+      display: flex; flex-direction: column; align-items: center;
+      position: relative; z-index: 2;
+    }
+    .step-node-circle {
+      width: 48px; height: 48px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--mono); font-size: 13px; font-weight: 500;
+      position: relative; margin-bottom: 8px;
+    }
+    .step-node-circle::before {
+      content: '';
+      position: absolute; inset: -4px; border-radius: 50%;
+      opacity: 0.2;
+    }
+    .step-num-label {
+      font-family: var(--mono); font-size: 9px; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--text-muted); text-align: center;
+    }
+
+    /* Step content */
+    .step-content { padding: 0 40px; }
+    .step-diagram { padding: 0 40px; }
+
+    .step-tag {
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em;
+      text-transform: uppercase; margin-bottom: 12px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .step-tag::before { content: ''; width: 16px; height: 1px; }
+
+    .step-title {
+      font-family: var(--display); font-size: clamp(24px, 3vw, 38px);
+      font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px;
+    }
+    .step-body { font-size: 15px; color: var(--text-muted); line-height: 1.75; margin-bottom: 24px; }
+
+    .step-constraints { display: flex; flex-direction: column; gap: 10px; }
+    .step-constraint {
+      display: flex; align-items: flex-start; gap: 12px;
+      font-family: var(--mono); font-size: 12px; color: var(--text-muted); line-height: 1.5;
+    }
+    .step-constraint-bullet {
+      font-size: 11px; flex-shrink: 0; padding-top: 1px;
+    }
+
+    .step-product-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+      text-decoration: none; padding: 8px 14px; border-radius: 2px;
+      border: 1px solid transparent; margin-top: 20px;
+      transition: all 0.2s;
+    }
+    .step-product-link::after { content: ' →'; }
+
+    /* Step diagram panels */
+    .diagram-panel {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px;
+      overflow: hidden; font-family: var(--mono);
+    }
+    .diagram-header {
+      padding: 10px 16px;
+      background: var(--bg-2); border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .diagram-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .diagram-label { font-size: 10px; letter-spacing: 0.1em; color: var(--text-muted); }
+    .diagram-body { padding: 20px; }
+
+    /* Terminal output style */
+    .terminal { background: #070809; border-radius: 2px; padding: 16px; font-size: 11px; line-height: 1.9; }
+    .t-comment { color: #4b5563; }
+    .t-cmd { color: #e8eaed; }
+    .t-key { color: #9ca3af; }
+    .t-val-green { color: #22c55e; }
+    .t-val-blue { color: #3b82f6; }
+    .t-val-amber { color: #f59e0b; }
+    .t-val-purple { color: #a855f7; }
+    .t-val-dim { color: #6b7280; }
+    .t-prompt { color: #4b5563; }
+
+    /* Status indicators */
+    .status-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 0; border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .status-row:last-child { border-bottom: none; }
+    .status-indicator {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    }
+    .status-label { color: var(--text-muted); font-family: var(--mono); font-size: 11px; flex: 1; }
+    .status-value { font-family: var(--mono); font-size: 11px; }
+
+    /* ── STEP COLORS ── */
+    /* Step 1 - Amber - PowerVerify */
+    .step-1 .step-tag { color: var(--s1); }
+    .step-1 .step-tag::before { background: var(--s1); }
+    .step-1 .step-node-circle { background: rgba(245,158,11,0.12); color: var(--s1); border: 1px solid rgba(245,158,11,0.3); }
+    .step-1 .step-node-circle::before { background: var(--s1); }
+    .step-1 .step-product-link { color: var(--s1); border-color: rgba(245,158,11,0.25); background: rgba(245,158,11,0.05); }
+    .step-1 .step-product-link:hover { background: rgba(245,158,11,0.12); }
+    .step-1 .step-constraint-bullet { color: var(--s1); }
+
+    /* Step 2 - Green - Capture */
+    .step-2 .step-tag { color: var(--s2); }
+    .step-2 .step-tag::before { background: var(--s2); }
+    .step-2 .step-node-circle { background: rgba(34,197,94,0.12); color: var(--s2); border: 1px solid rgba(34,197,94,0.3); }
+    .step-2 .step-node-circle::before { background: var(--s2); }
+    .step-2 .step-product-link { color: var(--s2); border-color: rgba(34,197,94,0.25); background: rgba(34,197,94,0.05); }
+    .step-2 .step-product-link:hover { background: rgba(34,197,94,0.12); }
+    .step-2 .step-constraint-bullet { color: var(--s2); }
+
+    /* Step 3 - Purple - TrustSeal */
+    .step-3 .step-tag { color: var(--s3); }
+    .step-3 .step-tag::before { background: var(--s3); }
+    .step-3 .step-node-circle { background: rgba(168,85,247,0.12); color: var(--s3); border: 1px solid rgba(168,85,247,0.3); }
+    .step-3 .step-node-circle::before { background: var(--s3); }
+    .step-3 .step-product-link { color: var(--s3); border-color: rgba(168,85,247,0.25); background: rgba(168,85,247,0.05); }
+    .step-3 .step-product-link:hover { background: rgba(168,85,247,0.12); }
+    .step-3 .step-constraint-bullet { color: var(--s3); }
+
+    /* Step 4 - Blue - ZKKey */
+    .step-4 .step-tag { color: var(--s4); }
+    .step-4 .step-tag::before { background: var(--s4); }
+    .step-4 .step-node-circle { background: rgba(59,130,246,0.12); color: var(--s4); border: 1px solid rgba(59,130,246,0.3); }
+    .step-4 .step-node-circle::before { background: var(--s4); }
+    .step-4 .step-product-link { color: var(--s4); border-color: rgba(59,130,246,0.25); background: rgba(59,130,246,0.05); }
+    .step-4 .step-product-link:hover { background: rgba(59,130,246,0.12); }
+    .step-4 .step-constraint-bullet { color: var(--s4); }
+
+    /* Step 5 - Green - Chain */
+    .step-5 .step-tag { color: var(--s5); }
+    .step-5 .step-tag::before { background: var(--s5); }
+    .step-5 .step-node-circle { background: rgba(34,197,94,0.12); color: var(--s5); border: 1px solid rgba(34,197,94,0.3); }
+    .step-5 .step-node-circle::before { background: var(--s5); }
+    .step-5 .step-product-link { color: var(--s5); border-color: rgba(34,197,94,0.25); background: rgba(34,197,94,0.05); }
+    .step-5 .step-product-link:hover { background: rgba(34,197,94,0.12); }
+    .step-5 .step-constraint-bullet { color: var(--s5); }
+
+    /* Step 6 - White - Report */
+    .step-6 .step-tag { color: var(--text-dim); }
+    .step-6 .step-tag::before { background: var(--text-dim); }
+    .step-6 .step-node-circle { background: rgba(255,255,255,0.06); color: var(--text); border: 1px solid rgba(255,255,255,0.15); }
+    .step-6 .step-product-link { color: var(--text-dim); border-color: rgba(255,255,255,0.15); background: rgba(255,255,255,0.04); }
+    .step-6 .step-product-link:hover { background: rgba(255,255,255,0.08); }
+    .step-6 .step-constraint-bullet { color: var(--text-dim); }
+
+    /* ── COMPLETE FLOW SUMMARY ── */
+    .summary-section { padding: 80px 40px; background: var(--bg-1); border-top: 1px solid var(--border); }
+    .summary-inner { max-width: 1100px; margin: 0 auto; }
+    .summary-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--green); display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+    .summary-label::before { content: ''; width: 20px; height: 1px; background: var(--green); }
+    .summary-title { font-family: var(--display); font-size: clamp(28px, 3.5vw, 46px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; }
+    .summary-sub { font-size: 16px; color: var(--text-muted); max-width: 560px; line-height: 1.7; margin-bottom: 48px; }
+
+    .summary-chain {
+      display: grid; grid-template-columns: repeat(6, 1fr);
+      gap: 1px; background: var(--border); border: 1px solid var(--border);
+      border-radius: 4px; overflow: hidden;
+    }
+    .summary-step {
+      background: var(--bg-card); padding: 24px 20px;
+      position: relative; overflow: hidden;
+    }
+    .summary-step::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    }
+    .summary-step:nth-child(1)::before { background: var(--s1); }
+    .summary-step:nth-child(2)::before { background: var(--s2); }
+    .summary-step:nth-child(3)::before { background: var(--s3); }
+    .summary-step:nth-child(4)::before { background: var(--s4); }
+    .summary-step:nth-child(5)::before { background: var(--s5); }
+    .summary-step:nth-child(6)::before { background: rgba(255,255,255,0.3); }
+
+    .summary-step-num { font-family: var(--mono); font-size: 9px; letter-spacing: 0.15em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; }
+    .summary-step-name { font-family: var(--display); font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+    .summary-step:nth-child(1) .summary-step-name { color: var(--s1); }
+    .summary-step:nth-child(2) .summary-step-name { color: var(--s2); }
+    .summary-step:nth-child(3) .summary-step-name { color: var(--s3); }
+    .summary-step:nth-child(4) .summary-step-name { color: var(--s4); }
+    .summary-step:nth-child(5) .summary-step-name { color: var(--s5); }
+    .summary-step:nth-child(6) .summary-step-name { color: var(--text); }
+    .summary-step-product { font-family: var(--mono); font-size: 10px; color: var(--text-muted); }
+    .summary-step-enforced { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); }
+
+    /* ── GUARANTEES ── */
+    .guarantees-section { padding: 80px 40px; }
+    .guarantees-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; margin-top: 48px; }
+    .guarantee-card { background: var(--bg-card); padding: 36px 28px; }
+    .guarantee-num { font-family: var(--mono); font-size: 48px; font-weight: 700; color: rgba(255,255,255,0.05); line-height: 1; margin-bottom: 16px; }
+    .guarantee-title { font-family: var(--display); font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+    .guarantee-body { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+
+    /* ── CTA ── */
+    .cta-section { padding: 100px 40px; text-align: center; position: relative; overflow: hidden; }
+    .cta-section::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 400px; background: radial-gradient(ellipse, rgba(34,197,94,0.06) 0%, transparent 70%); }
+    .cta-inner { position: relative; max-width: 600px; margin: 0 auto; }
+    .cta-inner h2 { font-family: var(--display); font-size: clamp(28px, 3.5vw, 48px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; }
+    .cta-inner p { font-size: 16px; color: var(--text-muted); line-height: 1.7; margin-bottom: 40px; }
+    .cta-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; font-weight: 500; color: #000; background: var(--green); border: none; padding: 14px 28px; border-radius: 2px; text-decoration: none; transition: all 0.2s; }
+    .btn-primary:hover { background: #16a34a; transform: translateY(-1px); box-shadow: 0 8px 32px rgba(34,197,94,0.28); }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; color: var(--text-muted); background: transparent; border: 1px solid var(--border); padding: 14px 28px; border-radius: 2px; text-decoration: none; transition: all 0.2s; }
+    .btn-secondary:hover { color: var(--text); border-color: var(--border-active); }
+
+    /* ── FOOTER ── */
+    footer { border-top: 1px solid var(--border); padding: 40px; }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+    .footer-brand { font-family: var(--display); font-size: 15px; font-weight: 700; }
+    .footer-meta { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: var(--text-muted); line-height: 1.8; margin-top: 6px; }
+    .footer-right { display: flex; gap: 28px; }
+    .footer-right a { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; color: var(--text-muted); text-decoration: none; text-transform: uppercase; transition: color 0.2s; }
+    .footer-right a:hover { color: var(--text); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .hero { padding: 120px 20px 60px; }
+      .flow-pills { justify-content: flex-start; }
+      .steps-wrapper::before { display: none; }
+      .step-inner { grid-template-columns: 1fr; }
+      .step-section:nth-child(even) .step-inner { direction: ltr; }
+      .step-node { flex-direction: row; margin-bottom: 20px; }
+      .step-node-circle { margin-bottom: 0; margin-right: 12px; flex-shrink: 0; }
+      .step-content, .step-diagram { padding: 0; }
+      .step-section { padding: 56px 20px; }
+      .summary-chain { grid-template-columns: repeat(2, 1fr); }
+      .guarantees-grid { grid-template-columns: 1fr; }
+      .summary-section, .guarantees-section { padding: 56px 20px; }
+      .cta-section { padding: 64px 20px; }
+      .breadcrumb { padding: 10px 20px; }
+      footer { padding: 32px 20px; }
+    }
+    @media (max-width: 500px) {
+      .summary-chain { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="2" fill="#111318"/><path d="M8 8L16 16L24 8" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 24L16 16L24 24" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><circle cx="16" cy="16" r="2.5" fill="#22c55e"/></svg>
+    <span class="nav-logo-text">ZKNOT<sup>™</sup></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/#products">Products</a></li>
+    <li><a href="/protocol">Protocol</a></li>
+    <li><a href="/#verticals">Verticals</a></li>
+    <li><a href="/docs">Docs</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="mailto:ops@zknot.io" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="breadcrumb">
+  <a href="/">zknot.io</a>
+  <span class="sep">/</span>
+  <span class="current">EvidenceProtocol™</span>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">End-to-End Chain of Custody</div>
+    <h1>EvidenceProtocol<span class="tm">™</span></h1>
+    <p class="hero-sub">
+      Six steps. Every constraint enforced by a different layer of physics or mathematics.
+      No single point of failure. No trust assumption at any stage.
+      From device connection to signed PDF — independently verifiable.
+    </p>
+    <div class="flow-pills">
+      <div class="flow-pill s1">01 PowerVerify™</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-pill s2">02 Capture</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-pill s3">03 TrustSeal™</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-pill s4">04 ZKKey™ Sign</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-pill s5">05 Chain Record</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-pill s6">06 PDF Report</div>
+    </div>
+    <div class="hero-scroll-hint">Walk the protocol</div>
+  </div>
+</section>
+
+<!-- STEPS -->
+<div class="steps-wrapper">
+
+  <!-- ── STEP 1: PowerVerify ── -->
+  <section class="step-section step-1">
+    <div class="step-inner">
+      <div class="step-content reveal">
+        <div class="step-tag">Step 01 · Hardware</div>
+        <h2 class="step-title">Connect PowerVerify™</h2>
+        <p class="step-body">
+          Before any data is touched, PowerVerify™ is inserted between the evidence
+          device and the forensic workstation. The write data path is physically severed
+          at the PCB level. From this point forward, the evidence device cannot be
+          written to — not by the operator, not by the OS, not by any software on the workstation.
+          This is not a policy. It is a physical fact testable with a multimeter.
+        </p>
+        <div class="step-constraints">
+          <div class="step-constraint">
+            <div class="step-constraint-bullet">→</div>
+            Write path eliminated before any software runs
+          </div>
+          <div class="step-constraint">
+            <div class="step-constraint-bullet">→</div>
+            No firmware to exploit or misconfigure
+          </div>
+          <div class="step-constraint">
+            <div class="step-constraint-bullet">→</div>
+            Continuity-testable in any court or lab
+          </div>
+        </div>
+        <a href="/products/powerverify" class="step-product-link">PowerVerify™ product page</a>
+      </div>
+      <div class="step-node">
+        <div class="step-node-circle">01</div>
+        <div class="step-num-label">Physical<br/>Constraint</div>
+      </div>
+      <div class="step-diagram reveal">
+        <div class="diagram-panel">
+          <div class="diagram-header">
+            <div class="diagram-dot" style="background:#f59e0b"></div>
+            <div class="diagram-label">PowerVerify™ — Write Path Status</div>
+          </div>
+          <div class="diagram-body">
+            <div class="status-row">
+              <div class="status-indicator" style="background:#22c55e; box-shadow:0 0 6px #22c55e;"></div>
+              <div class="status-label">Device Connected</div>
+              <div class="status-value" style="color:#22c55e">ACTIVE</div>
+            </div>
+            <div class="status-row">
+              <div class="status-indicator" style="background:#ef4444;"></div>
+              <div class="status-label">Write Path</div>
+              <div class="status-value" style="color:#ef4444">ELIMINATED</div>
+            </div>
+            <div class="status-row">
+              <div class="status-indicator" style="background:#22c55e; box-shadow:0 0 6px #22c55e;"></div>
+              <div class="status-label">Read Path</div>
+              <div class="status-value" style="color:#22c55e">OPEN</div>
+            </div>
+            <div class="status-row">
+              <div class="status-indicator" style="background:#f59e0b;"></div>
+              <div class="status-label">Firmware Required</div>
+              <div class="status-value" style="color:#f59e0b">NONE</div>
+            </div>
+            <div class="status-row">
+              <div class="status-indicator" style="background:#22c55e;"></div>
+              <div class="status-label">Continuity Testable</div>
+              <div class="status-value" style="color:#22c55e">YES</div>
+            </div>
+            <div class="terminal" style="margin-top:14px;">
+              <div class="t-comment">// Hardware attestation event</div>
+              <div><span class="t-key">event:</span> <span class="t-val-amber">"POWERVERIFY_CONNECT"</span></div>
+              <div><span class="t-key">device_serial:</span> <span class="t-val-dim">"PV-001-B3F9"</span></div>
+              <div><span class="t-key">write_path:</span> <span class="t-val-green">"SEVERED"</span></div>
+              <div><span class="t-key">ts:</span> <span class="t-val-dim">"2026-03-14T09:18:44Z"</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── STEP 2: Capture ── -->
+  <section class="step-section step-2">
+    <div class="step-inner">
+      <div class="step-content reveal">
+        <div class="step-tag">Step 02 · Acquisition</div>
+        <h2 class="step-title">Forensic Capture</h2>
+        <p class="step-body">
+          With the write path eliminated, data acquisition proceeds using standard
+          forensic imaging tools. Because PowerVerify™ operates below the software layer,
+          any imaging tool — dd, FTK, Cellebrite, custom — can be used without modification.
+          The tool cannot accidentally write to the source because the hardware
+          does not permit it. The resulting image or file set is hashed before proceeding.
+        </p>
+        <div class="step-constraints">
+          <div class="step-constraint">
+            <div class="step-constraint-bullet">→</div>
+            Compatible with any forensic imaging tool
+          </div>
+          <div class="step-constraint">
+            <div class="step-constraint-bullet">→</div>
+            SHA-256 hash computed on captured artifact
+          </div>
+          <div class="step-constraint">
+            <div class="step-constraint-bullet">→</div>
+            Hash becomes the binding element for all subsequent steps
+          </div>
+        </div>
+      </div>
+      <div class="step-node">
+        <div class="step-node-circle">02</div>
+        <div class="step-num-label">Acquisition</div>
+      </div>
+      <div class="step-diagram reveal">
+        <div class="diagram-panel">
+          <div class="diagram-header">
+            <div class="diagram-dot" style="background:#22c55e"></div>
+            <div class="diagram-label">Capture Session — Hash Computation</div>
+          </div>
+          <div class="diagram-body">
+            <div class="terminal">
+              <div class="t-comment">// Computing artifact hash</div>
+              <div><span class="t-prompt">$ </span><span class="t-cmd">sha256sum evidence.img</span></div>
+              <div style="margin-top:6px;"><span class="t-val-green">a3f8c1d2e4b5f9a0c7d3e2f1b8a4</span></div>
+              <div><span class="t-val-green">c6d9e0f2b3c5d7a8e1f4b2c9d0e3</span></div>
+              <div style="margin-top:10px;" class="t-comment">// Session metadata</div>
+              <div><span class="t-key">artifact_size:</span> <span class="t-val-dim">"128.4 GB"</span></div>
+              <div><span class="t-key">source_device:</span> <span class="t-val-dim">"Samsung 870 EVO"</span></div>
+              <div><span class="t-key">imaging_tool:</span> <span class="t-val-dim">"dd / forensic"</span></div>
+              <div><span class="t-key">write_blocked:</span> <span class="t-val-green">"HARDWARE"</span></div>
+              <div><span class="t-key">hash_algo:</span> <span class="t-val-dim">"SHA-256"</span></div>
+              <div style="margin-top:10px;"><span class="t-comment">// Ready for TrustSeal</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── STEP 3: TrustSeal ── -->
+  <section class="step-section step-3">
+    <div class="step-inner">
+      <div class="step-content reveal">
+        <div class="step-tag">Step 03 · Physical Binding</div>
+        <h2 class="step-title">Apply TrustSeal™</h2>
+        <p class="step-body">
+          A TrustSeal™ is applied to the evidence device packaging. At the exact moment
+          of application, the seal's unique ID is scanned and a chain entry is written
+          that binds the seal ID, the artifact hash from Step 02, the operator device ID,
+          and the timestamp into a single immutable record. Physical custody and digital
+          custody merge here and cannot be separated afterward.
+        </p>
+        <div class="step-constraints">
+          <div class="step-constraint">
+            <div class="step-constraint-bullet">→</div>
+            Seal application and chain entry are atomic — one event
+          </div>
+          <div class="step-constraint">
+            <div class="step-constraint-bullet">→</div>
+            Tamper reveals permanent VOID pattern on surface and backing
+          </div>
+          <div class="step-constraint">
+            <div class="step-constraint-bullet">→</div>
+            Short code on seal face resolves at verifyknot.io
+          </div>
+        </div>
+        <a href="/products/trustseal" class="step-product-link">TrustSeal™ product page</a>
+      </div>
+      <div class="step-node">
+        <div class="step-node-circle">03</div>
+        <div class="step-num-label">Physical<br/>+ Digital</div>
+      </div>
+      <div class="step-diagram reveal">
+        <div class="diagram-panel">
+          <div class="diagram-header">
+            <div class="diagram-dot" style="background:#a855f7"></div>
+            <div class="diagram-label">TrustSeal™ — Binding Event</div>
+          </div>
+          <div class="diagram-body">
+            <div class="terminal">
+              <div class="t-comment">// Seal scanned — binding event begins</div>
+              <div><span class="t-key">seal_id:</span> <span class="t-val-purple">"TS-00291-B"</span></div>
+              <div><span class="t-key">short_code:</span> <span class="t-val-purple">"ZK-4X9R-KM2"</span></div>
+              <div><span class="t-key">artifact_hash:</span> <span class="t-val-dim">"a3f8c1d2..."</span></div>
+              <div><span class="t-key">event_type:</span> <span class="t-val-purple">"TRUSTSEAL_EVENT"</span></div>
+              <div><span class="t-key">ts:</span> <span class="t-val-dim">"2026-03-14T09:22:04Z"</span></div>
+              <div style="margin-top:10px;" class="t-comment">// Chain entry queued for signing</div>
+              <div><span class="t-key">status:</span> <span class="t-val-amber">"AWAITING_ZKKEY_SIGNATURE"</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── STEP 4: ZKKey Sign ── -->
+  <section class="step-section step-4">
+    <div class="step-inner">
+      <div class="step-content reveal">
+        <div class="step-tag">Step 04 · Hardware Signing</div>
+        <h2 class="step-title">ZKKey™ Sign</h2>
+        <p class="step-body">
+          The operator presses the physical button on ZKKey™. This is the only action
+          that triggers a signature. No remote command, no scripted automation, no
+          administrator override can produce a valid signature. The ATECC608B secure
+          element signs the complete chain entry payload using ECDSA P-256.
+          The private key never leaves the hardware. After the nonce expires,
+          no further signatures are possible for this session.
+        </p>
+        <div class="step-constraints">
+          <div class="step-constraint">
+            <div class="step-constraint-bullet">→</div>
+            Physical button press is the only valid trigger
+          </div>
+          <div class="step-constraint">
+            <div class="step-constraint-bullet">→</div>
+            Private key is hardware-locked — non-exportable
+          </div>
+          <div class="step-constraint">
+            <div class="step-constraint-bullet">→</div>
+            Post-nonce signing structurally impossible
+          </div>
+        </div>
+        <a href="/products/zkkey" class="step-product-link">ZKKey™ product page</a>
+      </div>
+      <div class="step-node">
+        <div class="step-node-circle">04</div>
+        <div class="step-num-label">Hardware<br/>Attestation</div>
+      </div>
+      <div class="step-diagram reveal">
+        <div class="diagram-panel">
+          <div class="diagram-header">
+            <div class="diagram-dot" style="background:#3b82f6"></div>
+            <div class="diagram-label">ZKKey™ ATECC608B — Signature Event</div>
+          </div>
+          <div class="diagram-body">
+            <div class="status-row">
+              <div class="status-indicator" style="background:#22c55e; box-shadow:0 0 6px #22c55e; animation:pulse 2s infinite;"></div>
+              <div class="status-label">Nonce Status</div>
+              <div class="status-value" style="color:#22c55e">ACTIVE</div>
+            </div>
+            <div class="status-row">
+              <div class="status-indicator" style="background:#22c55e;"></div>
+              <div class="status-label">Physical Presence</div>
+              <div class="status-value" style="color:#22c55e">CONFIRMED</div>
+            </div>
+            <div class="status-row">
+              <div class="status-indicator" style="background:#3b82f6;"></div>
+              <div class="status-label">Key Storage</div>
+              <div class="status-value" style="color:#3b82f6">ATECC608B</div>
+            </div>
+            <div class="terminal" style="margin-top:14px;">
+              <div class="t-comment">// Signature produced</div>
+              <div><span class="t-key">algorithm:</span> <span class="t-val-blue">"ECDSA-P256"</span></div>
+              <div><span class="t-key">device_id:</span> <span class="t-val-dim">"ZKKEY-003-A7F2E1"</span></div>
+              <div><span class="t-key">signature:</span> <span class="t-val-blue">"MEQCIBx9..."</span></div>
+              <div><span class="t-key">key_exportable:</span> <span class="t-val-green">"NEVER"</span></div>
+              <div><span class="t-key">post_nonce_sign:</span> <span class="t-val-green">"IMPOSSIBLE"</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── STEP 5: Chain Record ── -->
+  <section class="step-section step-5">
+    <div class="step-inner">
+      <div class="step-content reveal">
+        <div class="step-tag">Step 05 · Ledger</div>
+        <h2 class="step-title">Chain Record Written</h2>
+        <p class="step-body">
+          The signed entry is written to ZK-LocalChain™. Its hash is computed and
+          chained to the previous entry — making every prior record part of the
+          mathematical proof of this one. The chain operates offline-capable;
+          no network connection is required. When connectivity is available,
+          the entry is published to verifyknot.io for public resolution.
+          Any party can independently verify the entire chain from any exported entry.
+        </p>
+        <div class="step-constraints">
+          <div class="step-constraint">
+            <div class="step-constraint-bullet">→</div>
+            Entry is append-only — no delete, no edit possible
+          </div>
+          <div class="step-constraint">
+            <div class="step-constraint-bullet">→</div>
+            Hash-chained to every prior entry in the ledger
+          </div>
+          <div class="step-constraint">
+            <div class="step-constraint-bullet">→</div>
+            Independently verifiable — ZKNOT™ not required to verify
+          </div>
+        </div>
+        <a href="/products/zk-localchain" class="step-product-link">ZK-LocalChain™ product page</a>
+      </div>
+      <div class="step-node">
+        <div class="step-node-circle">05</div>
+        <div class="step-num-label">Immutable<br/>Record</div>
+      </div>
+      <div class="step-diagram reveal">
+        <div class="diagram-panel">
+          <div class="diagram-header">
+            <div class="diagram-dot" style="background:#22c55e"></div>
+            <div class="diagram-label">ZK-LocalChain™ — Entry Written</div>
+          </div>
+          <div class="diagram-body">
+            <div class="terminal">
+              <div class="t-comment">// Full attestation artifact</div>
+              <div><span class="t-key">short_code:</span> <span class="t-val-green">"ZK-4X9R-KM2"</span></div>
+              <div><span class="t-key">artifact_type:</span> <span class="t-val-dim">"COMBINED_SESSION"</span></div>
+              <div><span class="t-key">chain_position:</span> <span class="t-val-green">41887</span></div>
+              <div><span class="t-key">prev_hash:</span> <span class="t-val-dim">"c7d3e2f1..."</span></div>
+              <div><span class="t-key">artifact_hash:</span> <span class="t-val-dim">"a3f8c1d2..."</span></div>
+              <div><span class="t-key">entry_hash:</span> <span class="t-val-green">"e0f2b3c5..."</span></div>
+              <div><span class="t-key">signed_at:</span> <span class="t-val-dim">"2026-03-14T09:22:11Z"</span></div>
+              <div style="margin-top:8px;"><span class="t-key">verify:</span> <span class="t-val-green">"verifyknot.io/ZK-4X9R-KM2"</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── STEP 6: PDF Report ── -->
+  <section class="step-section step-6">
+    <div class="step-inner">
+      <div class="step-content reveal">
+        <div class="step-tag">Step 06 · Output</div>
+        <h2 class="step-title">Signed PDF Report</h2>
+        <p class="step-body">
+          ZK-LocalChain™ exports a signed PDF chain-of-custody report containing
+          the full attestation artifact, device signatures, chain position,
+          all short codes, and QR codes linking to verifyknot.io for each entry.
+          The PDF is itself signed by the ZKKey™ at export time, making the report
+          a first-class chain artifact. Any party — opposing counsel, court, auditor —
+          can verify every claim in the report independently.
+        </p>
+        <div class="step-constraints">
+          <div class="step-constraint">
+            <div class="step-constraint-bullet">→</div>
+            PDF signed by ZKKey™ at export — it is itself a chain artifact
+          </div>
+          <div class="step-constraint">
+            <div class="step-constraint-bullet">→</div>
+            QR codes on every entry link to verifyknot.io
+          </div>
+          <div class="step-constraint">
+            <div class="step-constraint-bullet">→</div>
+            No vendor testimony required — report is self-verifying
+          </div>
+        </div>
+        <a href="https://verifyknot.io" class="step-product-link">Verify a record at verifyknot.io</a>
+      </div>
+      <div class="step-node">
+        <div class="step-node-circle">06</div>
+        <div class="step-num-label">Verified<br/>Output</div>
+      </div>
+      <div class="step-diagram reveal">
+        <div class="diagram-panel">
+          <div class="diagram-header">
+            <div class="diagram-dot" style="background:#e8eaed"></div>
+            <div class="diagram-label">Chain-of-Custody Report — Export</div>
+          </div>
+          <div class="diagram-body">
+            <div class="status-row">
+              <div class="status-indicator" style="background:#22c55e;"></div>
+              <div class="status-label">PDF Signature</div>
+              <div class="status-value" style="color:#22c55e">VALID</div>
+            </div>
+            <div class="status-row">
+              <div class="status-indicator" style="background:#22c55e;"></div>
+              <div class="status-label">Chain Integrity</div>
+              <div class="status-value" style="color:#22c55e">INTACT</div>
+            </div>
+            <div class="status-row">
+              <div class="status-indicator" style="background:#22c55e;"></div>
+              <div class="status-label">Public Verification</div>
+              <div class="status-value" style="color:#22c55e">AVAILABLE</div>
+            </div>
+            <div class="status-row">
+              <div class="status-indicator" style="background:#22c55e;"></div>
+              <div class="status-label">Vendor Required to Verify</div>
+              <div class="status-value" style="color:#22c55e">NO</div>
+            </div>
+            <div class="terminal" style="margin-top:14px;">
+              <div class="t-comment">// Report contents</div>
+              <div><span class="t-key">entries:</span> <span class="t-val-dim">3 chain entries</span></div>
+              <div><span class="t-key">qr_codes:</span> <span class="t-val-dim">per entry</span></div>
+              <div><span class="t-key">report_hash:</span> <span class="t-val-green">"f4a2c8..."</span></div>
+              <div><span class="t-key">report_signed:</span> <span class="t-val-green">"ZKKEY-003-A7F2E1"</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /steps-wrapper -->
+
+<!-- SUMMARY CHAIN -->
+<section class="summary-section">
+  <div class="summary-inner">
+    <div class="summary-label reveal">Complete Protocol</div>
+    <h2 class="summary-title reveal">Six steps. Six enforced constraints.</h2>
+    <p class="summary-sub reveal">
+      Each step enforces a different guarantee. No step relies on trust in the previous one —
+      each is independently auditable by a different party using a different method.
+    </p>
+    <div class="summary-chain reveal">
+      <div class="summary-step">
+        <div class="summary-step-num">Step 01</div>
+        <div class="summary-step-name">PowerVerify™</div>
+        <div class="summary-step-product">Hardware device</div>
+        <div class="summary-step-enforced">Enforced by: Physics</div>
+      </div>
+      <div class="summary-step">
+        <div class="summary-step-num">Step 02</div>
+        <div class="summary-step-name">Capture</div>
+        <div class="summary-step-product">Any imaging tool</div>
+        <div class="summary-step-enforced">Enforced by: Hardware</div>
+      </div>
+      <div class="summary-step">
+        <div class="summary-step-num">Step 03</div>
+        <div class="summary-step-name">TrustSeal™</div>
+        <div class="summary-step-product">Physical + chain</div>
+        <div class="summary-step-enforced">Enforced by: Material + Math</div>
+      </div>
+      <div class="summary-step">
+        <div class="summary-step-num">Step 04</div>
+        <div class="summary-step-name">ZKKey™ Sign</div>
+        <div class="summary-step-product">Hardware attestation</div>
+        <div class="summary-step-enforced">Enforced by: Cryptography</div>
+      </div>
+      <div class="summary-step">
+        <div class="summary-step-num">Step 05</div>
+        <div class="summary-step-name">Chain Record</div>
+        <div class="summary-step-product">ZK-LocalChain™</div>
+        <div class="summary-step-enforced">Enforced by: Math</div>
+      </div>
+      <div class="summary-step">
+        <div class="summary-step-num">Step 06</div>
+        <div class="summary-step-name">PDF Report</div>
+        <div class="summary-step-product">Signed export</div>
+        <div class="summary-step-enforced">Verified by: Anyone</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GUARANTEES -->
+<section class="guarantees-section">
+  <div class="section-inner" style="max-width:1100px;margin:0 auto;">
+    <div style="font-family:var(--mono);font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--green);display:flex;align-items:center;gap:8px;margin-bottom:16px;" class="reveal">
+      <span style="width:20px;height:1px;background:var(--green);display:block;"></span>
+      Protocol Guarantees
+    </div>
+    <h2 style="font-family:var(--display);font-size:clamp(28px,3.5vw,46px);font-weight:700;letter-spacing:-0.02em;margin-bottom:16px;" class="reveal">What the protocol guarantees — and how.</h2>
+    <p style="font-size:16px;color:var(--text-muted);max-width:560px;line-height:1.7;margin-bottom:48px;" class="reveal">
+      Not claims. Not features. Structural facts — each provable by a different method.
+    </p>
+    <div class="guarantees-grid reveal">
+      <div class="guarantee-card">
+        <div class="guarantee-num">01</div>
+        <div class="guarantee-title">The source device was not modified</div>
+        <div class="guarantee-body">Provable by PowerVerify™ continuity test — a multimeter confirms the write path was severed before the workstation was connected. No software claim required.</div>
+      </div>
+      <div class="guarantee-card">
+        <div class="guarantee-num">02</div>
+        <div class="guarantee-title">The captured artifact is unchanged</div>
+        <div class="guarantee-body">The SHA-256 hash in the chain entry can be recomputed against the artifact at any time. If the hash matches, the artifact is byte-identical to what was captured.</div>
+      </div>
+      <div class="guarantee-card">
+        <div class="guarantee-num">03</div>
+        <div class="guarantee-title">The physical item was sealed at this moment</div>
+        <div class="guarantee-body">The TrustSeal™ chain entry binds the seal ID, artifact hash, operator, and timestamp. Seal removal reveals permanent void evidence. The chain entry remains either way.</div>
+      </div>
+      <div class="guarantee-card">
+        <div class="guarantee-num">04</div>
+        <div class="guarantee-title">A human was physically present for each signature</div>
+        <div class="guarantee-body">ZKKey™ requires a physical button press for every signature. No remote command, script, or administrator credential can substitute. The hardware enforces this.</div>
+      </div>
+      <div class="guarantee-card">
+        <div class="guarantee-num">05</div>
+        <div class="guarantee-title">The chain has not been modified since recording</div>
+        <div class="guarantee-body">Any retroactive modification to any chain entry breaks every subsequent hash. The math makes silent tampering computationally impossible — detectable by any party with the chain.</div>
+      </div>
+      <div class="guarantee-card">
+        <div class="guarantee-num">06</div>
+        <div class="guarantee-title">Any party can verify — without ZKNOT™</div>
+        <div class="guarantee-body">Short codes on TrustSeal™ labels and PDF reports resolve at verifyknot.io. No account. No vendor call. No trust in ZKNOT™ required to confirm every guarantee above.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-inner reveal">
+    <div style="font-family:var(--mono);font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--green);display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:24px;">
+      <span style="width:20px;height:1px;background:var(--green);display:block;"></span>
+      Deploy EvidenceProtocol™
+    </div>
+    <h2>Deploy the full protocol in your operation.</h2>
+    <p>
+      EvidenceProtocol™ is available as a complete kit or by product. Contact us
+      to discuss your specific chain-of-custody requirements, volume, and integration needs.
+    </p>
+    <div class="cta-actions">
+      <a href="mailto:ops@zknot.io?subject=EvidenceProtocol%20Inquiry" class="btn-primary">Contact ops@zknot.io</a>
+      <a href="https://verifyknot.io" class="btn-secondary">Verify a Record →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">ZKNOT™</div>
+      <div class="footer-meta">
+        ZKNOT, Inc. — Utah-based SDVOSB · UEI: C4SKW13JPEL5<br/>
+        ops@zknot.io · William Shane Wilkinson, Founder & CEO
+      </div>
+    </div>
+    <div class="footer-right">
+      <a href="/">Home</a>
+      <a href="/#products">Products</a>
+      <a href="https://verifyknot.io">Verify</a>
+      <a href="/docs">Docs</a>
+      <a href="/about">About</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
