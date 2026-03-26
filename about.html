@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — ZKNOT™</title>
+  <meta name="description" content="ZKNOT™ is a Utah-based SDVOSB building cryptographic hardware attestation and chain-of-custody products. Founded by William Shane Wilkinson, U.S. Army veteran." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0b0d;
+      --bg-1: #0f1114;
+      --bg-2: #141720;
+      --bg-card: #111318;
+      --border: rgba(255,255,255,0.07);
+      --border-active: rgba(255,255,255,0.18);
+      --text: #e8eaed;
+      --text-muted: #6b7280;
+      --text-dim: #9ca3af;
+      --accent: #22c55e;
+      --accent-dim: rgba(34,197,94,0.10);
+      --amber: #f59e0b;
+      --blue: #3b82f6;
+      --mono: 'DM Mono', monospace;
+      --sans: 'DM Sans', sans-serif;
+      --display: 'Syne', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999; opacity: 0.4;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px; height: 64px;
+      background: rgba(10,11,13,0.88); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-text { font-family: var(--display); font-size: 18px; font-weight: 800; letter-spacing: 0.05em; color: var(--text); }
+    .nav-logo-text sup { font-size: 10px; font-weight: 400; color: var(--text-muted); vertical-align: super; }
+    .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+    .nav-links a { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--text); }
+    .nav-cta { color: var(--accent) !important; border: 1px solid rgba(34,197,94,0.3); padding: 6px 16px; border-radius: 2px; transition: all 0.2s !important; }
+    .nav-cta:hover { color: #000 !important; background: var(--accent) !important; }
+
+    .breadcrumb {
+      position: fixed; top: 64px; left: 0; right: 0; z-index: 99;
+      padding: 10px 40px;
+      background: rgba(10,11,13,0.7); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 8px;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--text-muted);
+    }
+    .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+    .breadcrumb .sep { opacity: 0.3; }
+    .breadcrumb .current { color: var(--accent); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 80vh;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 130px 40px 72px;
+      position: relative; overflow: hidden;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse 70% 80% at 20% 60%, black 20%, transparent 100%);
+    }
+    .hero-glow {
+      position: absolute; bottom: -100px; left: -100px;
+      width: 700px; height: 500px;
+      background: radial-gradient(ellipse, rgba(34,197,94,0.05) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-inner { position: relative; max-width: 1100px; margin: 0 auto; width: 100%; }
+
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 24px;
+      opacity: 0; animation: fadeUp 0.5s 0.1s ease forwards;
+    }
+    .hero-eyebrow::before { content: ''; width: 20px; height: 1px; background: var(--accent); }
+
+    .hero-headline {
+      font-family: var(--display); font-size: clamp(40px, 6vw, 80px);
+      font-weight: 800; letter-spacing: -0.025em; line-height: 1.05;
+      max-width: 800px; margin-bottom: 28px;
+      opacity: 0; animation: fadeUp 0.6s 0.2s ease forwards;
+    }
+    .hero-sub {
+      font-size: clamp(15px, 1.8vw, 18px); color: var(--text-muted);
+      line-height: 1.75; max-width: 600px;
+      opacity: 0; animation: fadeUp 0.6s 0.35s ease forwards;
+    }
+
+    /* ── REGISTRATION STRIP ── */
+    .reg-strip {
+      background: var(--bg-1);
+      border-bottom: 1px solid var(--border);
+      padding: 0;
+    }
+    .reg-strip-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+    .reg-item {
+      padding: 28px 32px;
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .reg-item:last-child { border-right: none; }
+    .reg-item-label {
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--text-muted);
+    }
+    .reg-item-value {
+      font-family: var(--mono); font-size: 14px; color: var(--text);
+      letter-spacing: 0.04em;
+    }
+    .reg-item-value.active { color: var(--accent); }
+    .reg-item-value.pending { color: var(--amber); }
+
+    /* ── SECTIONS ── */
+    section { padding: 80px 40px; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--accent); display: flex; align-items: center; gap: 8px; margin-bottom: 16px;
+    }
+    .section-label::before { content: ''; width: 20px; height: 1px; background: var(--accent); }
+    .section-title {
+      font-family: var(--display); font-size: clamp(28px, 3.5vw, 46px);
+      font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px;
+    }
+
+    /* ── FOUNDER ── */
+    .founder-section { border-bottom: 1px solid var(--border); }
+    .founder-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 80px; align-items: start; margin-top: 48px;
+    }
+    .founder-left { }
+    .founder-name {
+      font-family: var(--display); font-size: 36px; font-weight: 800;
+      letter-spacing: -0.02em; margin-bottom: 4px;
+    }
+    .founder-title {
+      font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-muted); margin-bottom: 28px;
+    }
+    .founder-bio {
+      font-size: 16px; color: var(--text-dim); line-height: 1.8;
+      margin-bottom: 20px;
+    }
+    .founder-bio p + p { margin-top: 16px; }
+
+    .founder-badges {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px;
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 6px 12px; border-radius: 2px; border: 1px solid;
+    }
+    .badge.green { color: var(--accent); border-color: rgba(34,197,94,0.25); background: rgba(34,197,94,0.06); }
+    .badge.amber { color: var(--amber); border-color: rgba(245,158,11,0.25); background: rgba(245,158,11,0.06); }
+    .badge.blue { color: var(--blue); border-color: rgba(59,130,246,0.25); background: rgba(59,130,246,0.06); }
+    .badge.dim { color: var(--text-muted); border-color: var(--border); background: rgba(255,255,255,0.03); }
+
+    .founder-right { }
+    .founder-sidebar-block {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 4px; overflow: hidden; margin-bottom: 16px;
+    }
+    .founder-sidebar-header {
+      padding: 12px 20px; background: var(--bg-2); border-bottom: 1px solid var(--border);
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text-muted);
+    }
+    .founder-sidebar-body { padding: 20px; }
+    .sidebar-row {
+      display: flex; align-items: flex-start; gap: 16px;
+      padding: 10px 0; border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .sidebar-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .sidebar-key {
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-muted); width: 110px; flex-shrink: 0; padding-top: 1px;
+    }
+    .sidebar-val { color: var(--text-dim); line-height: 1.5; }
+    .sidebar-val.mono { font-family: var(--mono); font-size: 11px; }
+    .sidebar-val.green { color: var(--accent); font-family: var(--mono); font-size: 11px; }
+    .sidebar-val.amber { color: var(--amber); font-family: var(--mono); font-size: 11px; }
+
+    /* ── MISSION ── */
+    .mission-section { background: var(--bg-1); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .mission-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; margin-top: 48px; }
+    .mission-statement {
+      font-family: var(--display); font-size: clamp(22px, 2.5vw, 30px);
+      font-weight: 700; letter-spacing: -0.02em; line-height: 1.35;
+      color: var(--text);
+    }
+    .mission-statement em { color: var(--accent); font-style: normal; }
+    .mission-body { font-size: 15px; color: var(--text-muted); line-height: 1.8; }
+    .mission-body p + p { margin-top: 16px; }
+
+    /* ── SDVOSB SECTION ── */
+    .sdvosb-section { }
+    .sdvosb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 48px; }
+    .sdvosb-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px;
+      padding: 32px; position: relative; overflow: hidden;
+    }
+    .sdvosb-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--accent); }
+    .sdvosb-card-title { font-family: var(--display); font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+    .sdvosb-card-body { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+    .sdvosb-detail {
+      margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border);
+      font-family: var(--mono); font-size: 11px; color: var(--text-muted); line-height: 1.9;
+    }
+    .sdvosb-detail span { color: var(--text-dim); }
+
+    /* ── CONTRACT VEHICLES ── */
+    .contract-section { background: var(--bg-1); border-top: 1px solid var(--border); }
+    .contract-table {
+      width: 100%; border-collapse: collapse;
+      border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
+      margin-top: 48px; font-family: var(--mono);
+    }
+    .contract-table thead th {
+      padding: 14px 24px; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+      text-align: left; background: var(--bg-2); border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+    .contract-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.2s; }
+    .contract-table tbody tr:last-child { border-bottom: none; }
+    .contract-table tbody tr:hover { background: var(--bg-1); }
+    .contract-table tbody td { padding: 16px 24px; font-size: 12px; color: var(--text-muted); }
+    .contract-table tbody td:first-child { color: var(--text-dim); }
+    .status-active { color: var(--accent); }
+    .status-pending { color: var(--amber); }
+    .status-available { color: var(--text-dim); }
+
+    /* ── CONTACT ── */
+    .contact-section { border-top: 1px solid var(--border); }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 48px; }
+    .contact-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 32px;
+    }
+    .contact-card-label {
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 12px;
+    }
+    .contact-card-value {
+      font-family: var(--mono); font-size: 16px; color: var(--accent);
+      text-decoration: none; display: block; margin-bottom: 12px;
+      transition: color 0.2s;
+    }
+    .contact-card-value:hover { color: #16a34a; }
+    .contact-card-body { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+
+    /* ── CTA ── */
+    .cta-section { padding: 100px 40px; text-align: center; position: relative; overflow: hidden; border-top: 1px solid var(--border); }
+    .cta-section::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 600px; height: 400px; background: radial-gradient(ellipse, rgba(34,197,94,0.05) 0%, transparent 70%); }
+    .cta-inner { position: relative; max-width: 600px; margin: 0 auto; }
+    .cta-inner h2 { font-family: var(--display); font-size: clamp(28px,3.5vw,48px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; }
+    .cta-inner p { font-size: 16px; color: var(--text-muted); line-height: 1.7; margin-bottom: 40px; }
+    .cta-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; font-weight: 500; color: #000; background: var(--accent); border: none; padding: 14px 28px; border-radius: 2px; text-decoration: none; transition: all 0.2s; }
+    .btn-primary:hover { background: #16a34a; transform: translateY(-1px); box-shadow: 0 8px 32px rgba(34,197,94,0.28); }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; color: var(--text-muted); background: transparent; border: 1px solid var(--border); padding: 14px 28px; border-radius: 2px; text-decoration: none; transition: all 0.2s; }
+    .btn-secondary:hover { color: var(--text); border-color: var(--border-active); }
+
+    /* ── FOOTER ── */
+    footer { border-top: 1px solid var(--border); padding: 40px; }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+    .footer-brand { font-family: var(--display); font-size: 15px; font-weight: 700; }
+    .footer-meta { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: var(--text-muted); line-height: 1.8; margin-top: 6px; }
+    .footer-right { display: flex; gap: 28px; }
+    .footer-right a { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; color: var(--text-muted); text-decoration: none; text-transform: uppercase; transition: color 0.2s; }
+    .footer-right a:hover { color: var(--text); }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    @media (max-width: 900px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .hero { padding: 120px 20px 56px; }
+      .breadcrumb { padding: 10px 20px; }
+      .reg-strip-inner { grid-template-columns: 1fr 1fr; }
+      .reg-item { border-right: none; border-bottom: 1px solid var(--border); }
+      .reg-item:nth-child(odd) { border-right: 1px solid var(--border); }
+      .founder-grid, .mission-grid, .sdvosb-grid, .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+      section { padding: 56px 20px; }
+      footer { padding: 32px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="2" fill="#111318"/><path d="M8 8L16 16L24 8" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 24L16 16L24 24" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><circle cx="16" cy="16" r="2.5" fill="#22c55e"/></svg>
+    <span class="nav-logo-text">ZKNOT<sup>™</sup></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/#products">Products</a></li>
+    <li><a href="/protocol">Protocol</a></li>
+    <li><a href="/#verticals">Verticals</a></li>
+    <li><a href="/docs">Docs</a></li>
+    <li><a href="/about" class="active">About</a></li>
+    <li><a href="mailto:ops@zknot.io" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="breadcrumb">
+  <a href="/">zknot.io</a>
+  <span class="sep">/</span>
+  <span class="current">About</span>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Company</div>
+    <h1 class="hero-headline">
+      Evidence doesn't lie.<br/>
+      Systems do.
+    </h1>
+    <p class="hero-sub">
+      ZKNOT™ was built on a single premise: if you cannot independently verify a
+      custody record without trusting the vendor, it is not evidence — it is a claim.
+      We build the hardware and software that makes evidence self-proving.
+    </p>
+  </div>
+</section>
+
+<!-- REGISTRATION STRIP -->
+<div class="reg-strip reveal">
+  <div class="reg-strip-inner">
+    <div class="reg-item">
+      <div class="reg-item-label">Entity</div>
+      <div class="reg-item-value">ZKNOT, Inc.</div>
+    </div>
+    <div class="reg-item">
+      <div class="reg-item-label">UEI</div>
+      <div class="reg-item-value mono">C4SKW13JPEL5</div>
+    </div>
+    <div class="reg-item">
+      <div class="reg-item-label">SAM.gov</div>
+      <div class="reg-item-value active">Registered</div>
+    </div>
+    <div class="reg-item">
+      <div class="reg-item-label">SDVOSB / VetCert</div>
+      <div class="reg-item-value pending">SBA Review</div>
+    </div>
+  </div>
+</div>
+
+<!-- FOUNDER -->
+<section class="founder-section">
+  <div class="section-inner">
+    <div class="section-label reveal">Founder</div>
+    <div class="founder-grid">
+      <div class="founder-left reveal">
+        <div class="founder-name">William Shane Wilkinson</div>
+        <div class="founder-title">Founder &amp; CEO — ZKNOT™</div>
+        <div class="founder-bio">
+          <p>
+            Shane is a U.S. Army veteran with a background in Chemical, Biological,
+            Radiological, Nuclear, and Explosives (CBRNe) operations — environments
+            where chain of custody is not a compliance checkbox but a life-safety
+            and legal requirement. That operational experience is the foundation
+            of every design decision at ZKNOT™.
+          </p>
+          <p>
+            The core insight is simple: every evidence integrity system built on
+            software policy can be defeated by anyone with sufficient access.
+            The only trustworthy guarantee is one that is enforced below the software
+            layer — by physics, by cryptography, or by both simultaneously.
+            ZKNOT™ products are designed so that the constraint exists whether or not
+            the system is properly configured, administered, or trusted.
+          </p>
+          <p>
+            Before founding ZKNOT™, Shane developed deep expertise in electronics
+            hardware, firmware engineering, and field-deployable systems — skills
+            that translate directly into the ZKKey™ and PowerVerify™ product lines.
+            ZKNOT™ is incorporated in Utah and registered with SAM.gov as a
+            Service-Disabled Veteran-Owned Small Business.
+          </p>
+        </div>
+        <div class="founder-badges">
+          <div class="badge green">U.S. Army Veteran</div>
+          <div class="badge amber">CBRNe Background</div>
+          <div class="badge blue">Hardware Engineer</div>
+          <div class="badge dim">Utah-Based</div>
+          <div class="badge dim">SDVOSB Founder</div>
+        </div>
+      </div>
+      <div class="founder-right reveal">
+        <div class="founder-sidebar-block">
+          <div class="founder-sidebar-header">Company Registration</div>
+          <div class="founder-sidebar-body">
+            <div class="sidebar-row">
+              <div class="sidebar-key">Entity Name</div>
+              <div class="sidebar-val">ZKNOT, Inc.</div>
+            </div>
+            <div class="sidebar-row">
+              <div class="sidebar-key">State</div>
+              <div class="sidebar-val">Utah</div>
+            </div>
+            <div class="sidebar-row">
+              <div class="sidebar-key">UEI</div>
+              <div class="sidebar-val mono">C4SKW13JPEL5</div>
+            </div>
+            <div class="sidebar-row">
+              <div class="sidebar-key">EIN</div>
+              <div class="sidebar-val mono">36-5165991</div>
+            </div>
+            <div class="sidebar-row">
+              <div class="sidebar-key">SAM.gov</div>
+              <div class="sidebar-val green">Registered</div>
+            </div>
+            <div class="sidebar-row">
+              <div class="sidebar-key">SDVOSB</div>
+              <div class="sidebar-val amber">VetCert — SBA Review</div>
+            </div>
+            <div class="sidebar-row">
+              <div class="sidebar-key">CAGE Code</div>
+              <div class="sidebar-val amber">Pending — DLA</div>
+            </div>
+          </div>
+        </div>
+        <div class="founder-sidebar-block">
+          <div class="founder-sidebar-header">Contact</div>
+          <div class="founder-sidebar-body">
+            <div class="sidebar-row">
+              <div class="sidebar-key">General</div>
+              <div class="sidebar-val mono"><a href="mailto:ops@zknot.io" style="color:var(--accent);text-decoration:none;">ops@zknot.io</a></div>
+            </div>
+            <div class="sidebar-row">
+              <div class="sidebar-key">Contracting</div>
+              <div class="sidebar-val mono"><a href="mailto:ops@zknot.io?subject=Contracting Inquiry" style="color:var(--accent);text-decoration:none;">ops@zknot.io</a></div>
+            </div>
+            <div class="sidebar-row">
+              <div class="sidebar-key">Teaming</div>
+              <div class="sidebar-val mono"><a href="mailto:ops@zknot.io?subject=Teaming Inquiry" style="color:var(--accent);text-decoration:none;">ops@zknot.io</a></div>
+            </div>
+            <div class="sidebar-row">
+              <div class="sidebar-key">Press</div>
+              <div class="sidebar-val mono"><a href="mailto:ops@zknot.io?subject=Press Inquiry" style="color:var(--accent);text-decoration:none;">ops@zknot.io</a></div>
+            </div>
+          </div>
+        </div>
+        <!-- Subtle SVG accent — field equipment aesthetic -->
+        <div style="padding:20px;background:var(--bg-card);border:1px solid var(--border);border-radius:4px;font-family:var(--mono);font-size:11px;color:var(--text-muted);line-height:1.9;">
+          <div style="color:var(--accent);margin-bottom:8px;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;">Current focus</div>
+          <div>→ ZKKey™ firmware bringup</div>
+          <div>→ ATECC608B I²C attestation</div>
+          <div>→ SAM.gov CAGE assignment</div>
+          <div>→ SBIR Phase I preparation</div>
+          <div>→ Contracting officer outreach</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MISSION -->
+<section class="mission-section">
+  <div class="section-inner">
+    <div class="section-label reveal">Mission</div>
+    <div class="mission-grid reveal">
+      <div>
+        <div class="mission-statement">
+          We build the systems that make evidence <em>self-proving</em> — independent of any vendor, administrator, or institution.
+        </div>
+      </div>
+      <div class="mission-body">
+        <p>
+          Chain of custody has been a software problem for decades. Software systems
+          can be misconfigured, exploited, or simply lied about. When a forensic
+          examiner testifies that a write-blocker was in place, they are testifying
+          to a software state — which is ultimately a claim, not a proof.
+        </p>
+        <p>
+          ZKNOT™ changes the enforcement layer. PowerVerify™ makes write-blocking
+          a physical fact testable with a multimeter. ZKKey™ makes unauthorized
+          signing structurally impossible. ZK-LocalChain™ makes retroactive tampering
+          mathematically detectable by anyone. TrustSeal™ binds physical and digital
+          custody at a single atomic event.
+        </p>
+        <p>
+          The result is a chain of custody where the defense attorney, the judge,
+          and the opposing expert can all verify independently — without trusting ZKNOT™,
+          without calling our engineers, and without understanding cryptography.
+          The short code resolves. The hash matches. The seal voided or it didn't.
+          Physics enforces. Math proves. You verify.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SDVOSB -->
+<section class="sdvosb-section">
+  <div class="section-inner">
+    <div class="section-label reveal">SDVOSB Status</div>
+    <h2 class="section-title reveal">Service-Disabled Veteran-Owned Small Business</h2>
+    <div class="sdvosb-grid reveal">
+      <div class="sdvosb-card">
+        <div class="sdvosb-card-title">What SDVOSB means for contracting</div>
+        <div class="sdvosb-card-body">
+          Federal agencies have set-aside contracting authority for SDVOSBs under
+          FAR 19.14. The VA additionally operates the Veterans First Contracting
+          Program, giving SDVOSBs priority consideration. ZKNOT™'s SDVOSB status
+          makes it eligible for sole-source awards up to $4.5M (services) and
+          $7.5M (manufacturing) without competitive bidding requirements.
+        </div>
+        <div class="sdvosb-detail">
+          VetCert Application: <span>SBA Review — in progress</span><br/>
+          SAM.gov Registration: <span style="color:var(--accent)">Active</span><br/>
+          CAGE Code: <span style="color:var(--amber)">Pending — DLA assignment</span>
+        </div>
+      </div>
+      <div class="sdvosb-card">
+        <div class="sdvosb-card-title">Teaming and subcontracting</div>
+        <div class="sdvosb-card-body">
+          ZKNOT™ is available as a prime contractor for SDVOSB set-asides and
+          as a subcontractor or teaming partner on larger vehicles. We are actively
+          seeking teaming arrangements with system integrators pursuing DoD, DHS,
+          and DOJ contracts where hardware attestation, forensic evidence integrity,
+          or chain-of-custody requirements are present.
+        </div>
+        <div class="sdvosb-detail">
+          Primary NAICS: <span>334419 — Other Electronic Component Mfg.</span><br/>
+          Secondary NAICS: <span>541519 — Other Computer Related Services</span><br/>
+          Contact: <span><a href="mailto:ops@zknot.io?subject=Teaming" style="color:var(--accent);text-decoration:none;">ops@zknot.io</a></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTRACT VEHICLES -->
+<section class="contract-section">
+  <div class="section-inner">
+    <div class="section-label reveal">Contracting</div>
+    <h2 class="section-title reveal">Acquisition pathways</h2>
+    <p style="font-size:16px;color:var(--text-muted);max-width:560px;line-height:1.7;margin-bottom:0;" class="reveal">
+      Current and anticipated contract vehicles for government acquisition of ZKNOT™ products.
+    </p>
+    <table class="contract-table reveal">
+      <thead>
+        <tr>
+          <th>Vehicle / Pathway</th>
+          <th>Type</th>
+          <th>Status</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>SAM.gov Direct Award</td>
+          <td>SDVOSB Set-Aside</td>
+          <td class="status-active">Available</td>
+          <td>Sole-source eligible upon CAGE assignment</td>
+        </tr>
+        <tr>
+          <td>SBIR Phase I</td>
+          <td>R&amp;D Contract</td>
+          <td class="status-pending">Preparing</td>
+          <td>DoD / DHS topics — hardware attestation</td>
+        </tr>
+        <tr>
+          <td>GSA Schedule 70</td>
+          <td>IT Products &amp; Services</td>
+          <td class="status-available">Planned — 2026</td>
+          <td>Post-CAGE assignment</td>
+        </tr>
+        <tr>
+          <td>DHS SAFETY Act</td>
+          <td>Technology Designation</td>
+          <td class="status-available">Under evaluation</td>
+          <td>Anti-terrorism technology designation</td>
+        </tr>
+        <tr>
+          <td>Teaming / Subcontract</td>
+          <td>Prime contractor sub</td>
+          <td class="status-active">Available now</td>
+          <td>Contact ops@zknot.io</td>
+        </tr>
+        <tr>
+          <td>Direct Purchase / Pilot</td>
+          <td>Commercial</td>
+          <td class="status-active">Available now</td>
+          <td>Hardware pilot units — limited qty</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section">
+  <div class="section-inner">
+    <div class="section-label reveal">Get in Touch</div>
+    <h2 class="section-title reveal">One inbox. Fast response.</h2>
+    <p style="font-size:16px;color:var(--text-muted);max-width:520px;line-height:1.7;margin-bottom:0;" class="reveal">
+      Whether you're a contracting officer, a teaming partner, a journalist, or a pilot customer — start here.
+    </p>
+    <div class="contact-grid reveal">
+      <div class="contact-card">
+        <div class="contact-card-label">General &amp; Contracting</div>
+        <a href="mailto:ops@zknot.io" class="contact-card-value">ops@zknot.io</a>
+        <div class="contact-card-body">
+          For government contracting inquiries, teaming discussions, pilot unit requests,
+          SBIR teaming, and press. Response within one business day.
+        </div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-card-label">Verify a Record</div>
+        <a href="https://verifyknot.io" class="contact-card-value">verifyknot.io</a>
+        <div class="contact-card-body">
+          Public attestation record verification. Enter any ZKNOT™ short code to
+          retrieve the full chain entry — no account, no login required.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-inner reveal">
+    <div style="font-family:var(--mono);font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:24px;">
+      <span style="width:20px;height:1px;background:var(--accent);display:block;"></span>
+      Work with us
+    </div>
+    <h2>Ready to deploy verifiable evidence infrastructure?</h2>
+    <p>
+      Contact us for pilot units, teaming conversations, contracting officer briefings,
+      or technical integration discussions.
+    </p>
+    <div class="cta-actions">
+      <a href="mailto:ops@zknot.io" class="btn-primary">Contact ops@zknot.io</a>
+      <a href="/" class="btn-secondary">View Products →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">ZKNOT™</div>
+      <div class="footer-meta">
+        ZKNOT, Inc. — Utah-based SDVOSB · UEI: C4SKW13JPEL5 · EIN: 36-5165991<br/>
+        ops@zknot.io · William Shane Wilkinson, Founder &amp; CEO
+      </div>
+    </div>
+    <div class="footer-right">
+      <a href="/">Home</a>
+      <a href="/#products">Products</a>
+      <a href="/protocol">Protocol</a>
+      <a href="https://verifyknot.io">Verify</a>
+      <a href="/docs">Docs</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+    });
+  }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
