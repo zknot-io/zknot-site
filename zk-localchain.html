@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZK-LocalChain™ — Offline Append-Only Ledger | ZKNOT™</title>
+  <meta name="description" content="ZK-LocalChain™ is an offline-capable, append-only hash-chained ledger. No central authority. Independently verifiable." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:#0a0b0d;--bg-1:#0f1114;--bg-2:#141720;--bg-card:#111318;
+      --border:rgba(255,255,255,0.07);--border-active:rgba(255,255,255,0.18);
+      --text:#e8eaed;--text-muted:#6b7280;--text-dim:#9ca3af;
+      --accent:#3b82f6;--accent-dim:rgba(59,130,246,0.10);
+      --green:#22c55e;--amber:#f59e0b;
+      --mono:'DM Mono',monospace;--sans:'DM Sans',sans-serif;--display:'Syne',sans-serif;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+    body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.4;}
+
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:64px;background:rgba(10,11,13,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+    .nav-logo-text{font-family:var(--display);font-size:18px;font-weight:800;letter-spacing:0.05em;color:var(--text);}
+    .nav-logo-text sup{font-size:10px;font-weight:400;color:var(--text-muted);vertical-align:super;}
+    .nav-links{display:flex;align-items:center;gap:32px;list-style:none;}
+    .nav-links a{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color 0.2s;}
+    .nav-links a:hover{color:var(--text);}
+    .nav-cta{color:var(--green)!important;border:1px solid rgba(34,197,94,0.3);padding:6px 16px;border-radius:2px;}
+    .nav-cta:hover{color:#000!important;background:var(--green)!important;}
+    .breadcrumb{position:fixed;top:64px;left:0;right:0;z-index:99;padding:10px 40px;background:rgba(10,11,13,0.7);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:0.1em;color:var(--text-muted);}
+    .breadcrumb a{color:var(--text-muted);text-decoration:none;}
+    .breadcrumb .sep{opacity:0.3;}
+    .breadcrumb .current{color:var(--accent);}
+
+    .product-hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:140px 60px 80px;gap:80px;max-width:1200px;margin:0 auto;position:relative;}
+    .hero-bg-lc{position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse 80% 60% at 30% 40%,black 20%,transparent 100%);pointer-events:none;}
+    .hero-glow-lc{position:absolute;top:-100px;left:-100px;width:600px;height:600px;background:radial-gradient(ellipse,rgba(59,130,246,0.06) 0%,transparent 70%);pointer-events:none;}
+
+    .product-tag{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:24px;opacity:0;animation:fadeUp 0.5s 0.1s ease forwards;}
+    .product-tag::before{content:'';width:20px;height:1px;background:var(--accent);}
+    .product-name{font-family:var(--display);font-size:clamp(40px,6vw,76px);font-weight:800;letter-spacing:-0.03em;line-height:0.95;color:var(--text);margin-bottom:8px;opacity:0;animation:fadeUp 0.6s 0.15s ease forwards;}
+    .product-name sup{font-size:0.3em;vertical-align:super;font-weight:500;color:var(--text-muted);}
+    .product-tagline{font-family:var(--mono);font-size:13px;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:32px;opacity:0;animation:fadeUp 0.6s 0.25s ease forwards;}
+    .product-desc{font-size:17px;line-height:1.75;color:var(--text-dim);max-width:480px;margin-bottom:40px;opacity:0;animation:fadeUp 0.6s 0.35s ease forwards;}
+    .hero-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap;opacity:0;animation:fadeUp 0.6s 0.45s ease forwards;}
+    .btn-primary{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:13px;letter-spacing:0.06em;font-weight:500;color:#fff;background:var(--accent);border:none;padding:13px 26px;border-radius:2px;text-decoration:none;cursor:pointer;transition:all 0.2s;}
+    .btn-primary:hover{background:#2563eb;transform:translateY(-1px);box-shadow:0 8px 32px rgba(59,130,246,0.28);}
+    .btn-secondary{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:13px;letter-spacing:0.06em;color:var(--text-muted);background:transparent;border:1px solid var(--border);padding:13px 26px;border-radius:2px;text-decoration:none;transition:all 0.2s;}
+    .btn-secondary:hover{color:var(--text);border-color:var(--border-active);}
+
+    .hero-right{opacity:0;animation:fadeUp 0.8s 0.3s ease forwards;display:flex;align-items:center;justify-content:center;}
+    .chain-diagram{width:100%;max-width:380px;}
+
+    section{padding:80px 40px;}
+    .section-inner{max-width:1100px;margin:0 auto;}
+    .section-label{font-family:var(--mono);font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:8px;margin-bottom:16px;}
+    .section-label::before{content:'';width:20px;height:1px;background:var(--accent);}
+    .section-title{font-family:var(--display);font-size:clamp(28px,3.5vw,46px);font-weight:700;letter-spacing:-0.02em;margin-bottom:16px;}
+    .section-sub{font-size:16px;color:var(--text-muted);max-width:560px;line-height:1.7;margin-bottom:56px;}
+
+    /* JSON SCHEMA DISPLAY */
+    .schema-section{background:var(--bg-1);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+    .schema-display{margin-top:48px;background:var(--bg);border:1px solid var(--border);border-radius:4px;overflow:hidden;}
+    .schema-bar{display:flex;align-items:center;gap:8px;padding:12px 20px;background:var(--bg-2);border-bottom:1px solid var(--border);}
+    .schema-bar-dot{width:10px;height:10px;border-radius:50%;}
+    .schema-bar-label{font-family:var(--mono);font-size:11px;color:var(--text-muted);letter-spacing:0.08em;margin-left:8px;}
+    .schema-code{padding:28px;font-family:var(--mono);font-size:12px;line-height:1.8;overflow-x:auto;}
+    .k{color:#9ca3af;} .s{color:#22c55e;} .n{color:#3b82f6;} .b{color:#f59e0b;} .cm{color:#4b5563;font-style:italic;}
+
+    .specs-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-top:48px;}
+    .spec-row{display:flex;align-items:flex-start;gap:24px;padding:18px 24px;background:var(--bg-card);border-bottom:1px solid var(--border);}
+    .spec-row:nth-last-child(-n+2){border-bottom:none;}
+    .spec-key{font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);width:160px;flex-shrink:0;padding-top:2px;}
+    .spec-val{font-size:14px;color:var(--text);line-height:1.6;}
+    .spec-val .mono{font-family:var(--mono);font-size:12px;color:var(--text-dim);}
+
+    .constraint-box{border:1px solid rgba(59,130,246,0.2);border-radius:4px;background:rgba(59,130,246,0.04);padding:40px 48px;margin-top:48px;}
+    .constraint-title{font-family:var(--display);font-size:24px;font-weight:700;color:var(--accent);margin-bottom:20px;}
+    .constraint-list{display:flex;flex-direction:column;gap:14px;}
+    .constraint-item{display:flex;align-items:flex-start;gap:16px;font-size:15px;color:var(--text-dim);line-height:1.65;}
+    .constraint-item::before{content:'//';font-family:var(--mono);font-size:12px;color:var(--accent);flex-shrink:0;padding-top:3px;}
+
+    .product-cta{text-align:center;padding:100px 40px;position:relative;overflow:hidden;}
+    .product-cta::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:400px;background:radial-gradient(ellipse,rgba(59,130,246,0.05) 0%,transparent 70%);}
+    .product-cta h2{font-family:var(--display);font-size:clamp(28px,3.5vw,48px);font-weight:700;letter-spacing:-0.02em;margin-bottom:16px;position:relative;}
+    .product-cta p{font-size:16px;color:var(--text-muted);line-height:1.7;max-width:520px;margin:0 auto 40px;position:relative;}
+    .cta-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;position:relative;}
+
+    .next-products{background:var(--bg-1);border-top:1px solid var(--border);padding:60px 40px;}
+    .next-label{font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:24px;}
+    .next-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden;}
+    .next-card{background:var(--bg-card);padding:28px 24px;text-decoration:none;color:inherit;display:block;transition:background 0.2s;position:relative;}
+    .next-card:hover{background:var(--bg-2);}
+    .next-card-tag{font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;}
+    .next-card-name{font-family:var(--display);font-size:20px;font-weight:700;margin-bottom:8px;}
+    .next-card-desc{font-size:13px;color:var(--text-muted);line-height:1.6;}
+    .next-card-arrow{position:absolute;top:28px;right:24px;color:var(--text-muted);font-size:16px;transition:transform 0.2s;}
+    .next-card:hover .next-card-arrow{transform:translate(3px,-3px);}
+
+    footer{border-top:1px solid var(--border);padding:40px;}
+    .footer-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;}
+    .footer-brand{font-family:var(--display);font-size:15px;font-weight:700;}
+    .footer-meta{font-family:var(--mono);font-size:10px;letter-spacing:0.1em;color:var(--text-muted);line-height:1.8;margin-top:6px;}
+    .footer-right{display:flex;gap:28px;}
+    .footer-right a{font-family:var(--mono);font-size:11px;letter-spacing:0.08em;color:var(--text-muted);text-decoration:none;text-transform:uppercase;transition:color 0.2s;}
+    .footer-right a:hover{color:var(--text);}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s ease,transform 0.7s ease;}
+    .reveal.visible{opacity:1;transform:none;}
+
+    @media(max-width:900px){
+      nav{padding:0 20px;}.nav-links{display:none;}
+      .product-hero{grid-template-columns:1fr;padding:130px 20px 60px;gap:40px;}
+      .hero-right{display:none;}
+      .specs-grid{grid-template-columns:1fr;}
+      .next-grid{grid-template-columns:1fr;}
+      section{padding:56px 20px;}
+      .next-products{padding:48px 20px;}
+      .breadcrumb{padding:10px 20px;}
+      footer{padding:32px 20px;}
+      .constraint-box{padding:28px 24px;}
+    }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="/" class="nav-logo">
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="2" fill="#111318"/><path d="M8 8L16 16L24 8" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 24L16 16L24 24" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><circle cx="16" cy="16" r="2.5" fill="#22c55e"/></svg>
+    <span class="nav-logo-text">ZKNOT<sup>™</sup></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/#products">Products</a></li><li><a href="/#protocol">Protocol</a></li>
+    <li><a href="/#verticals">Verticals</a></li><li><a href="/docs">Docs</a></li>
+    <li><a href="/about">About</a></li><li><a href="mailto:ops@zknot.io" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+<div class="breadcrumb">
+  <a href="/">zknot.io</a><span class="sep">/</span>
+  <a href="/#products">Products</a><span class="sep">/</span>
+  <span class="current">ZK-LocalChain™</span>
+</div>
+
+<div style="position:relative;overflow:hidden;">
+  <div class="hero-bg-lc"></div>
+  <div style="position:absolute;inset:0;pointer-events:none;"><div class="hero-glow-lc"></div></div>
+  <div class="product-hero">
+    <div>
+      <div class="product-tag">Offline Ledger · Layer 02</div>
+      <h1 class="product-name">ZK-LocalChain<sup>™</sup></h1>
+      <div class="product-tagline">Offline-capable append-only hash-chained ledger</div>
+      <p class="product-desc">
+        No central authority. No internet dependency. No deletion. No edit.
+        Every record is mathematically bound to every record before it.
+        Any party with a single exported entry can verify the entire chain independently
+        — without ever contacting ZKNOT™.
+      </p>
+      <div class="hero-actions">
+        <a href="mailto:ops@zknot.io?subject=ZK-LocalChain Inquiry" class="btn-primary">Request Access</a>
+        <a href="/docs#localchain" class="btn-secondary">Chain Format Spec →</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <!-- Chain visualization -->
+      <svg class="chain-diagram" viewBox="0 0 360 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Block 41885 -->
+        <rect x="40" y="20" width="280" height="80" rx="4" fill="#111318" stroke="rgba(59,130,246,0.25)" stroke-width="1.5"/>
+        <text x="56" y="44" font-family="DM Mono, monospace" font-size="9" fill="#6b7280" letter-spacing="1">BLOCK #00041885</text>
+        <text x="56" y="62" font-family="DM Mono, monospace" font-size="10" fill="#e8eaed">COMBINED_SESSION</text>
+        <text x="56" y="78" font-family="DM Mono, monospace" font-size="8" fill="#3b82f6">a3f8c1d2e4b5f9a0c7d3e2f1b8a4c6d9...</text>
+        <text x="290" y="44" text-anchor="end" font-family="DM Mono, monospace" font-size="8" fill="#22c55e">✓ VALID</text>
+
+        <!-- Chain link -->
+        <line x1="180" y1="100" x2="180" y2="140" stroke="rgba(59,130,246,0.3)" stroke-width="2" stroke-dasharray="3 3"/>
+        <rect x="164" y="115" width="32" height="10" rx="2" fill="rgba(59,130,246,0.1)" stroke="rgba(59,130,246,0.2)" stroke-width="1"/>
+        <text x="180" y="123" text-anchor="middle" font-family="DM Mono, monospace" font-size="7" fill="#3b82f6">HASH</text>
+
+        <!-- Block 41886 -->
+        <rect x="40" y="140" width="280" height="80" rx="4" fill="#111318" stroke="rgba(59,130,246,0.25)" stroke-width="1.5"/>
+        <text x="56" y="164" font-family="DM Mono, monospace" font-size="9" fill="#6b7280" letter-spacing="1">BLOCK #00041886</text>
+        <text x="56" y="182" font-family="DM Mono, monospace" font-size="10" fill="#e8eaed">TRUSTSEAL_EVENT</text>
+        <text x="56" y="198" font-family="DM Mono, monospace" font-size="8" fill="#3b82f6">c7d3e2f1b8a4c6d9e0f2b3c5d7a8e1f4...</text>
+        <text x="290" y="164" text-anchor="end" font-family="DM Mono, monospace" font-size="8" fill="#22c55e">✓ VALID</text>
+
+        <line x1="180" y1="220" x2="180" y2="260" stroke="rgba(59,130,246,0.3)" stroke-width="2" stroke-dasharray="3 3"/>
+        <rect x="164" y="235" width="32" height="10" rx="2" fill="rgba(59,130,246,0.1)" stroke="rgba(59,130,246,0.2)" stroke-width="1"/>
+        <text x="180" y="243" text-anchor="middle" font-family="DM Mono, monospace" font-size="7" fill="#3b82f6">HASH</text>
+
+        <!-- Block 41887 (current) -->
+        <rect x="40" y="260" width="280" height="80" rx="4" fill="#0f1520" stroke="rgba(59,130,246,0.5)" stroke-width="2"/>
+        <rect x="40" y="260" width="280" height="3" rx="2" fill="#3b82f6"/>
+        <text x="56" y="284" font-family="DM Mono, monospace" font-size="9" fill="#3b82f6" letter-spacing="1">BLOCK #00041887 ← LATEST</text>
+        <text x="56" y="302" font-family="DM Mono, monospace" font-size="10" fill="#e8eaed">ZKKEY_SIGNATURE</text>
+        <text x="56" y="318" font-family="DM Mono, monospace" font-size="8" fill="#3b82f6">e0f2b3c5d7a8e1f4b2c9d0e3f6a7b1c4...</text>
+        <text x="290" y="284" text-anchor="end" font-family="DM Mono, monospace" font-size="8" fill="#22c55e">✓ VALID</text>
+
+        <!-- Offline badge -->
+        <rect x="40" y="370" width="130" height="32" rx="3" fill="rgba(34,197,94,0.06)" stroke="rgba(34,197,94,0.2)" stroke-width="1"/>
+        <text x="105" y="388" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="#22c55e" letter-spacing="1">OFFLINE-CAPABLE</text>
+
+        <!-- Independent verify badge -->
+        <rect x="190" y="370" width="130" height="32" rx="3" fill="rgba(59,130,246,0.06)" stroke="rgba(59,130,246,0.2)" stroke-width="1"/>
+        <text x="255" y="388" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="#3b82f6" letter-spacing="1">INDEPENDENTLY</text>
+
+        <rect x="40" y="416" width="130" height="32" rx="3" fill="rgba(245,158,11,0.05)" stroke="rgba(245,158,11,0.2)" stroke-width="1"/>
+        <text x="105" y="434" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="#f59e0b" letter-spacing="1">APPEND-ONLY</text>
+
+        <rect x="190" y="416" width="130" height="32" rx="3" fill="rgba(59,130,246,0.06)" stroke="rgba(59,130,246,0.2)" stroke-width="1"/>
+        <text x="255" y="434" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="#3b82f6" letter-spacing="1">VERIFIABLE</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- SCHEMA -->
+<section class="schema-section">
+  <div class="section-inner">
+    <div class="section-label reveal">Attestation Artifact</div>
+    <h2 class="section-title reveal">The chain entry format — open and auditable</h2>
+    <p class="section-sub reveal">Every chain entry follows a published JSON schema. Any party can parse, verify, and audit a chain export with nothing but an internet connection and a SHA-256 library.</p>
+    <div class="schema-display reveal">
+      <div class="schema-bar">
+        <div class="schema-bar-dot" style="background:#ef4444"></div>
+        <div class="schema-bar-dot" style="background:#f59e0b"></div>
+        <div class="schema-bar-dot" style="background:#22c55e"></div>
+        <div class="schema-bar-label">attestation_artifact.json — ZK-LocalChain™ v1</div>
+      </div>
+      <div class="schema-code">
+<span class="k">{</span><br/>
+&nbsp;&nbsp;<span class="s">"schema_version"</span><span class="k">:</span> <span class="s">"1.0"</span><span class="k">,</span><br/>
+&nbsp;&nbsp;<span class="s">"short_code"</span><span class="k">:</span> <span class="s">"ZK-4X9R-KM2"</span><span class="k">,</span>&nbsp;&nbsp;<span class="cm">// human-readable, public</span><br/>
+&nbsp;&nbsp;<span class="s">"artifact_type"</span><span class="k">:</span> <span class="s">"COMBINED_SESSION"</span><span class="k">,</span><br/>
+&nbsp;&nbsp;<span class="s">"device_id"</span><span class="k">:</span> <span class="s">"ZKKEY-003-A7F2E1"</span><span class="k">,</span><br/>
+&nbsp;&nbsp;<span class="s">"signed_at"</span><span class="k">:</span> <span class="s">"2026-03-14T09:22:11Z"</span><span class="k">,</span><br/>
+&nbsp;&nbsp;<span class="s">"chain_position"</span><span class="k">:</span> <span class="n">41887</span><span class="k">,</span><br/>
+&nbsp;&nbsp;<span class="s">"chain_length_at_signing"</span><span class="k">:</span> <span class="n">41887</span><span class="k">,</span><br/>
+&nbsp;&nbsp;<span class="s">"prev_hash"</span><span class="k">:</span> <span class="s">"c7d3e2f1b8a4c6d9e0f2b3c5d7a8e1f4b2c9..."</span><span class="k">,</span><br/>
+&nbsp;&nbsp;<span class="s">"artifact_hash"</span><span class="k">:</span> <span class="s">"a3f8c1d2e4b5f9a0c7d3e2f1b8a4c6d9e0f2..."</span><span class="k">,</span>&nbsp;&nbsp;<span class="cm">// SHA-256</span><br/>
+&nbsp;&nbsp;<span class="s">"entry_hash"</span><span class="k">:</span> <span class="s">"e0f2b3c5d7a8e1f4b2c9d0e3f6a7b1c4d5e8..."</span><span class="k">,</span>&nbsp;&nbsp;<span class="cm">// hash of this entry</span><br/>
+&nbsp;&nbsp;<span class="s">"device_signature"</span><span class="k">:</span> <span class="k">{</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="s">"algorithm"</span><span class="k">:</span> <span class="s">"ECDSA-P256"</span><span class="k">,</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="s">"public_key_fingerprint"</span><span class="k">:</span> <span class="s">"3a:7c:f1:..."</span><span class="k">,</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="s">"signature"</span><span class="k">:</span> <span class="s">"MEQCIBx..."</span><br/>
+&nbsp;&nbsp;<span class="k">}</span><span class="k">,</span><br/>
+&nbsp;&nbsp;<span class="s">"verification_url"</span><span class="k">:</span> <span class="s">"https://verifyknot.io/ZK-4X9R-KM2"</span><br/>
+<span class="k">}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPECS -->
+<section>
+  <div class="section-inner">
+    <div class="section-label reveal">Specifications</div>
+    <h2 class="section-title reveal">Built for environments without network assumptions</h2>
+    <p class="section-sub reveal">Full chain operation with zero cloud dependency.</p>
+    <div class="specs-grid reveal">
+      <div class="spec-row"><div class="spec-key">Ledger Type</div><div class="spec-val">Append-only, hash-chained<br/><span class="mono">No delete, no edit, no reorder</span></div></div>
+      <div class="spec-row"><div class="spec-key">Hash Algorithm</div><div class="spec-val">SHA-256 per entry<br/><span class="mono">Chain integrity verifiable from any node</span></div></div>
+      <div class="spec-row"><div class="spec-key">Connectivity</div><div class="spec-val">Offline-capable<br/><span class="mono">Sync on reconnect, no data loss</span></div></div>
+      <div class="spec-row"><div class="spec-key">Authority Model</div><div class="spec-val">No central authority required<br/><span class="mono">Any exported entry is self-verifying</span></div></div>
+      <div class="spec-row"><div class="spec-key">Export Format</div><div class="spec-val">JSON (attestation_artifact v1)<br/><span class="mono">Signed PDF report</span></div></div>
+      <div class="spec-row"><div class="spec-key">Public Verification</div><div class="spec-val">verifyknot.io<br/><span class="mono">No login, no account</span></div></div>
+      <div class="spec-row"><div class="spec-key">Signing Integration</div><div class="spec-val">ZKKey™ native<br/><span class="mono">Hardware-attested entries only</span></div></div>
+      <div class="spec-row"><div class="spec-key">Storage</div><div class="spec-val">Local flash · W25Q series<br/><span class="mono">Encrypted at rest</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONSTRAINTS -->
+<section style="background:var(--bg-1);border-top:1px solid var(--border);">
+  <div class="section-inner">
+    <div class="section-label reveal">Structural Constraints</div>
+    <h2 class="section-title reveal">What ZK-LocalChain™ cannot do</h2>
+    <div class="constraint-box reveal">
+      <div class="constraint-title">By design, ZK-LocalChain™ cannot:</div>
+      <div class="constraint-list">
+        <div class="constraint-item">Delete any chain entry — the append-only structure has no delete operation</div>
+        <div class="constraint-item">Edit any prior chain entry without breaking every subsequent entry hash</div>
+        <div class="constraint-item">Accept an unsigned entry — ZKKey™ hardware attestation is required at write time</div>
+        <div class="constraint-item">Produce a valid chain export that conceals a gap or reordering in chain positions</div>
+        <div class="constraint-item">Require ZKNOT™ infrastructure to verify — any exported entry is independently verifiable</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="product-cta">
+  <h2>Deploy ZK-LocalChain™ in your evidence workflow</h2>
+  <p>Available as embedded firmware for ZKKey™, standalone edge appliance, or SDK for integration into existing forensic toolchains.</p>
+  <div class="cta-actions">
+    <a href="mailto:ops@zknot.io?subject=ZK-LocalChain%20Inquiry" class="btn-primary">Contact ops@zknot.io</a>
+    <a href="/docs#localchain" class="btn-secondary">Chain Format Spec →</a>
+  </div>
+</section>
+
+<div class="next-products">
+  <div class="section-inner">
+    <div class="next-label">Also in the ZKNOT™ product line</div>
+    <div class="next-grid">
+      <a href="/products/zkkey" class="next-card"><div class="next-card-arrow">↗</div><div class="next-card-tag">Signing Hardware</div><div class="next-card-name">ZKKey™</div><div class="next-card-desc">Human-gated signing device. Post-nonce enforcement.</div></a>
+      <a href="/products/powerverify" class="next-card"><div class="next-card-arrow">↗</div><div class="next-card-tag">Data Path Control</div><div class="next-card-name">PowerVerify™</div><div class="next-card-desc">Physical write-path elimination. Zero firmware.</div></a>
+      <a href="/products/trustseal" class="next-card"><div class="next-card-arrow">↗</div><div class="next-card-tag">Physical Binding</div><div class="next-card-name">TrustSeal™</div><div class="next-card-desc">Tamper-evident seal cryptographically bound to chain.</div></a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div><div class="footer-brand">ZKNOT™</div><div class="footer-meta">ZKNOT, Inc. — Utah-based SDVOSB · UEI: C4SKW13JPEL5<br/>ops@zknot.io · William Shane Wilkinson, Founder & CEO</div></div>
+    <div class="footer-right"><a href="/">Home</a><a href="/#products">Products</a><a href="https://verifyknot.io">Verify</a><a href="/docs">Docs</a><a href="/about">About</a></div>
+  </div>
+</footer>
+<script>
+  const reveals=document.querySelectorAll('.reveal');
+  const observer=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target);}});},{threshold:0.07,rootMargin:'0px 0px -40px 0px'});
+  reveals.forEach(el=>observer.observe(el));
+</script>
+</body>
+</html>

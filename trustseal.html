@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TrustSeal™ — Cryptographic Physical Tamper Evidence | ZKNOT™</title>
+  <meta name="description" content="TrustSeal™ is a tamper-evident physical seal cryptographically bound to the chain at the exact moment of application." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:#0a0b0d;--bg-1:#0f1114;--bg-2:#141720;--bg-card:#111318;
+      --border:rgba(255,255,255,0.07);--border-active:rgba(255,255,255,0.18);
+      --text:#e8eaed;--text-muted:#6b7280;--text-dim:#9ca3af;
+      --accent:#a855f7;--accent-dim:rgba(168,85,247,0.10);
+      --green:#22c55e;--amber:#f59e0b;--blue:#3b82f6;
+      --mono:'DM Mono',monospace;--sans:'DM Sans',sans-serif;--display:'Syne',sans-serif;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+    body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.4;}
+
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:64px;background:rgba(10,11,13,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+    .nav-logo-text{font-family:var(--display);font-size:18px;font-weight:800;letter-spacing:0.05em;color:var(--text);}
+    .nav-logo-text sup{font-size:10px;font-weight:400;color:var(--text-muted);vertical-align:super;}
+    .nav-links{display:flex;align-items:center;gap:32px;list-style:none;}
+    .nav-links a{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color 0.2s;}
+    .nav-links a:hover{color:var(--text);}
+    .nav-cta{color:var(--green)!important;border:1px solid rgba(34,197,94,0.3);padding:6px 16px;border-radius:2px;}
+    .nav-cta:hover{color:#000!important;background:var(--green)!important;}
+    .breadcrumb{position:fixed;top:64px;left:0;right:0;z-index:99;padding:10px 40px;background:rgba(10,11,13,0.7);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:0.1em;color:var(--text-muted);}
+    .breadcrumb a{color:var(--text-muted);text-decoration:none;}
+    .breadcrumb .sep{opacity:0.3;}
+    .breadcrumb .current{color:var(--accent);}
+
+    .product-hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:140px 60px 80px;gap:80px;max-width:1200px;margin:0 auto;position:relative;}
+    .hero-glow-ts{position:absolute;top:-50px;right:-100px;width:600px;height:600px;background:radial-gradient(ellipse,rgba(168,85,247,0.06) 0%,transparent 70%);pointer-events:none;}
+    .hero-bg-ts{position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse 80% 60% at 70% 40%,black 20%,transparent 100%);pointer-events:none;}
+
+    .product-tag{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:24px;opacity:0;animation:fadeUp 0.5s 0.1s ease forwards;}
+    .product-tag::before{content:'';width:20px;height:1px;background:var(--accent);}
+    .product-name{font-family:var(--display);font-size:clamp(52px,7.5vw,96px);font-weight:800;letter-spacing:-0.03em;line-height:0.95;color:var(--text);margin-bottom:8px;opacity:0;animation:fadeUp 0.6s 0.15s ease forwards;}
+    .product-name sup{font-size:0.3em;vertical-align:super;font-weight:500;color:var(--text-muted);}
+    .product-tagline{font-family:var(--mono);font-size:13px;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:32px;opacity:0;animation:fadeUp 0.6s 0.25s ease forwards;}
+    .product-desc{font-size:17px;line-height:1.75;color:var(--text-dim);max-width:480px;margin-bottom:40px;opacity:0;animation:fadeUp 0.6s 0.35s ease forwards;}
+    .hero-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap;opacity:0;animation:fadeUp 0.6s 0.45s ease forwards;}
+    .btn-primary{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:13px;letter-spacing:0.06em;font-weight:500;color:#fff;background:var(--accent);border:none;padding:13px 26px;border-radius:2px;text-decoration:none;cursor:pointer;transition:all 0.2s;}
+    .btn-primary:hover{background:#9333ea;transform:translateY(-1px);box-shadow:0 8px 32px rgba(168,85,247,0.28);}
+    .btn-secondary{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:13px;letter-spacing:0.06em;color:var(--text-muted);background:transparent;border:1px solid var(--border);padding:13px 26px;border-radius:2px;text-decoration:none;transition:all 0.2s;}
+    .btn-secondary:hover{color:var(--text);border-color:var(--border-active);}
+
+    .hero-right{opacity:0;animation:fadeUp 0.8s 0.3s ease forwards;display:flex;align-items:center;justify-content:center;}
+
+    section{padding:80px 40px;}
+    .section-inner{max-width:1100px;margin:0 auto;}
+    .section-label{font-family:var(--mono);font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:8px;margin-bottom:16px;}
+    .section-label::before{content:'';width:20px;height:1px;background:var(--accent);}
+    .section-title{font-family:var(--display);font-size:clamp(28px,3.5vw,46px);font-weight:700;letter-spacing:-0.02em;margin-bottom:16px;}
+    .section-sub{font-size:16px;color:var(--text-muted);max-width:560px;line-height:1.7;margin-bottom:56px;}
+
+    /* BINDING EVENT TIMELINE */
+    .timeline{display:flex;flex-direction:column;gap:0;margin-top:48px;border:1px solid var(--border);border-radius:4px;overflow:hidden;}
+    .timeline-step{display:grid;grid-template-columns:60px 1fr;background:var(--bg-card);border-bottom:1px solid var(--border);}
+    .timeline-step:last-child{border-bottom:none;}
+    .timeline-step:hover{background:var(--bg-2);}
+    .timeline-num{display:flex;align-items:center;justify-content:center;background:var(--bg-2);border-right:1px solid var(--border);font-family:var(--mono);font-size:11px;color:var(--text-muted);letter-spacing:0.1em;}
+    .timeline-content{padding:24px 28px;}
+    .timeline-title{font-family:var(--display);font-size:17px;font-weight:700;margin-bottom:6px;}
+    .timeline-body{font-size:13px;color:var(--text-muted);line-height:1.65;}
+    .timeline-step:nth-child(1) .timeline-title{color:var(--amber);}
+    .timeline-step:nth-child(2) .timeline-title{color:var(--accent);}
+    .timeline-step:nth-child(3) .timeline-title{color:var(--green);}
+    .timeline-step:nth-child(4) .timeline-title{color:var(--blue);}
+
+    .specs-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-top:48px;}
+    .spec-row{display:flex;align-items:flex-start;gap:24px;padding:18px 24px;background:var(--bg-card);border-bottom:1px solid var(--border);}
+    .spec-row:nth-last-child(-n+2){border-bottom:none;}
+    .spec-key{font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);width:160px;flex-shrink:0;padding-top:2px;}
+    .spec-val{font-size:14px;color:var(--text);line-height:1.6;}
+    .spec-val .mono{font-family:var(--mono);font-size:12px;color:var(--text-dim);}
+
+    .constraint-box{border:1px solid rgba(168,85,247,0.2);border-radius:4px;background:rgba(168,85,247,0.04);padding:40px 48px;margin-top:48px;}
+    .constraint-title{font-family:var(--display);font-size:24px;font-weight:700;color:var(--accent);margin-bottom:20px;}
+    .constraint-list{display:flex;flex-direction:column;gap:14px;}
+    .constraint-item{display:flex;align-items:flex-start;gap:16px;font-size:15px;color:var(--text-dim);line-height:1.65;}
+    .constraint-item::before{content:'//';font-family:var(--mono);font-size:12px;color:var(--accent);flex-shrink:0;padding-top:3px;}
+
+    .product-cta{text-align:center;padding:100px 40px;position:relative;overflow:hidden;}
+    .product-cta::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:400px;background:radial-gradient(ellipse,rgba(168,85,247,0.05) 0%,transparent 70%);}
+    .product-cta h2{font-family:var(--display);font-size:clamp(28px,3.5vw,48px);font-weight:700;letter-spacing:-0.02em;margin-bottom:16px;position:relative;}
+    .product-cta p{font-size:16px;color:var(--text-muted);line-height:1.7;max-width:520px;margin:0 auto 40px;position:relative;}
+    .cta-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;position:relative;}
+
+    .next-products{background:var(--bg-1);border-top:1px solid var(--border);padding:60px 40px;}
+    .next-label{font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:24px;}
+    .next-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden;}
+    .next-card{background:var(--bg-card);padding:28px 24px;text-decoration:none;color:inherit;display:block;transition:background 0.2s;position:relative;}
+    .next-card:hover{background:var(--bg-2);}
+    .next-card-tag{font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;}
+    .next-card-name{font-family:var(--display);font-size:20px;font-weight:700;margin-bottom:8px;}
+    .next-card-desc{font-size:13px;color:var(--text-muted);line-height:1.6;}
+    .next-card-arrow{position:absolute;top:28px;right:24px;color:var(--text-muted);font-size:16px;transition:transform 0.2s;}
+    .next-card:hover .next-card-arrow{transform:translate(3px,-3px);}
+
+    footer{border-top:1px solid var(--border);padding:40px;}
+    .footer-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;}
+    .footer-brand{font-family:var(--display);font-size:15px;font-weight:700;}
+    .footer-meta{font-family:var(--mono);font-size:10px;letter-spacing:0.1em;color:var(--text-muted);line-height:1.8;margin-top:6px;}
+    .footer-right{display:flex;gap:28px;}
+    .footer-right a{font-family:var(--mono);font-size:11px;letter-spacing:0.08em;color:var(--text-muted);text-decoration:none;text-transform:uppercase;transition:color 0.2s;}
+    .footer-right a:hover{color:var(--text);}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s ease,transform 0.7s ease;}
+    .reveal.visible{opacity:1;transform:none;}
+
+    @media(max-width:900px){
+      nav{padding:0 20px;}.nav-links{display:none;}
+      .product-hero{grid-template-columns:1fr;padding:130px 20px 60px;gap:40px;}
+      .hero-right{display:none;}
+      .specs-grid{grid-template-columns:1fr;}
+      .next-grid{grid-template-columns:1fr;}
+      section{padding:56px 20px;}
+      .next-products{padding:48px 20px;}
+      .breadcrumb{padding:10px 20px;}
+      footer{padding:32px 20px;}
+      .constraint-box{padding:28px 24px;}
+    }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="/" class="nav-logo">
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="2" fill="#111318"/><path d="M8 8L16 16L24 8" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 24L16 16L24 24" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><circle cx="16" cy="16" r="2.5" fill="#22c55e"/></svg>
+    <span class="nav-logo-text">ZKNOT<sup>™</sup></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/#products">Products</a></li><li><a href="/#protocol">Protocol</a></li>
+    <li><a href="/#verticals">Verticals</a></li><li><a href="/docs">Docs</a></li>
+    <li><a href="/about">About</a></li><li><a href="mailto:ops@zknot.io" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+<div class="breadcrumb">
+  <a href="/">zknot.io</a><span class="sep">/</span>
+  <a href="/#products">Products</a><span class="sep">/</span>
+  <span class="current">TrustSeal™</span>
+</div>
+
+<div style="position:relative;overflow:hidden;">
+  <div class="hero-bg-ts"></div>
+  <div style="position:absolute;inset:0;pointer-events:none;"><div class="hero-glow-ts"></div></div>
+  <div class="product-hero">
+    <div>
+      <div class="product-tag">Physical Binding · Layer 01 + 02</div>
+      <h1 class="product-name">TrustSeal<sup>™</sup></h1>
+      <div class="product-tagline">Tamper-evident seal cryptographically bound to chain</div>
+      <p class="product-desc">
+        TrustSeal™ is where physical custody and digital custody become one.
+        At the moment the seal is applied, a chain entry is written — binding
+        the seal's unique identifier, the ZKKey™ device, the operator, and the timestamp
+        into an unforgeable record. The physical seal and the chain entry are inseparable.
+      </p>
+      <div class="hero-actions">
+        <a href="mailto:ops@zknot.io?subject=TrustSeal Inquiry" class="btn-primary">Request Samples</a>
+        <a href="/docs#trustseal" class="btn-secondary">Specification →</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <!-- TrustSeal illustration -->
+      <svg viewBox="0 0 340 400" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:340px;">
+        <!-- Seal body - intact -->
+        <rect x="60" y="60" width="220" height="120" rx="6" fill="#13111a" stroke="rgba(168,85,247,0.4)" stroke-width="1.5"/>
+        <rect x="60" y="60" width="220" height="4" rx="2" fill="#a855f7"/>
+        <!-- Holographic pattern suggestion -->
+        <rect x="70" y="74" width="200" height="96" rx="3" fill="none" stroke="rgba(168,85,247,0.1)" stroke-width="1"/>
+        <path d="M70 100 L270 100" stroke="rgba(168,85,247,0.06)" stroke-width="1"/>
+        <path d="M70 116 L270 116" stroke="rgba(168,85,247,0.06)" stroke-width="1"/>
+        <path d="M70 132 L270 132" stroke="rgba(168,85,247,0.06)" stroke-width="1"/>
+        <path d="M70 148 L270 148" stroke="rgba(168,85,247,0.06)" stroke-width="1"/>
+        <!-- Seal content -->
+        <text x="180" y="98" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="#a855f7" letter-spacing="2">ZKNOT™ TRUSTSEAL</text>
+        <text x="180" y="116" text-anchor="middle" font-family="DM Mono, monospace" font-size="13" fill="#e8eaed" letter-spacing="1">ZK-4X9R-KM2</text>
+        <text x="180" y="134" text-anchor="middle" font-family="DM Mono, monospace" font-size="8" fill="#6b7280">2026-03-14T09:22:11Z</text>
+        <text x="180" y="150" text-anchor="middle" font-family="DM Mono, monospace" font-size="8" fill="#6b7280">BLOCK #00041887</text>
+        <text x="180" y="168" text-anchor="middle" font-family="DM Mono, monospace" font-size="8" fill="#22c55e">✓ CRYPTOGRAPHICALLY BOUND</text>
+
+        <!-- VOID pattern (tampered seal below) -->
+        <rect x="60" y="240" width="220" height="120" rx="6" fill="#130a0a" stroke="rgba(239,68,68,0.3)" stroke-width="1.5"/>
+        <!-- VOID text repeating pattern -->
+        <text x="75" y="268" font-family="DM Mono, monospace" font-size="11" fill="rgba(239,68,68,0.25)" letter-spacing="3">VOID VOID VOID VOID</text>
+        <text x="75" y="284" font-family="DM Mono, monospace" font-size="11" fill="rgba(239,68,68,0.25)" letter-spacing="3">VOID VOID VOID VOID</text>
+        <text x="75" y="300" font-family="DM Mono, monospace" font-size="11" fill="rgba(239,68,68,0.25)" letter-spacing="3">VOID VOID VOID VOID</text>
+        <text x="75" y="316" font-family="DM Mono, monospace" font-size="11" fill="rgba(239,68,68,0.25)" letter-spacing="3">VOID VOID VOID VOID</text>
+        <text x="75" y="332" font-family="DM Mono, monospace" font-size="11" fill="rgba(239,68,68,0.25)" letter-spacing="3">VOID VOID VOID VOID</text>
+        <text x="75" y="348" font-family="DM Mono, monospace" font-size="11" fill="rgba(239,68,68,0.25)" letter-spacing="3">VOID VOID VOID VOID</text>
+
+        <!-- Labels -->
+        <text x="180" y="208" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="#22c55e" letter-spacing="1">INTACT SEAL</text>
+        <rect x="130" y="214" width="100" height="1" fill="rgba(34,197,94,0.2)"/>
+        <text x="180" y="392" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="#ef4444" letter-spacing="1">TAMPERED — VOID PATTERN REVEALED</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- BINDING EVENT -->
+<section style="background:var(--bg-1);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+  <div class="section-inner">
+    <div class="section-label reveal">The Binding Event</div>
+    <h2 class="section-title reveal">Physical and digital custody merge at one moment</h2>
+    <p class="section-sub reveal">The binding event is atomic — the seal and the chain entry are created simultaneously. There is no window between physical application and cryptographic record.</p>
+    <div class="timeline reveal">
+      <div class="timeline-step">
+        <div class="timeline-num">01</div>
+        <div class="timeline-content">
+          <div class="timeline-title">Seal scanned at application</div>
+          <div class="timeline-body">The seal's unique QR or barcode is scanned by the ZKKey™-integrated scanner at the moment the seal is applied to the physical item. The seal ID is included in the chain entry payload.</div>
+        </div>
+      </div>
+      <div class="timeline-step">
+        <div class="timeline-num">02</div>
+        <div class="timeline-content">
+          <div class="timeline-title">Chain entry written simultaneously</div>
+          <div class="timeline-body">ZKKey™ signs a chain entry containing the seal ID, operator device ID, GPS coordinates (optional), timestamp, and the hash of any associated digital artifact. The entry is written to ZK-LocalChain™.</div>
+        </div>
+      </div>
+      <div class="timeline-step">
+        <div class="timeline-num">03</div>
+        <div class="timeline-content">
+          <div class="timeline-title">Short code printed on seal</div>
+          <div class="timeline-body">The seal itself carries the short code (e.g., ZK-4X9R-KM2) that resolves to the full chain entry at verifyknot.io. Any party can verify the seal's provenance by scanning or entering the code.</div>
+        </div>
+      </div>
+      <div class="timeline-step">
+        <div class="timeline-num">04</div>
+        <div class="timeline-content">
+          <div class="timeline-title">Tamper reveals VOID pattern, chain entry remains</div>
+          <div class="timeline-body">If the seal is removed, the void pattern is permanently revealed on both the item surface and the seal backing. The chain entry remains — proving the seal existed, when it was applied, and who applied it. Tampering is provable either way.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPECS -->
+<section>
+  <div class="section-inner">
+    <div class="section-label reveal">Specifications</div>
+    <h2 class="section-title reveal">Physical and cryptographic properties</h2>
+    <p class="section-sub reveal">Every property is a verifiable fact at time of seal application.</p>
+    <div class="specs-grid reveal">
+      <div class="spec-row"><div class="spec-key">Tamper Evidence</div><div class="spec-val">Destructive VOID pattern<br/><span class="mono">Permanent on surface and backing</span></div></div>
+      <div class="spec-row"><div class="spec-key">Cryptographic Binding</div><div class="spec-val">ZK-LocalChain™ entry at application<br/><span class="mono">Seal ID in signed chain payload</span></div></div>
+      <div class="spec-row"><div class="spec-key">Short Code</div><div class="spec-val">Printed on seal face<br/><span class="mono">Resolves at verifyknot.io</span></div></div>
+      <div class="spec-row"><div class="spec-key">Scan Integration</div><div class="spec-val">DE2120 barcode scanner<br/><span class="mono">USB HID · 1D/2D codes</span></div></div>
+      <div class="spec-row"><div class="spec-key">Material</div><div class="spec-val">Polyester tamper-evident substrate<br/><span class="mono">UV-resistant ink</span></div></div>
+      <div class="spec-row"><div class="spec-key">Size Options</div><div class="spec-val">25mm × 50mm (standard)<br/><span class="mono">Custom sizes available</span></div></div>
+      <div class="spec-row"><div class="spec-key">Chain Entry Type</div><div class="spec-val">TRUSTSEAL_EVENT<br/><span class="mono">Attestation artifact JSON schema v1</span></div></div>
+      <div class="spec-row"><div class="spec-key">Verification</div><div class="spec-val">Public — no account required<br/><span class="mono">verifyknot.io</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONSTRAINTS -->
+<section style="background:var(--bg-1);border-top:1px solid var(--border);">
+  <div class="section-inner">
+    <div class="section-label reveal">Structural Constraints</div>
+    <h2 class="section-title reveal">What TrustSeal™ cannot do</h2>
+    <div class="constraint-box reveal">
+      <div class="constraint-title">By design, TrustSeal™ cannot:</div>
+      <div class="constraint-list">
+        <div class="constraint-item">Be removed without permanently revealing the VOID pattern on both the item surface and the seal backing</div>
+        <div class="constraint-item">Be applied without simultaneously creating an immutable chain entry — the binding is atomic</div>
+        <div class="constraint-item">Be reapplied after removal in a way that resets the void indicator</div>
+        <div class="constraint-item">Be forged without access to the ZKKey™ device that signed the original entry</div>
+        <div class="constraint-item">Produce a chain entry that doesn't include the operator device ID, timestamp, and seal unique identifier</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="product-cta">
+  <h2>Bind physical custody to digital chain.</h2>
+  <p>TrustSeal™ is available in sample packs for evaluation and in volume for deployment. Custom sizes and materials available for specific environments.</p>
+  <div class="cta-actions">
+    <a href="mailto:ops@zknot.io?subject=TrustSeal%20Sample%20Request" class="btn-primary">Request Samples</a>
+    <a href="/docs#trustseal" class="btn-secondary">Specification →</a>
+  </div>
+</section>
+
+<div class="next-products">
+  <div class="section-inner">
+    <div class="next-label">Also in the ZKNOT™ product line</div>
+    <div class="next-grid">
+      <a href="/products/zkkey" class="next-card"><div class="next-card-arrow">↗</div><div class="next-card-tag">Signing Hardware</div><div class="next-card-name">ZKKey™</div><div class="next-card-desc">Human-gated signing device. Post-nonce enforcement.</div></a>
+      <a href="/products/powerverify" class="next-card"><div class="next-card-arrow">↗</div><div class="next-card-tag">Data Path Control</div><div class="next-card-name">PowerVerify™</div><div class="next-card-desc">Physical write-path elimination. Zero firmware.</div></a>
+      <a href="/products/zk-localchain" class="next-card"><div class="next-card-arrow">↗</div><div class="next-card-tag">Offline Ledger</div><div class="next-card-name">ZK-LocalChain™</div><div class="next-card-desc">Append-only hash-chained ledger. No central authority.</div></a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div><div class="footer-brand">ZKNOT™</div><div class="footer-meta">ZKNOT, Inc. — Utah-based SDVOSB · UEI: C4SKW13JPEL5<br/>ops@zknot.io · William Shane Wilkinson, Founder & CEO</div></div>
+    <div class="footer-right"><a href="/">Home</a><a href="/#products">Products</a><a href="https://verifyknot.io">Verify</a><a href="/docs">Docs</a><a href="/about">About</a></div>
+  </div>
+</footer>
+<script>
+  const reveals=document.querySelectorAll('.reveal');
+  const observer=new IntersectionObserver((e)=>{e.forEach(r=>{if(r.isIntersecting){r.target.classList.add('visible');observer.unobserve(r.target);}});},{threshold:0.07,rootMargin:'0px 0px -40px 0px'});
+  reveals.forEach(el=>observer.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PowerVerify™ — Physical Data-Path Elimination | ZKNOT™</title>
+  <meta name="description" content="PowerVerify™ eliminates the write data path at the hardware level. No firmware. No attack surface. Continuity-testable in court." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0b0d; --bg-1: #0f1114; --bg-2: #141720; --bg-card: #111318;
+      --border: rgba(255,255,255,0.07); --border-active: rgba(255,255,255,0.18);
+      --text: #e8eaed; --text-muted: #6b7280; --text-dim: #9ca3af;
+      --accent: #f59e0b; --accent-dim: rgba(245,158,11,0.10); --accent-glow: rgba(245,158,11,0.2);
+      --green: #22c55e; --blue: #3b82f6;
+      --mono: 'DM Mono', monospace; --sans: 'DM Sans', sans-serif; --display: 'Syne', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; opacity: 0.4; }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 64px; background: rgba(10,11,13,0.88); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-text { font-family: var(--display); font-size: 18px; font-weight: 800; letter-spacing: 0.05em; color: var(--text); }
+    .nav-logo-text sup { font-size: 10px; font-weight: 400; color: var(--text-muted); vertical-align: super; }
+    .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+    .nav-links a { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta { color: var(--green) !important; border: 1px solid rgba(34,197,94,0.3); padding: 6px 16px; border-radius: 2px; }
+    .nav-cta:hover { color: #000 !important; background: var(--green) !important; }
+    .breadcrumb { position: fixed; top: 64px; left: 0; right: 0; z-index: 99; padding: 10px 40px; background: rgba(10,11,13,0.7); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--text-muted); }
+    .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+    .breadcrumb .sep { opacity: 0.3; }
+    .breadcrumb .current { color: var(--accent); }
+
+    /* HERO - amber accent for PowerVerify */
+    .product-hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; align-items: center; padding: 140px 60px 80px; gap: 80px; max-width: 1200px; margin: 0 auto; position: relative; }
+    .hero-bg { position: fixed; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px); background-size: 48px 48px; mask-image: radial-gradient(ellipse 80% 60% at 70% 40%, black 20%, transparent 100%); pointer-events: none; }
+    .hero-glow-pv { position: absolute; top: 0; right: -100px; width: 600px; height: 600px; background: radial-gradient(ellipse, rgba(245,158,11,0.06) 0%, transparent 70%); pointer-events: none; }
+
+    .product-tag { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 24px; opacity: 0; animation: fadeUp 0.5s 0.1s ease forwards; }
+    .product-tag::before { content: ''; width: 20px; height: 1px; background: var(--accent); }
+    .product-name { font-family: var(--display); font-size: clamp(48px, 7vw, 88px); font-weight: 800; letter-spacing: -0.03em; line-height: 0.95; color: var(--text); margin-bottom: 8px; opacity: 0; animation: fadeUp 0.6s 0.15s ease forwards; }
+    .product-name sup { font-size: 0.3em; vertical-align: super; font-weight: 500; color: var(--text-muted); }
+    .product-tagline { font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 32px; opacity: 0; animation: fadeUp 0.6s 0.25s ease forwards; }
+    .product-desc { font-size: 17px; line-height: 1.75; color: var(--text-dim); max-width: 480px; margin-bottom: 40px; opacity: 0; animation: fadeUp 0.6s 0.35s ease forwards; }
+    .hero-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.6s 0.45s ease forwards; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; font-weight: 500; color: #000; background: var(--accent); border: none; padding: 13px 26px; border-radius: 2px; text-decoration: none; cursor: pointer; transition: all 0.2s; }
+    .btn-primary:hover { background: #d97706; transform: translateY(-1px); box-shadow: 0 8px 32px rgba(245,158,11,0.28); }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; color: var(--text-muted); background: transparent; border: 1px solid var(--border); padding: 13px 26px; border-radius: 2px; text-decoration: none; transition: all 0.2s; }
+    .btn-secondary:hover { color: var(--text); border-color: var(--border-active); }
+
+    /* PATH DIAGRAM */
+    .hero-right { opacity: 0; animation: fadeUp 0.8s 0.3s ease forwards; display: flex; align-items: center; justify-content: center; }
+    .path-diagram { width: 100%; max-width: 400px; }
+
+    section { padding: 80px 40px; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+    .section-label::before { content: ''; width: 20px; height: 1px; background: var(--accent); }
+    .section-title { font-family: var(--display); font-size: clamp(28px, 3.5vw, 46px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; }
+    .section-sub { font-size: 16px; color: var(--text-muted); max-width: 560px; line-height: 1.7; margin-bottom: 56px; }
+
+    /* COMPARE PANEL */
+    .compare-section { background: var(--bg-1); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; margin-top: 48px; }
+    .compare-col { background: var(--bg-card); padding: 36px; }
+    .compare-col.them { border-top: 2px solid #ef4444; }
+    .compare-col.us { border-top: 2px solid var(--accent); }
+    .compare-header { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 24px; }
+    .compare-col.them .compare-header { color: #ef4444; }
+    .compare-col.us .compare-header { color: var(--accent); }
+    .compare-item { display: flex; align-items: flex-start; gap: 12px; font-size: 14px; line-height: 1.65; margin-bottom: 16px; color: var(--text-dim); }
+    .compare-item::before { font-family: var(--mono); font-size: 12px; flex-shrink: 0; padding-top: 1px; }
+    .compare-col.them .compare-item::before { content: '✗'; color: #ef4444; }
+    .compare-col.us .compare-item::before { content: '→'; color: var(--accent); }
+
+    /* SPECS */
+    .specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; margin-top: 48px; }
+    .spec-row { display: flex; align-items: flex-start; gap: 24px; padding: 18px 24px; background: var(--bg-card); border-bottom: 1px solid var(--border); }
+    .spec-row:nth-last-child(-n+2) { border-bottom: none; }
+    .spec-key { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); width: 160px; flex-shrink: 0; padding-top: 2px; }
+    .spec-val { font-size: 14px; color: var(--text); line-height: 1.6; }
+    .spec-val .mono { font-family: var(--mono); font-size: 12px; color: var(--text-dim); }
+
+    /* CONSTRAINT BOX */
+    .constraint-box { border: 1px solid rgba(245,158,11,0.2); border-radius: 4px; background: rgba(245,158,11,0.04); padding: 40px 48px; margin-top: 48px; }
+    .constraint-title { font-family: var(--display); font-size: 24px; font-weight: 700; color: var(--accent); margin-bottom: 20px; }
+    .constraint-list { display: flex; flex-direction: column; gap: 14px; }
+    .constraint-item { display: flex; align-items: flex-start; gap: 16px; font-size: 15px; color: var(--text-dim); line-height: 1.65; }
+    .constraint-item::before { content: '//'; font-family: var(--mono); font-size: 12px; color: var(--accent); flex-shrink: 0; padding-top: 3px; }
+
+    /* CTA */
+    .product-cta { text-align: center; padding: 100px 40px; position: relative; overflow: hidden; }
+    .product-cta::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 500px; height: 400px; background: radial-gradient(ellipse, rgba(245,158,11,0.05) 0%, transparent 70%); }
+    .product-cta h2 { font-family: var(--display); font-size: clamp(28px, 3.5vw, 48px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; position: relative; }
+    .product-cta p { font-size: 16px; color: var(--text-muted); line-height: 1.7; max-width: 520px; margin: 0 auto 40px; position: relative; }
+    .cta-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; position: relative; }
+
+    /* NEXT PRODUCTS */
+    .next-products { background: var(--bg-1); border-top: 1px solid var(--border); padding: 60px 40px; }
+    .next-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 24px; }
+    .next-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+    .next-card { background: var(--bg-card); padding: 28px 24px; text-decoration: none; color: inherit; display: block; transition: background 0.2s; position: relative; }
+    .next-card:hover { background: var(--bg-2); }
+    .next-card-tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; }
+    .next-card-name { font-family: var(--display); font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .next-card-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+    .next-card-arrow { position: absolute; top: 28px; right: 24px; color: var(--text-muted); font-size: 16px; transition: transform 0.2s; }
+    .next-card:hover .next-card-arrow { transform: translate(3px, -3px); }
+
+    footer { border-top: 1px solid var(--border); padding: 40px; }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+    .footer-brand { font-family: var(--display); font-size: 15px; font-weight: 700; }
+    .footer-meta { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: var(--text-muted); line-height: 1.8; margin-top: 6px; }
+    .footer-right { display: flex; gap: 28px; }
+    .footer-right a { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; color: var(--text-muted); text-decoration: none; text-transform: uppercase; transition: color 0.2s; }
+    .footer-right a:hover { color: var(--text); }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    @media (max-width: 900px) {
+      nav { padding: 0 20px; } .nav-links { display: none; }
+      .product-hero { grid-template-columns: 1fr; padding: 130px 20px 60px; gap: 40px; }
+      .hero-right { display: none; }
+      .compare-grid { grid-template-columns: 1fr; }
+      .specs-grid { grid-template-columns: 1fr; }
+      .next-grid { grid-template-columns: 1fr; }
+      section { padding: 56px 20px; }
+      .next-products { padding: 48px 20px; }
+      .breadcrumb { padding: 10px 20px; }
+      footer { padding: 32px 20px; }
+    }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="/" class="nav-logo">
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="2" fill="#111318"/><path d="M8 8L16 16L24 8" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 24L16 16L24 24" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><circle cx="16" cy="16" r="2.5" fill="#22c55e"/></svg>
+    <span class="nav-logo-text">ZKNOT<sup>™</sup></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/#products">Products</a></li>
+    <li><a href="/#protocol">Protocol</a></li>
+    <li><a href="/#verticals">Verticals</a></li>
+    <li><a href="/docs">Docs</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="mailto:ops@zknot.io" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+<div class="breadcrumb">
+  <a href="/">zknot.io</a><span class="sep">/</span>
+  <a href="/#products">Products</a><span class="sep">/</span>
+  <span class="current">PowerVerify™</span>
+</div>
+
+<div style="position:relative; overflow:hidden;">
+  <div class="hero-bg"></div>
+  <div style="position:absolute; inset:0; pointer-events:none;">
+    <div class="hero-glow-pv"></div>
+  </div>
+  <div class="product-hero">
+    <div>
+      <div class="product-tag">Data Path Control · Layer 01</div>
+      <h1 class="product-name">PowerVerify<sup>™</sup></h1>
+      <div class="product-tagline">Physical data-path elimination device</div>
+      <p class="product-desc">
+        PowerVerify™ does not prevent writes via software policy. It eliminates
+        the write data path at the hardware level. The result: no firmware to exploit,
+        no configuration to misconfigure, no failure mode from software compromise.
+        Continuity-testable in any court.
+      </p>
+      <div class="hero-actions">
+        <a href="mailto:ops@zknot.io?subject=PowerVerify Pilot" class="btn-primary">Request a Unit</a>
+        <a href="/docs#powerverify" class="btn-secondary">Technical Spec →</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <!-- Path Elimination Diagram -->
+      <svg class="path-diagram" viewBox="0 0 380 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Source device -->
+        <rect x="20" y="60" width="120" height="70" rx="6" fill="#111318" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+        <text x="80" y="88" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="#9ca3af" letter-spacing="1">SOURCE</text>
+        <text x="80" y="106" text-anchor="middle" font-family="DM Mono, monospace" font-size="11" fill="#e8eaed" letter-spacing="1">DEVICE</text>
+        <text x="80" y="120" text-anchor="middle" font-family="DM Mono, monospace" font-size="8" fill="#6b7280">forensic target</text>
+
+        <!-- PowerVerify unit -->
+        <rect x="130" y="170" width="120" height="140" rx="6" fill="#161a20" stroke="rgba(245,158,11,0.3)" stroke-width="1.5"/>
+        <rect x="130" y="170" width="120" height="4" rx="2" fill="#f59e0b"/>
+        <text x="190" y="198" text-anchor="middle" font-family="DM Mono, monospace" font-size="8" fill="#f59e0b" letter-spacing="1.5">POWERVERIFY™</text>
+        <!-- Write path (crossed out) -->
+        <line x1="150" y1="230" x2="230" y2="230" stroke="rgba(239,68,68,0.3)" stroke-width="8" stroke-linecap="round"/>
+        <line x1="148" y1="222" x2="232" y2="238" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/>
+        <line x1="148" y1="238" x2="232" y2="222" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/>
+        <text x="190" y="260" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="#ef4444">WRITE PATH</text>
+        <text x="190" y="272" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="#ef4444">ELIMINATED</text>
+        <!-- Read path (active) -->
+        <line x1="150" y1="295" x2="230" y2="295" stroke="rgba(34,197,94,0.5)" stroke-width="2" stroke-linecap="round" stroke-dasharray="4 2"/>
+        <text x="190" y="312" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="#22c55e">READ ONLY</text>
+
+        <!-- Destination device -->
+        <rect x="240" y="60" width="120" height="70" rx="6" fill="#111318" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+        <text x="300" y="88" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="#9ca3af" letter-spacing="1">FORENSIC</text>
+        <text x="300" y="106" text-anchor="middle" font-family="DM Mono, monospace" font-size="11" fill="#e8eaed" letter-spacing="1">WORKSTATION</text>
+        <text x="300" y="120" text-anchor="middle" font-family="DM Mono, monospace" font-size="8" fill="#6b7280">analysis host</text>
+
+        <!-- Connectors -->
+        <path d="M80 130 L80 180 L130 210" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M250 210 L300 180 L300 130" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+        <!-- Continuity test annotation -->
+        <rect x="20" y="380" width="340" height="60" rx="4" fill="rgba(245,158,11,0.05)" stroke="rgba(245,158,11,0.2)" stroke-width="1"/>
+        <text x="190" y="404" text-anchor="middle" font-family="DM Mono, monospace" font-size="10" fill="#f59e0b" letter-spacing="1">CONTINUITY-TESTABLE</text>
+        <text x="190" y="422" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="#6b7280">Physical trace break is measurable</text>
+        <text x="190" y="435" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="#6b7280">with a multimeter in any courtroom</text>
+
+        <!-- No firmware badge -->
+        <rect x="144" y="340" width="92" height="26" rx="3" fill="rgba(34,197,94,0.08)" stroke="rgba(34,197,94,0.2)" stroke-width="1"/>
+        <text x="190" y="357" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="#22c55e" letter-spacing="1">ZERO FIRMWARE</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- COMPARE -->
+<section class="compare-section">
+  <div class="section-inner">
+    <div class="section-label reveal">The Difference</div>
+    <h2 class="section-title reveal">Software write-blockers vs. hardware path elimination</h2>
+    <p class="section-sub reveal">Software write-blockers trust a firmware stack. PowerVerify™ trusts physics.</p>
+    <div class="compare-grid reveal">
+      <div class="compare-col them">
+        <div class="compare-header">Software Write-Blockers</div>
+        <div class="compare-item">Rely on firmware to intercept and deny write commands</div>
+        <div class="compare-item">Firmware can be updated, exploited, or misconfigured</div>
+        <div class="compare-item">Zero-day vulnerabilities in the driver stack can enable writes</div>
+        <div class="compare-item">Attestation of protection is a software claim, not a physical fact</div>
+        <div class="compare-item">Defense must explain the software to a jury</div>
+      </div>
+      <div class="compare-col us">
+        <div class="compare-header">PowerVerify™</div>
+        <div class="compare-item">Write data lines are physically severed at the PCB level</div>
+        <div class="compare-item">No firmware to update, exploit, or misconfigure</div>
+        <div class="compare-item">No software vulnerability can restore a cut trace</div>
+        <div class="compare-item">Protection is a physical fact — measurable with a multimeter</div>
+        <div class="compare-item">Defense shows a continuity test. Jury understands.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPECS -->
+<section>
+  <div class="section-inner">
+    <div class="section-label reveal">Specifications</div>
+    <h2 class="section-title reveal">Hardware-only. Nothing to configure.</h2>
+    <p class="section-sub reveal">Every specification is a physical property, not a software setting.</p>
+    <div class="specs-grid reveal">
+      <div class="spec-row"><div class="spec-key">Write Protection</div><div class="spec-val">Physical trace elimination<br/><span class="mono">Write lines severed at PCB layer</span></div></div>
+      <div class="spec-row"><div class="spec-key">Read Path</div><div class="spec-val">Fully intact, passive<br/><span class="mono">No signal degradation</span></div></div>
+      <div class="spec-row"><div class="spec-key">Firmware</div><div class="spec-val">None<br/><span class="mono">Zero attack surface</span></div></div>
+      <div class="spec-row"><div class="spec-key">Testability</div><div class="spec-val">Continuity-testable<br/><span class="mono">Standard multimeter, any lab</span></div></div>
+      <div class="spec-row"><div class="spec-key">Interface</div><div class="spec-val">USB 3.0 · SATA · M.2 variants<br/><span class="mono">Passive passthrough form factor</span></div></div>
+      <div class="spec-row"><div class="spec-key">Power</div><div class="spec-val">Bus-powered, passive<br/><span class="mono">No external power required</span></div></div>
+      <div class="spec-row"><div class="spec-key">Connectors</div><div class="spec-val">MIL-grade available<br/><span class="mono">Field-deployable enclosure</span></div></div>
+      <div class="spec-row"><div class="spec-key">Chain Integration</div><div class="spec-val">ZK-LocalChain™ compatible<br/><span class="mono">Session attestation on connect</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONSTRAINTS -->
+<section style="background:var(--bg-1); border-top:1px solid var(--border);">
+  <div class="section-inner">
+    <div class="section-label reveal">Structural Constraints</div>
+    <h2 class="section-title reveal">What PowerVerify™ cannot do</h2>
+    <p class="section-sub reveal">These are not policy settings. They are physical facts.</p>
+    <div class="constraint-box reveal">
+      <div class="constraint-title">By design, PowerVerify™ cannot:</div>
+      <div class="constraint-list">
+        <div class="constraint-item">Allow any write command to reach the connected storage device — the write path does not exist</div>
+        <div class="constraint-item">Be updated via firmware to restore write capability — there is no firmware</div>
+        <div class="constraint-item">Be exploited via driver vulnerabilities — the protection is below the driver layer</div>
+        <div class="constraint-item">Produce a false continuity test — the break is a physical property of the PCB</div>
+        <div class="constraint-item">Fail in a way that enables writes — failure mode is loss of read, never gain of write</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="product-cta">
+  <h2>Deploy PowerVerify™ in your forensic workflow</h2>
+  <p>Contact us to discuss hardware specifications, volume requirements, and integration with ZKKey™ and ZK-LocalChain™.</p>
+  <div class="cta-actions">
+    <a href="mailto:ops@zknot.io?subject=PowerVerify%20Inquiry" class="btn-primary">Contact ops@zknot.io</a>
+    <a href="/docs#powerverify" class="btn-secondary">Technical Spec →</a>
+  </div>
+</section>
+
+<div class="next-products">
+  <div class="section-inner">
+    <div class="next-label">Also in the ZKNOT™ product line</div>
+    <div class="next-grid">
+      <a href="/products/zkkey" class="next-card"><div class="next-card-arrow">↗</div><div class="next-card-tag">Signing Hardware</div><div class="next-card-name">ZKKey™</div><div class="next-card-desc">Human-gated signing device. Post-nonce enforcement.</div></a>
+      <a href="/products/zk-localchain" class="next-card"><div class="next-card-arrow">↗</div><div class="next-card-tag">Offline Ledger</div><div class="next-card-name">ZK-LocalChain™</div><div class="next-card-desc">Append-only hash-chained ledger. No central authority.</div></a>
+      <a href="/products/trustseal" class="next-card"><div class="next-card-arrow">↗</div><div class="next-card-tag">Physical Binding</div><div class="next-card-name">TrustSeal™</div><div class="next-card-desc">Tamper-evident seal cryptographically bound to chain.</div></a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div><div class="footer-brand">ZKNOT™</div><div class="footer-meta">ZKNOT, Inc. — Utah-based SDVOSB · UEI: C4SKW13JPEL5<br/>ops@zknot.io · William Shane Wilkinson, Founder & CEO</div></div>
+    <div class="footer-right"><a href="/">Home</a><a href="/#products">Products</a><a href="https://verifyknot.io">Verify</a><a href="/docs">Docs</a><a href="/about">About</a></div>
+  </div>
+</footer>
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }); }, { threshold: 0.07, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
