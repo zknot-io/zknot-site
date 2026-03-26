@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pharmaceutical Supply Chain — ZKNOT™</title>
+  <meta name="description" content="ZKNOT™ provides cryptographic chain-of-custody attestation for controlled substances, clinical trial samples, and pharmaceutical supply chain handoffs." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:#0a0b0d;--bg-1:#0f1114;--bg-2:#141720;--bg-card:#111318;
+      --border:rgba(255,255,255,0.07);--border-active:rgba(255,255,255,0.18);
+      --text:#e8eaed;--text-muted:#6b7280;--text-dim:#9ca3af;
+      --accent:#3b82f6;--accent-dim:rgba(59,130,246,0.10);
+      --green:#22c55e;--amber:#f59e0b;--purple:#a855f7;
+      --mono:'DM Mono',monospace;--sans:'DM Sans',sans-serif;--display:'Syne',sans-serif;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+    body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.4;}
+
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:64px;background:rgba(10,11,13,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+    .nav-logo-text{font-family:var(--display);font-size:18px;font-weight:800;letter-spacing:0.05em;color:var(--text);}
+    .nav-logo-text sup{font-size:10px;font-weight:400;color:var(--text-muted);vertical-align:super;}
+    .nav-links{display:flex;align-items:center;gap:32px;list-style:none;}
+    .nav-links a{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color 0.2s;}
+    .nav-links a:hover,.nav-links a.active{color:var(--text);}
+    .nav-cta{color:var(--green)!important;border:1px solid rgba(34,197,94,0.3);padding:6px 16px;border-radius:2px;}
+    .nav-cta:hover{color:#000!important;background:var(--green)!important;}
+    .breadcrumb{position:fixed;top:64px;left:0;right:0;z-index:99;padding:10px 40px;background:rgba(10,11,13,0.7);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:0.1em;color:var(--text-muted);}
+    .breadcrumb a{color:var(--text-muted);text-decoration:none;}
+    .breadcrumb .sep{opacity:0.3;}
+    .breadcrumb .current{color:var(--accent);}
+
+    .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:140px 40px 80px;position:relative;overflow:hidden;}
+    .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse 80% 60% at 60% 40%,black 20%,transparent 100%);}
+    .hero-glow{position:absolute;top:-100px;right:-100px;width:700px;height:700px;background:radial-gradient(ellipse,rgba(59,130,246,0.05) 0%,transparent 70%);pointer-events:none;}
+    .hero-inner{position:relative;max-width:1100px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+
+    .vertical-tag{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:24px;opacity:0;animation:fadeUp 0.5s 0.1s ease forwards;}
+    .vertical-tag::before{content:'';width:20px;height:1px;background:var(--accent);}
+    h1{font-family:var(--display);font-size:clamp(40px,6vw,76px);font-weight:800;letter-spacing:-0.025em;line-height:1.0;margin-bottom:24px;opacity:0;animation:fadeUp 0.6s 0.2s ease forwards;}
+    .hero-sub{font-size:17px;color:var(--text-muted);line-height:1.75;max-width:500px;margin-bottom:40px;opacity:0;animation:fadeUp 0.6s 0.35s ease forwards;}
+    .hero-actions{display:flex;gap:16px;flex-wrap:wrap;opacity:0;animation:fadeUp 0.6s 0.45s ease forwards;}
+    .btn-primary{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:13px;letter-spacing:0.06em;font-weight:500;color:#fff;background:var(--accent);border:none;padding:13px 26px;border-radius:2px;text-decoration:none;transition:all 0.2s;}
+    .btn-primary:hover{background:#2563eb;transform:translateY(-1px);box-shadow:0 8px 32px rgba(59,130,246,0.28);}
+    .btn-secondary{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:13px;letter-spacing:0.06em;color:var(--text-muted);background:transparent;border:1px solid var(--border);padding:13px 26px;border-radius:2px;text-decoration:none;transition:all 0.2s;}
+    .btn-secondary:hover{color:var(--text);border-color:var(--border-active);}
+    .hero-right{opacity:0;animation:fadeUp 0.8s 0.3s ease forwards;}
+
+    /* CUSTODY CHAIN VISUAL */
+    .custody-chain{display:flex;flex-direction:column;gap:2px;}
+    .custody-node{background:var(--bg-card);border:1px solid var(--border);border-radius:3px;padding:16px 20px;position:relative;}
+    .custody-node.active{border-color:rgba(59,130,246,0.3);}
+    .custody-node-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+    .custody-node-label{font-family:var(--mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);}
+    .custody-node-status{font-family:var(--mono);font-size:10px;letter-spacing:0.1em;color:var(--green);}
+    .custody-node-name{font-family:var(--display);font-size:15px;font-weight:700;margin-bottom:4px;}
+    .custody-node-meta{font-family:var(--mono);font-size:11px;color:var(--text-muted);}
+    .custody-node-hash{font-family:var(--mono);font-size:10px;color:var(--accent);margin-top:8px;padding-top:8px;border-top:1px solid var(--border);}
+    .custody-connector{display:flex;align-items:center;justify-content:center;padding:4px 0;}
+    .custody-connector-line{width:1px;height:16px;background:linear-gradient(var(--accent),rgba(59,130,246,0.3));}
+
+    section{padding:80px 40px;}
+    .section-inner{max-width:1100px;margin:0 auto;}
+    .section-label{font-family:var(--mono);font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:8px;margin-bottom:16px;}
+    .section-label::before{content:'';width:20px;height:1px;background:var(--accent);}
+    .section-title{font-family:var(--display);font-size:clamp(28px,3.5vw,46px);font-weight:700;letter-spacing:-0.02em;margin-bottom:16px;}
+    .section-sub{font-size:16px;color:var(--text-muted);max-width:560px;line-height:1.7;margin-bottom:56px;}
+
+    /* APPLICATIONS */
+    .apps-section{background:var(--bg-1);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+    .apps-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-top:48px;}
+    .app-card{background:var(--bg-card);padding:36px 32px;transition:background 0.3s;}
+    .app-card:hover{background:var(--bg-2);}
+    .app-card-top{display:flex;align-items:flex-start;gap:16px;margin-bottom:16px;}
+    .app-card-num{font-family:var(--mono);font-size:28px;font-weight:700;color:rgba(59,130,246,0.2);line-height:1;flex-shrink:0;}
+    .app-card-title{font-family:var(--display);font-size:19px;font-weight:700;}
+    .app-card-body{font-size:14px;color:var(--text-muted);line-height:1.75;}
+    .app-card-regs{margin-top:16px;display:flex;flex-wrap:wrap;gap:6px;}
+    .reg-badge{font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;padding:4px 8px;border-radius:2px;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);color:var(--accent);}
+
+    /* HANDOFF EVENTS */
+    .handoff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-top:48px;}
+    .handoff-card{background:var(--bg-card);padding:28px 24px;transition:background 0.3s;}
+    .handoff-card:hover{background:var(--bg-2);}
+    .handoff-card::before{content:'';display:block;width:28px;height:2px;background:var(--accent);margin-bottom:16px;}
+    .handoff-title{font-family:var(--display);font-size:16px;font-weight:700;margin-bottom:10px;}
+    .handoff-body{font-size:13px;color:var(--text-muted);line-height:1.7;}
+
+    /* WORKFLOW */
+    .workflow-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-top:48px;}
+    .workflow-step{display:grid;grid-template-columns:56px 1fr;background:var(--bg-card);}
+    .workflow-num{display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;color:var(--accent);background:var(--bg-2);border-right:1px solid var(--border);}
+    .workflow-content{padding:22px 28px;}
+    .workflow-title{font-family:var(--display);font-size:16px;font-weight:700;margin-bottom:6px;}
+    .workflow-body{font-size:13px;color:var(--text-muted);line-height:1.65;}
+
+    .products-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-top:48px;}
+    .product-chip{background:var(--bg-card);padding:20px 24px;text-decoration:none;color:inherit;display:block;transition:background 0.2s;position:relative;}
+    .product-chip:hover{background:var(--bg-2);}
+    .product-chip-tag{font-family:var(--mono);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;}
+    .product-chip-name{font-family:var(--display);font-size:16px;font-weight:700;}
+    .product-chip-arrow{position:absolute;top:20px;right:20px;font-size:14px;color:var(--text-muted);}
+
+    .cta-section{padding:100px 40px;text-align:center;position:relative;overflow:hidden;}
+    .cta-section::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(59,130,246,0.05) 0%,transparent 70%);}
+    .cta-inner{position:relative;max-width:600px;margin:0 auto;}
+    .cta-inner h2{font-family:var(--display);font-size:clamp(28px,3.5vw,48px);font-weight:700;letter-spacing:-0.02em;margin-bottom:16px;}
+    .cta-inner p{font-size:16px;color:var(--text-muted);line-height:1.7;margin-bottom:40px;}
+    .cta-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+
+    .other-verticals{background:var(--bg-1);border-top:1px solid var(--border);padding:60px 40px;}
+    .other-label{font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:24px;}
+    .other-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden;}
+    .other-card{background:var(--bg-card);padding:28px 24px;text-decoration:none;color:inherit;display:block;transition:background 0.2s;position:relative;}
+    .other-card:hover{background:var(--bg-2);}
+    .other-card-tag{font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;}
+    .other-card-name{font-family:var(--display);font-size:20px;font-weight:700;margin-bottom:8px;}
+    .other-card-desc{font-size:13px;color:var(--text-muted);line-height:1.6;}
+    .other-card-arrow{position:absolute;top:28px;right:24px;font-size:16px;color:var(--text-muted);transition:transform 0.2s;}
+    .other-card:hover .other-card-arrow{transform:translate(3px,-3px);}
+
+    footer{border-top:1px solid var(--border);padding:40px;}
+    .footer-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;}
+    .footer-brand{font-family:var(--display);font-size:15px;font-weight:700;}
+    .footer-meta{font-family:var(--mono);font-size:10px;letter-spacing:0.1em;color:var(--text-muted);line-height:1.8;margin-top:6px;}
+    .footer-right{display:flex;gap:28px;}
+    .footer-right a{font-family:var(--mono);font-size:11px;letter-spacing:0.08em;color:var(--text-muted);text-decoration:none;text-transform:uppercase;transition:color 0.2s;}
+    .footer-right a:hover{color:var(--text);}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s ease,transform 0.7s ease;}
+    .reveal.visible{opacity:1;transform:none;}
+
+    @media(max-width:900px){
+      nav{padding:0 20px;}.nav-links{display:none;}
+      .hero-inner{grid-template-columns:1fr;padding:130px 20px 60px;gap:40px;}
+      .hero-right{display:none;}
+      .hero{padding:0;}
+      .apps-grid,.handoff-grid,.products-strip,.other-grid{grid-template-columns:1fr;}
+      section{padding:56px 20px;}
+      .other-verticals{padding:48px 20px;}
+      .breadcrumb,.cta-section{padding-left:20px;padding-right:20px;}
+      footer{padding:32px 20px;}
+    }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="/" class="nav-logo">
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="2" fill="#111318"/><path d="M8 8L16 16L24 8" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 24L16 16L24 24" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><circle cx="16" cy="16" r="2.5" fill="#22c55e"/></svg>
+    <span class="nav-logo-text">ZKNOT<sup>™</sup></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/#products">Products</a></li>
+    <li><a href="/protocol">Protocol</a></li>
+    <li><a href="/#verticals" class="active">Verticals</a></li>
+    <li><a href="/docs">Docs</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="mailto:ops@zknot.io" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+<div class="breadcrumb">
+  <a href="/">zknot.io</a><span class="sep">/</span>
+  <a href="/#verticals">Verticals</a><span class="sep">/</span>
+  <span class="current">Pharmaceutical Supply Chain</span>
+</div>
+
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="vertical-tag">Vertical · Pharmaceutical Supply Chain</div>
+      <h1>Every handoff.<br/>Every handler.<br/>Unforgeable.</h1>
+      <p class="hero-sub">
+        Controlled substances, clinical trial samples, and temperature-sensitive biologics
+        change hands dozens of times before reaching patients or regulators.
+        ZKNOT™ makes each handoff event cryptographically unforgeable and independently
+        verifiable — without a cloud dependency or a trusted intermediary.
+      </p>
+      <div class="hero-actions">
+        <a href="mailto:ops@zknot.io?subject=Pharma%20Pilot" class="btn-primary">Request a Pilot</a>
+        <a href="/protocol" class="btn-secondary">See the Protocol →</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <!-- Custody chain visualization -->
+      <div class="custody-chain">
+        <div class="custody-node active">
+          <div class="custody-node-header">
+            <div class="custody-node-label">Handoff 01 — Manufacturer</div>
+            <div class="custody-node-status">✓ VERIFIED</div>
+          </div>
+          <div class="custody-node-name">Batch Release — Lot #RX-2026-0314</div>
+          <div class="custody-node-meta">2026-03-14T06:00:00Z · ZKKEY-001-C4F8A2</div>
+          <div class="custody-node-hash">ZK-7P3Q-LN8 → Chain #00081204</div>
+        </div>
+        <div class="custody-connector"><div class="custody-connector-line"></div></div>
+        <div class="custody-node active">
+          <div class="custody-node-header">
+            <div class="custody-node-label">Handoff 02 — Distributor</div>
+            <div class="custody-node-status">✓ VERIFIED</div>
+          </div>
+          <div class="custody-node-name">Cold Chain Transfer — Facility SLC-03</div>
+          <div class="custody-node-meta">2026-03-14T14:22:11Z · ZKKEY-002-D9E1B3</div>
+          <div class="custody-node-hash">ZK-4X9R-KM2 → Chain #00081205</div>
+        </div>
+        <div class="custody-connector"><div class="custody-connector-line"></div></div>
+        <div class="custody-node active">
+          <div class="custody-node-header">
+            <div class="custody-node-label">Handoff 03 — Hospital Pharmacy</div>
+            <div class="custody-node-status">✓ VERIFIED</div>
+          </div>
+          <div class="custody-node-name">Receipt &amp; Seal Verification</div>
+          <div class="custody-node-meta">2026-03-15T08:47:03Z · ZKKEY-003-A7F2E1</div>
+          <div class="custody-node-hash">ZK-2M6T-WR9 → Chain #00081206</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APPLICATIONS -->
+<section class="apps-section">
+  <div class="section-inner">
+    <div class="section-label reveal">Applications</div>
+    <h2 class="section-title reveal">Four high-stakes custody scenarios ZKNOT™ solves.</h2>
+    <div class="apps-grid reveal">
+      <div class="app-card">
+        <div class="app-card-top">
+          <div class="app-card-num">01</div>
+          <div class="app-card-title">Controlled Substance Chain of Custody</div>
+        </div>
+        <div class="app-card-body">DEA Schedule I–V substances require documented custody from manufacturer to dispenser. ZKNOT™ makes each custody transfer event cryptographically attested and independently auditable — without a central database that becomes a single point of failure or subpoena target.</div>
+        <div class="app-card-regs">
+          <div class="reg-badge">DEA 21 CFR</div>
+          <div class="reg-badge">PDMP Compliant</div>
+        </div>
+      </div>
+      <div class="app-card">
+        <div class="app-card-top">
+          <div class="app-card-num">02</div>
+          <div class="app-card-title">Clinical Trial Sample Integrity</div>
+        </div>
+        <div class="app-card-body">GCP requires documented chain of custody for biological samples, investigational drugs, and clinical specimens. ZKNOT™ provides physically-attested handoff records that satisfy FDA audit requirements without relying on institutional trust or paper logs.</div>
+        <div class="app-card-regs">
+          <div class="reg-badge">FDA 21 CFR Part 11</div>
+          <div class="reg-badge">GCP</div>
+          <div class="reg-badge">ICH E6</div>
+        </div>
+      </div>
+      <div class="app-card">
+        <div class="app-card-top">
+          <div class="app-card-num">03</div>
+          <div class="app-card-title">Cold Chain Breach Documentation</div>
+        </div>
+        <div class="app-card-body">Temperature excursions must be documented at point of discovery. ZKNOT™ creates an unforgeable timestamped record of the breach event, the condition observed, and the handler present — before any remediation action is taken.</div>
+        <div class="app-card-regs">
+          <div class="reg-badge">USP 1079</div>
+          <div class="reg-badge">WHO TRS 961</div>
+        </div>
+      </div>
+      <div class="app-card">
+        <div class="app-card-top">
+          <div class="app-card-num">04</div>
+          <div class="app-card-title">Anti-Counterfeiting at Receipt</div>
+        </div>
+        <div class="app-card-body">TrustSeal™ on primary packaging creates a cryptographic binding between the physical item and the chain entry at point of manufacture. Any party downstream can verify the seal has not been removed and the chain entry matches — without calling the manufacturer.</div>
+        <div class="app-card-regs">
+          <div class="reg-badge">DSCSA 2023</div>
+          <div class="reg-badge">Serialization</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HANDOFF EVENTS -->
+<section>
+  <div class="section-inner">
+    <div class="section-label reveal">Handoff Events</div>
+    <h2 class="section-title reveal">What gets attested at each handoff.</h2>
+    <p class="section-sub reveal">Each custody transfer is one ZKKey™ button press. The chain entry contains everything a regulator or auditor needs.</p>
+    <div class="handoff-grid reveal">
+      <div class="handoff-card">
+        <div class="handoff-title">Handler Identity</div>
+        <div class="handoff-body">The ZKKey™ device ID is cryptographically bound to every entry. Each device is registered to a specific operator or facility. No anonymous transfers.</div>
+      </div>
+      <div class="handoff-card">
+        <div class="handoff-title">Timestamp</div>
+        <div class="handoff-body">Set by the ZKKey™ hardware clock at the moment of button press. Cannot be backdated. Chain position provides additional temporal ordering proof.</div>
+      </div>
+      <div class="handoff-card">
+        <div class="handoff-title">Item Hash</div>
+        <div class="handoff-body">SHA-256 hash of the batch record, label scan, or associated digital documentation. Proves the item state at time of transfer without exposing proprietary formulation data.</div>
+      </div>
+      <div class="handoff-card">
+        <div class="handoff-title">Seal Binding</div>
+        <div class="handoff-body">TrustSeal™ ID is included in the chain entry at application. Seal removal is physically evident. Chain entry persists regardless of seal state.</div>
+      </div>
+      <div class="handoff-card">
+        <div class="handoff-title">Short Code</div>
+        <div class="handoff-body">Every handoff event gets a short code printed on the TrustSeal™ or included in accompanying documentation. Any regulator can verify independently at verifyknot.io.</div>
+      </div>
+      <div class="handoff-card">
+        <div class="handoff-title">Chain Continuity</div>
+        <div class="handoff-body">Each entry is mathematically linked to the prior entry. A missing or altered handoff breaks the chain — detectable by any auditor without ZKNOT™ infrastructure.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORKFLOW -->
+<section style="background:var(--bg-1);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+  <div class="section-inner">
+    <div class="section-label reveal">Deployment</div>
+    <h2 class="section-title reveal">How a pharmaceutical facility deploys ZKNOT™.</h2>
+    <div class="workflow-list reveal">
+      <div class="workflow-step">
+        <div class="workflow-num">01</div>
+        <div class="workflow-content">
+          <div class="workflow-title">Register ZKKey™ devices per facility and operator role</div>
+          <div class="workflow-body">Each ZKKey™ is registered with a device ID tied to the facility and operator role. The public key is registered at api.zknot.io. Auditors can resolve any device ID to its registration record at any time.</div>
+        </div>
+      </div>
+      <div class="workflow-step">
+        <div class="workflow-num">02</div>
+        <div class="workflow-content">
+          <div class="workflow-title">Apply TrustSeal™ at manufacture or receipt</div>
+          <div class="workflow-body">Scan the seal barcode, press the ZKKey™ button. Chain entry is written binding the seal ID, batch documentation hash, and timestamp. Takes under 10 seconds per item or lot.</div>
+        </div>
+      </div>
+      <div class="workflow-step">
+        <div class="workflow-num">03</div>
+        <div class="workflow-content">
+          <div class="workflow-title">Attest each custody transfer with a button press</div>
+          <div class="workflow-body">At every handoff — manufacturer to distributor, distributor to pharmacy, pharmacy to patient — the receiving handler presses the ZKKey™ button. One press. One chain entry. One timestamp. No paper form.</div>
+        </div>
+      </div>
+      <div class="workflow-step">
+        <div class="workflow-num">04</div>
+        <div class="workflow-content">
+          <div class="workflow-title">Export PDF chain-of-custody report for audit</div>
+          <div class="workflow-body">ZK-LocalChain™ exports a signed PDF containing every handoff event in sequence, with QR codes linking to verifyknot.io for each entry. The report is itself a chain artifact — signed and independently verifiable.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-inner">
+    <div class="section-label reveal">Products Used</div>
+    <h2 class="section-title reveal">The full pharmaceutical custody kit.</h2>
+    <div class="products-strip reveal">
+      <a href="/products/zkkey" class="product-chip"><div class="product-chip-arrow">↗</div><div class="product-chip-tag">Signing Hardware</div><div class="product-chip-name">ZKKey™</div></a>
+      <a href="/products/zk-localchain" class="product-chip"><div class="product-chip-arrow">↗</div><div class="product-chip-tag">Offline Ledger</div><div class="product-chip-name">ZK-LocalChain™</div></a>
+      <a href="/products/trustseal" class="product-chip"><div class="product-chip-arrow">↗</div><div class="product-chip-tag">Physical Binding</div><div class="product-chip-name">TrustSeal™</div></a>
+      <a href="https://verifyknot.io" class="product-chip"><div class="product-chip-arrow">↗</div><div class="product-chip-tag">Public Verification</div><div class="product-chip-name">verifyknot.io</div></a>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="cta-inner reveal">
+    <div style="font-family:var(--mono);font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:24px;"><span style="width:20px;height:1px;background:var(--accent);display:block;"></span>Get started</div>
+    <h2>Deploy verifiable custody across your supply chain.</h2>
+    <p>Pilot deployments available for pharmaceutical manufacturers, clinical research organizations, and hospital pharmacy systems. Contact us to scope your implementation.</p>
+    <div class="cta-actions">
+      <a href="mailto:ops@zknot.io?subject=Pharma%20Supply%20Chain%20Pilot" class="btn-primary">Contact ops@zknot.io</a>
+      <a href="/docs" class="btn-secondary">Technical Docs →</a>
+    </div>
+  </div>
+</section>
+
+<div class="other-verticals">
+  <div class="section-inner">
+    <div class="other-label">Other verticals</div>
+    <div class="other-grid">
+      <a href="/verticals/election-integrity" class="other-card"><div class="other-card-arrow">↗</div><div class="other-card-tag">Vertical</div><div class="other-card-name">Election Integrity</div><div class="other-card-desc">Chain of custody for ballot equipment and audit events.</div></a>
+      <a href="/verticals/journalism" class="other-card"><div class="other-card-arrow">↗</div><div class="other-card-tag">Vertical</div><div class="other-card-name">Investigative Journalism</div><div class="other-card-desc">Cryptographic provenance for sensitive documents and video.</div></a>
+      <a href="/verticals/law-enforcement" class="other-card"><div class="other-card-arrow">↗</div><div class="other-card-tag">Vertical</div><div class="other-card-name">Law Enforcement</div><div class="other-card-desc">Digital forensics chain of custody that holds in court.</div></a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div><div class="footer-brand">ZKNOT™</div><div class="footer-meta">ZKNOT, Inc. — Utah-based SDVOSB · UEI: C4SKW13JPEL5<br/>ops@zknot.io · William Shane Wilkinson, Founder & CEO</div></div>
+    <div class="footer-right"><a href="/">Home</a><a href="/#products">Products</a><a href="/protocol">Protocol</a><a href="https://verifyknot.io">Verify</a><a href="/about">About</a></div>
+  </div>
+</footer>
+<script>
+  const reveals=document.querySelectorAll('.reveal');
+  const observer=new IntersectionObserver((e)=>{e.forEach(r=>{if(r.isIntersecting){r.target.classList.add('visible');observer.unobserve(r.target);}});},{threshold:0.07,rootMargin:'0px 0px -40px 0px'});
+  reveals.forEach(el=>observer.observe(el));
+</script>
+</body>
+</html>

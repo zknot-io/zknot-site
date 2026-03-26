@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Docs — ZKNOT™</title>
+  <meta name="description" content="ZKNOT™ technical documentation: API reference, attestation artifact JSON schema, chain format specification, and SDK overview." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0b0d;
+      --bg-1: #0f1114;
+      --bg-2: #141720;
+      --bg-card: #111318;
+      --bg-code: #070809;
+      --border: rgba(255,255,255,0.07);
+      --border-active: rgba(255,255,255,0.18);
+      --text: #e8eaed;
+      --text-muted: #6b7280;
+      --text-dim: #9ca3af;
+      --accent: #22c55e;
+      --amber: #f59e0b;
+      --blue: #3b82f6;
+      --purple: #a855f7;
+      --red: #ef4444;
+      --mono: 'DM Mono', monospace;
+      --sans: 'DM Sans', sans-serif;
+      --display: 'Syne', sans-serif;
+      --sidebar-w: 260px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999; opacity: 0.4;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px; height: 64px;
+      background: rgba(10,11,13,0.92); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-text { font-family: var(--display); font-size: 18px; font-weight: 800; letter-spacing: 0.05em; color: var(--text); }
+    .nav-logo-text sup { font-size: 10px; font-weight: 400; color: var(--text-muted); vertical-align: super; }
+    .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+    .nav-links a { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--text); }
+    .nav-cta { color: var(--accent) !important; border: 1px solid rgba(34,197,94,0.3); padding: 6px 16px; border-radius: 2px; }
+    .nav-cta:hover { color: #000 !important; background: var(--accent) !important; }
+
+    /* ── LAYOUT ── */
+    .docs-layout {
+      display: grid;
+      grid-template-columns: var(--sidebar-w) 1fr;
+      min-height: 100vh;
+      padding-top: 64px;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      position: fixed;
+      top: 64px; left: 0; bottom: 0;
+      width: var(--sidebar-w);
+      background: var(--bg-1);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      padding: 32px 0 40px;
+      z-index: 50;
+    }
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-track { background: transparent; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .sidebar-section { margin-bottom: 8px; }
+    .sidebar-section-label {
+      font-family: var(--mono); font-size: 9px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--text-muted);
+      padding: 10px 24px 6px; display: block;
+    }
+    .sidebar-link {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 24px; font-family: var(--mono); font-size: 12px;
+      letter-spacing: 0.04em; color: var(--text-muted); text-decoration: none;
+      border-left: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    .sidebar-link:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+    .sidebar-link.active { color: var(--accent); border-left-color: var(--accent); background: rgba(34,197,94,0.05); }
+    .sidebar-link .dot {
+      width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0;
+      background: currentColor; opacity: 0.5;
+    }
+    .sidebar-divider { height: 1px; background: var(--border); margin: 12px 24px; }
+
+    /* ── MAIN CONTENT ── */
+    .docs-main {
+      margin-left: var(--sidebar-w);
+      max-width: 860px;
+      padding: 56px 56px 100px;
+    }
+
+    /* ── DOC SECTIONS ── */
+    .doc-section {
+      padding-bottom: 72px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 72px;
+    }
+    .doc-section:last-child { border-bottom: none; margin-bottom: 0; }
+
+    .doc-section-eyebrow {
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--accent);
+      display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+    }
+    .doc-section-eyebrow::before { content: ''; width: 16px; height: 1px; background: var(--accent); }
+
+    h1.doc-title {
+      font-family: var(--display); font-size: clamp(32px, 4vw, 52px);
+      font-weight: 800; letter-spacing: -0.025em; line-height: 1.05;
+      margin-bottom: 20px;
+    }
+    .doc-intro {
+      font-size: 17px; color: var(--text-muted); line-height: 1.75;
+      max-width: 640px; margin-bottom: 0;
+    }
+
+    h2.doc-h2 {
+      font-family: var(--display); font-size: 26px; font-weight: 700;
+      letter-spacing: -0.02em; margin-bottom: 14px; margin-top: 48px;
+      scroll-margin-top: 88px;
+    }
+    h2.doc-h2:first-child { margin-top: 0; }
+
+    h3.doc-h3 {
+      font-family: var(--mono); font-size: 13px; font-weight: 500;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--text-dim); margin-bottom: 12px; margin-top: 36px;
+    }
+
+    p.doc-p { font-size: 15px; color: var(--text-muted); line-height: 1.8; margin-bottom: 16px; }
+    p.doc-p:last-child { margin-bottom: 0; }
+
+    /* ── CODE BLOCKS ── */
+    .code-block {
+      background: var(--bg-code); border: 1px solid var(--border);
+      border-radius: 4px; overflow: hidden; margin: 20px 0;
+    }
+    .code-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 16px; background: var(--bg-2); border-bottom: 1px solid var(--border);
+    }
+    .code-lang {
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text-muted);
+    }
+    .code-copy {
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-muted); cursor: pointer;
+      background: none; border: none; padding: 2px 8px; border-radius: 2px;
+      transition: all 0.2s;
+    }
+    .code-copy:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+    .code-copy.copied { color: var(--accent); }
+    pre {
+      padding: 20px; font-family: var(--mono); font-size: 12px;
+      line-height: 1.85; overflow-x: auto; color: var(--text-dim);
+    }
+    pre::-webkit-scrollbar { height: 4px; }
+    pre::-webkit-scrollbar-track { background: transparent; }
+    pre::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    /* Syntax */
+    .k { color: #9ca3af; }
+    .s { color: #22c55e; }
+    .n { color: #3b82f6; }
+    .t { color: #f59e0b; }
+    .cm { color: #374151; font-style: italic; }
+    .kw { color: #a855f7; }
+    .err { color: #ef4444; }
+    .ok { color: #22c55e; }
+
+    /* ── INLINE CODE ── */
+    code {
+      font-family: var(--mono); font-size: 12px;
+      background: var(--bg-2); border: 1px solid var(--border);
+      padding: 2px 6px; border-radius: 2px; color: var(--text-dim);
+    }
+
+    /* ── HTTP METHOD BADGES ── */
+    .endpoint {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--bg-code); border: 1px solid var(--border);
+      border-radius: 4px; padding: 14px 20px; margin: 16px 0;
+      font-family: var(--mono);
+    }
+    .method {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+      padding: 3px 8px; border-radius: 2px;
+    }
+    .method.get { background: rgba(34,197,94,0.15); color: var(--accent); }
+    .method.post { background: rgba(59,130,246,0.15); color: var(--blue); }
+    .endpoint-path { font-size: 13px; color: var(--text); }
+    .endpoint-desc { font-size: 12px; color: var(--text-muted); margin-left: auto; }
+
+    /* ── PARAM TABLE ── */
+    .param-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    .param-table thead th {
+      padding: 10px 16px; font-family: var(--mono); font-size: 10px;
+      letter-spacing: 0.12em; text-transform: uppercase; text-align: left;
+      background: var(--bg-2); border-bottom: 1px solid var(--border);
+      color: var(--text-muted); border: 1px solid var(--border);
+    }
+    .param-table tbody td {
+      padding: 11px 16px; font-size: 13px; color: var(--text-muted);
+      border: 1px solid var(--border); vertical-align: top; line-height: 1.6;
+    }
+    .param-table tbody td:first-child { font-family: var(--mono); font-size: 12px; color: var(--accent); }
+    .param-table tbody td:nth-child(2) { font-family: var(--mono); font-size: 11px; color: var(--blue); }
+    .param-req { font-family: var(--mono); font-size: 10px; color: var(--amber); }
+    .param-opt { font-family: var(--mono); font-size: 10px; color: var(--text-muted); }
+
+    /* ── CALLOUT BOXES ── */
+    .callout {
+      border-radius: 3px; padding: 16px 20px; margin: 20px 0;
+      font-size: 14px; line-height: 1.7;
+      display: flex; gap: 12px; align-items: flex-start;
+    }
+    .callout-icon { flex-shrink: 0; font-size: 14px; padding-top: 1px; }
+    .callout.info { background: rgba(59,130,246,0.07); border: 1px solid rgba(59,130,246,0.2); color: var(--text-dim); }
+    .callout.info .callout-icon { color: var(--blue); }
+    .callout.warn { background: rgba(245,158,11,0.07); border: 1px solid rgba(245,158,11,0.2); color: var(--text-dim); }
+    .callout.warn .callout-icon { color: var(--amber); }
+    .callout.constraint { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); color: var(--text-dim); }
+    .callout.constraint .callout-icon { color: var(--accent); }
+
+    /* ── FIELD ROWS ── */
+    .field-list { border: 1px solid var(--border); border-radius: 4px; overflow: hidden; margin: 16px 0; }
+    .field-row {
+      display: grid; grid-template-columns: 180px 100px 1fr;
+      padding: 12px 20px; border-bottom: 1px solid var(--border);
+      gap: 16px; font-size: 13px; align-items: start;
+    }
+    .field-row:last-child { border-bottom: none; }
+    .field-row:hover { background: var(--bg-1); }
+    .field-name { font-family: var(--mono); font-size: 12px; color: var(--accent); }
+    .field-type { font-family: var(--mono); font-size: 11px; color: var(--blue); }
+    .field-desc { color: var(--text-muted); line-height: 1.6; }
+
+    /* ── STATUS RESPONSE ── */
+    .response-block { margin: 16px 0; }
+    .response-status {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 16px; background: var(--bg-2); border: 1px solid var(--border);
+      border-radius: 3px 3px 0 0; font-family: var(--mono); font-size: 12px;
+    }
+    .status-code { font-weight: 500; }
+    .status-code.ok { color: var(--accent); }
+    .status-code.err { color: var(--red); }
+    .response-block pre { border-radius: 0 0 3px 3px; border-top: none; }
+
+    /* ── VERSION BADGE ── */
+    .version-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
+      padding: 4px 10px; border-radius: 2px;
+      background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2);
+      color: var(--accent); margin-left: 12px; vertical-align: middle;
+    }
+
+    /* ── TOC ON DESKTOP ── */
+    .toc-right {
+      display: none; /* enabled via JS for large screens */
+    }
+
+    /* ── FOOTER ── */
+    footer { border-top: 1px solid var(--border); padding: 40px 40px 40px calc(var(--sidebar-w) + 40px); }
+    .footer-inner { max-width: 860px; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+    .footer-brand { font-family: var(--display); font-size: 15px; font-weight: 700; }
+    .footer-meta { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: var(--text-muted); line-height: 1.8; margin-top: 6px; }
+    .footer-right { display: flex; gap: 28px; }
+    .footer-right a { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; color: var(--text-muted); text-decoration: none; text-transform: uppercase; transition: color 0.2s; }
+    .footer-right a:hover { color: var(--text); }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 900px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .sidebar { display: none; }
+      .docs-layout { grid-template-columns: 1fr; }
+      .docs-main { margin-left: 0; padding: 80px 20px 64px; max-width: 100%; }
+      footer { padding: 32px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="2" fill="#111318"/><path d="M8 8L16 16L24 8" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 24L16 16L24 24" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><circle cx="16" cy="16" r="2.5" fill="#22c55e"/></svg>
+    <span class="nav-logo-text">ZKNOT<sup>™</sup></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/#products">Products</a></li>
+    <li><a href="/protocol">Protocol</a></li>
+    <li><a href="/#verticals">Verticals</a></li>
+    <li><a href="/docs" class="active">Docs</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="mailto:ops@zknot.io" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="docs-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <span class="sidebar-section-label">Overview</span>
+      <a href="#overview" class="sidebar-link active"><span class="dot"></span>Introduction</a>
+      <a href="#concepts" class="sidebar-link"><span class="dot"></span>Core Concepts</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <span class="sidebar-section-label">API Reference</span>
+      <a href="#api-verify" class="sidebar-link"><span class="dot"></span>GET /verify/{code}</a>
+      <a href="#api-chain" class="sidebar-link"><span class="dot"></span>GET /chain/{position}</a>
+      <a href="#api-device" class="sidebar-link"><span class="dot"></span>GET /device/{id}</a>
+      <a href="#api-errors" class="sidebar-link"><span class="dot"></span>Errors</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <span class="sidebar-section-label">Schema</span>
+      <a href="#schema-artifact" class="sidebar-link"><span class="dot"></span>Attestation Artifact</a>
+      <a href="#schema-chain" class="sidebar-link"><span class="dot"></span>Chain Entry</a>
+      <a href="#schema-device-sig" class="sidebar-link"><span class="dot"></span>Device Signature</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <span class="sidebar-section-label">Chain Format</span>
+      <a href="#chain-structure" class="sidebar-link"><span class="dot"></span>Structure</a>
+      <a href="#chain-hashing" class="sidebar-link"><span class="dot"></span>Hash Computation</a>
+      <a href="#chain-verify" class="sidebar-link"><span class="dot"></span>Independent Verification</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <span class="sidebar-section-label">Products</span>
+      <a href="#zkkey" class="sidebar-link"><span class="dot"></span>ZKKey™</a>
+      <a href="#powerverify" class="sidebar-link"><span class="dot"></span>PowerVerify™</a>
+      <a href="#localchain" class="sidebar-link"><span class="dot"></span>ZK-LocalChain™</a>
+      <a href="#trustseal" class="sidebar-link"><span class="dot"></span>TrustSeal™</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <span class="sidebar-section-label">SDK</span>
+      <a href="#sdk-python" class="sidebar-link"><span class="dot"></span>Python</a>
+      <a href="#sdk-js" class="sidebar-link"><span class="dot"></span>JavaScript</a>
+      <a href="#sdk-cli" class="sidebar-link"><span class="dot"></span>CLI</a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="docs-main">
+
+    <!-- ── OVERVIEW ── -->
+    <div class="doc-section" id="overview">
+      <div class="doc-section-eyebrow">Documentation</div>
+      <h1 class="doc-title">ZKNOT™ Docs <span class="version-badge">v1.0</span></h1>
+      <p class="doc-intro">
+        Technical reference for the ZKNOT™ attestation API, attestation artifact schema,
+        ZK-LocalChain™ chain format, and product integration specifications.
+        All records produced by ZKNOT™ hardware are independently verifiable
+        without contacting ZKNOT™ infrastructure.
+      </p>
+
+      <div class="callout info" style="margin-top:28px;">
+        <div class="callout-icon">ℹ</div>
+        <div>The verification API at <code>api.zknot.io</code> and the SDK are under active development. This document reflects the v1 specification. Contact <a href="mailto:ops@zknot.io" style="color:var(--accent);">ops@zknot.io</a> for early API access.</div>
+      </div>
+    </div>
+
+    <!-- ── CONCEPTS ── -->
+    <div class="doc-section" id="concepts">
+      <h2 class="doc-h2">Core Concepts</h2>
+
+      <h3 class="doc-h3">Short Code</h3>
+      <p class="doc-p">A human-readable identifier assigned to every chain entry at write time. Format: <code>ZK-XXXX-XXX</code> — four alphanumeric characters, a hyphen, three alphanumeric characters. Printed on TrustSeal™ labels and included in PDF reports. Resolves to the full attestation artifact via the verify API or at <a href="https://verifyknot.io" style="color:var(--accent);">verifyknot.io</a>.</p>
+
+      <h3 class="doc-h3">Attestation Artifact</h3>
+      <p class="doc-p">The complete JSON record produced at each chain write event. Contains the short code, artifact type, device ID, timestamp, chain position, artifact hash, entry hash, and device signature. The artifact is the unit of evidence — everything else derives from it.</p>
+
+      <h3 class="doc-h3">Chain Entry</h3>
+      <p class="doc-p">An attestation artifact written to ZK-LocalChain™. Each entry includes a <code>prev_hash</code> linking it to the prior entry, making every entry a mathematical proof of all prior entries. Entries are append-only — no delete, no edit operation exists.</p>
+
+      <h3 class="doc-h3">Device Signature</h3>
+      <p class="doc-p">Every chain entry is signed by a ZKKey™ hardware device using ECDSA P-256. The private key is hardware-locked inside the ATECC608B secure element and cannot be exported. Verification requires only the public key, which is public by design.</p>
+
+      <div class="callout constraint">
+        <div class="callout-icon">→</div>
+        <div>Independent verification requires only: the attestation artifact JSON, the device public key, and a SHA-256 library. ZKNOT™ infrastructure is not required to verify any record.</div>
+      </div>
+    </div>
+
+    <!-- ── API: VERIFY ── -->
+    <div class="doc-section" id="api-verify">
+      <h2 class="doc-h2">API Reference</h2>
+
+      <h3 class="doc-h3" id="api-verify">GET /v1/verify/{short_code}</h3>
+      <p class="doc-p">Resolve a short code to its full attestation artifact. The primary endpoint — used by verifyknot.io and any third-party integration.</p>
+
+      <div class="endpoint">
+        <span class="method get">GET</span>
+        <span class="endpoint-path">https://api.zknot.io/v1/verify/{short_code}</span>
+        <span class="endpoint-desc">No auth required</span>
+      </div>
+
+      <h3 class="doc-h3">Path Parameters</h3>
+      <table class="param-table">
+        <thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>short_code</td><td>string</td><td><span class="param-req">required</span></td><td>The short code printed on the TrustSeal™ or PDF report. Format: <code>ZK-XXXX-XXX</code></td></tr>
+        </tbody>
+      </table>
+
+      <div class="response-block">
+        <div class="response-status"><span class="status-code ok">200</span> OK</div>
+        <div class="code-block" style="border-radius:0 0 4px 4px;border-top:none;">
+          <div class="code-header"><div class="code-lang">JSON</div><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+          <pre><span class="k">{</span>
+  <span class="s">"schema_version"</span><span class="k">:</span> <span class="s">"1.0"</span><span class="k">,</span>
+  <span class="s">"short_code"</span><span class="k">:</span> <span class="s">"ZK-4X9R-KM2"</span><span class="k">,</span>
+  <span class="s">"artifact_type"</span><span class="k">:</span> <span class="s">"COMBINED_SESSION"</span><span class="k">,</span>
+  <span class="s">"device_id"</span><span class="k">:</span> <span class="s">"ZKKEY-003-A7F2E1"</span><span class="k">,</span>
+  <span class="s">"signed_at"</span><span class="k">:</span> <span class="s">"2026-03-14T09:22:11Z"</span><span class="k">,</span>
+  <span class="s">"chain_position"</span><span class="k">:</span> <span class="n">41887</span><span class="k">,</span>
+  <span class="s">"chain_length_at_signing"</span><span class="k">:</span> <span class="n">41887</span><span class="k">,</span>
+  <span class="s">"prev_hash"</span><span class="k">:</span> <span class="s">"c7d3e2f1b8a4c6d9e0f2b3c5d7a8e1f4b2c9d0e3f6a7b1c4d5e8f0a2b3c4d5e6"</span><span class="k">,</span>
+  <span class="s">"artifact_hash"</span><span class="k">:</span> <span class="s">"a3f8c1d2e4b5f9a0c7d3e2f1b8a4c6d9e0f2b3c5d7a8e1f4b2c9d0e3f6a7b1c4"</span><span class="k">,</span>
+  <span class="s">"entry_hash"</span><span class="k">:</span> <span class="s">"e0f2b3c5d7a8e1f4b2c9d0e3f6a7b1c4d5e8f0a2b3c4d5e6f7a8b9c0d1e2f3a4"</span><span class="k">,</span>
+  <span class="s">"device_signature"</span><span class="k">:</span> <span class="k">{</span>
+    <span class="s">"algorithm"</span><span class="k">:</span> <span class="s">"ECDSA-P256"</span><span class="k">,</span>
+    <span class="s">"public_key_fingerprint"</span><span class="k">:</span> <span class="s">"3a:7c:f1:9b:2d:e4:8a:05:c3:71:b6:4f:2e:9d:a8:01"</span><span class="k">,</span>
+    <span class="s">"public_key_pem"</span><span class="k">:</span> <span class="s">"-----BEGIN PUBLIC KEY-----\nMFkwEwYH..."</span><span class="k">,</span>
+    <span class="s">"signature"</span><span class="k">:</span> <span class="s">"MEQCIBx9f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2MEQCIBx9..."</span>
+  <span class="k">},</span>
+  <span class="s">"verification_status"</span><span class="k">:</span> <span class="s">"VERIFIED"</span><span class="k">,</span>
+  <span class="s">"verification_url"</span><span class="k">:</span> <span class="s">"https://verifyknot.io/ZK-4X9R-KM2"</span>
+<span class="k">}</span></pre>
+        </div>
+      </div>
+
+      <div class="response-block">
+        <div class="response-status"><span class="status-code err">404</span> Not Found</div>
+        <div class="code-block" style="border-radius:0 0 4px 4px;border-top:none;">
+          <div class="code-header"><div class="code-lang">JSON</div><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+          <pre><span class="k">{</span>
+  <span class="s">"error"</span><span class="k">:</span> <span class="s">"SHORT_CODE_NOT_FOUND"</span><span class="k">,</span>
+  <span class="s">"short_code"</span><span class="k">:</span> <span class="s">"ZK-0000-000"</span><span class="k">,</span>
+  <span class="s">"message"</span><span class="k">:</span> <span class="s">"No chain entry exists for this short code."</span>
+<span class="k">}</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── API: CHAIN ── -->
+    <div class="doc-section" id="api-chain">
+      <h3 class="doc-h3">GET /v1/chain/{position}</h3>
+      <p class="doc-p">Retrieve a chain entry by its absolute position in the ledger. Useful for chain traversal and integrity auditing.</p>
+      <div class="endpoint">
+        <span class="method get">GET</span>
+        <span class="endpoint-path">https://api.zknot.io/v1/chain/{position}</span>
+        <span class="endpoint-desc">No auth required</span>
+      </div>
+
+      <h3 class="doc-h3">GET /v1/chain/latest</h3>
+      <p class="doc-p">Returns the most recent chain entry and current chain length. Use to confirm chain head state.</p>
+      <div class="endpoint">
+        <span class="method get">GET</span>
+        <span class="endpoint-path">https://api.zknot.io/v1/chain/latest</span>
+        <span class="endpoint-desc">No auth required</span>
+      </div>
+
+      <h3 class="doc-h3" id="api-device">GET /v1/device/{device_id}</h3>
+      <p class="doc-p">Retrieve the public key and registration record for a ZKKey™ device ID. Use to obtain the public key needed for independent signature verification.</p>
+      <div class="endpoint">
+        <span class="method get">GET</span>
+        <span class="endpoint-path">https://api.zknot.io/v1/device/{device_id}</span>
+        <span class="endpoint-desc">No auth required</span>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header"><div class="code-lang">Response — 200 OK</div><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="k">{</span>
+  <span class="s">"device_id"</span><span class="k">:</span> <span class="s">"ZKKEY-003-A7F2E1"</span><span class="k">,</span>
+  <span class="s">"device_type"</span><span class="k">:</span> <span class="s">"ZKKey"</span><span class="k">,</span>
+  <span class="s">"secure_element"</span><span class="k">:</span> <span class="s">"ATECC608B"</span><span class="k">,</span>
+  <span class="s">"registered_at"</span><span class="k">:</span> <span class="s">"2026-01-08T14:00:00Z"</span><span class="k">,</span>
+  <span class="s">"public_key_pem"</span><span class="k">:</span> <span class="s">"-----BEGIN PUBLIC KEY-----\nMFkwEwYH..."</span><span class="k">,</span>
+  <span class="s">"public_key_fingerprint"</span><span class="k">:</span> <span class="s">"3a:7c:f1:9b:2d:e4:8a:05:c3:71:b6:4f:2e:9d:a8:01"</span><span class="k">,</span>
+  <span class="s">"status"</span><span class="k">:</span> <span class="s">"ACTIVE"</span>
+<span class="k">}</span></pre>
+      </div>
+    </div>
+
+    <!-- ── API ERRORS ── -->
+    <div class="doc-section" id="api-errors">
+      <h2 class="doc-h2">Error Codes</h2>
+      <div class="field-list">
+        <div class="field-row">
+          <div class="field-name" style="color:var(--red)">SHORT_CODE_NOT_FOUND</div>
+          <div class="field-type" style="color:var(--red)">404</div>
+          <div class="field-desc">The short code does not exist in the chain. It has never been written, or was entered incorrectly.</div>
+        </div>
+        <div class="field-row">
+          <div class="field-name" style="color:var(--red)">CHAIN_INTEGRITY_FAILURE</div>
+          <div class="field-type" style="color:var(--red)">409</div>
+          <div class="field-desc">The entry's hash does not match its position in the chain. This indicates tampering. This error should never occur in normal operation.</div>
+        </div>
+        <div class="field-row">
+          <div class="field-name" style="color:var(--red)">SIGNATURE_INVALID</div>
+          <div class="field-type" style="color:var(--red)">422</div>
+          <div class="field-desc">The device signature on this entry does not verify against the registered device public key.</div>
+        </div>
+        <div class="field-row">
+          <div class="field-name" style="color:var(--red)">DEVICE_NOT_FOUND</div>
+          <div class="field-type" style="color:var(--red)">404</div>
+          <div class="field-desc">The device ID is not registered. All deployed ZKKey™ devices must be registered before use.</div>
+        </div>
+        <div class="field-row">
+          <div class="field-name" style="color:var(--red)">RATE_LIMITED</div>
+          <div class="field-type" style="color:var(--red)">429</div>
+          <div class="field-desc">Verification API is rate-limited at 60 requests/minute per IP for unauthenticated callers.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SCHEMA: ARTIFACT ── -->
+    <div class="doc-section" id="schema-artifact">
+      <h2 class="doc-h2">Attestation Artifact Schema</h2>
+      <p class="doc-p">The canonical JSON schema for all ZKNOT™ chain entries. Version 1.0. Every field is required unless marked optional.</p>
+
+      <div class="field-list">
+        <div class="field-row">
+          <div class="field-name">schema_version</div>
+          <div class="field-type">string</div>
+          <div class="field-desc">Schema version. Currently <code>"1.0"</code>. Increment on breaking changes.</div>
+        </div>
+        <div class="field-row">
+          <div class="field-name">short_code</div>
+          <div class="field-type">string</div>
+          <div class="field-desc">Human-readable identifier. Format: <code>ZK-[A-Z0-9]{4}-[A-Z0-9]{3}</code>. Globally unique per chain entry.</div>
+        </div>
+        <div class="field-row">
+          <div class="field-name">artifact_type</div>
+          <div class="field-type">enum</div>
+          <div class="field-desc"><code>COMBINED_SESSION</code> · <code>TRUSTSEAL_EVENT</code> · <code>ZKKEY_SIGNATURE</code> · <code>POWERVERIFY_CONNECT</code> · <code>CHAIN_EXPORT</code></div>
+        </div>
+        <div class="field-row">
+          <div class="field-name">device_id</div>
+          <div class="field-type">string</div>
+          <div class="field-desc">The ZKKey™ device that produced this entry. Resolves to a public key via <code>GET /v1/device/{device_id}</code>.</div>
+        </div>
+        <div class="field-row">
+          <div class="field-name">signed_at</div>
+          <div class="field-type">string (ISO 8601)</div>
+          <div class="field-desc">UTC timestamp of the signature event. Set by the ZKKey™ hardware clock at button-press time.</div>
+        </div>
+        <div class="field-row">
+          <div class="field-name">chain_position</div>
+          <div class="field-type">integer</div>
+          <div class="field-desc">Monotonically increasing position in the chain. Starts at 1. Gaps indicate a chain integrity failure.</div>
+        </div>
+        <div class="field-row">
+          <div class="field-name">chain_length_at_signing</div>
+          <div class="field-type">integer</div>
+          <div class="field-desc">Total chain length at the moment of signing. Must equal <code>chain_position</code> for a valid head entry.</div>
+        </div>
+        <div class="field-row">
+          <div class="field-name">prev_hash</div>
+          <div class="field-type">string (hex)</div>
+          <div class="field-desc">SHA-256 hash of the immediately preceding chain entry's full JSON. <code>null</code> for genesis entry only.</div>
+        </div>
+        <div class="field-row">
+          <div class="field-name">artifact_hash</div>
+          <div class="field-type">string (hex)</div>
+          <div class="field-desc">SHA-256 hash of the digital artifact associated with this entry (image, file, session). The proof that the artifact is unchanged.</div>
+        </div>
+        <div class="field-row">
+          <div class="field-name">entry_hash</div>
+          <div class="field-type">string (hex)</div>
+          <div class="field-desc">SHA-256 hash of this entry's full JSON (excluding the <code>entry_hash</code> field itself). Used as <code>prev_hash</code> in the next entry.</div>
+        </div>
+        <div class="field-row">
+          <div class="field-name">device_signature</div>
+          <div class="field-type">object</div>
+          <div class="field-desc">ZKKey™ hardware signature over this entry. See Device Signature schema below.</div>
+        </div>
+        <div class="field-row">
+          <div class="field-name">verification_url</div>
+          <div class="field-type">string (URI)</div>
+          <div class="field-desc">Canonical public verification URL for this entry. Always <code>https://verifyknot.io/{short_code}</code>.</div>
+        </div>
+        <div class="field-row">
+          <div class="field-name">metadata</div>
+          <div class="field-type">object (optional)</div>
+          <div class="field-desc">Optional key-value extension for operator notes, GPS coordinates, seal ID, case number. Not included in signature computation.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SCHEMA: DEVICE SIG ── -->
+    <div class="doc-section" id="schema-device-sig">
+      <h2 class="doc-h2">Device Signature Schema</h2>
+      <div class="field-list">
+        <div class="field-row">
+          <div class="field-name">algorithm</div>
+          <div class="field-type">string</div>
+          <div class="field-desc">Always <code>"ECDSA-P256"</code> in v1. Per NIST FIPS 186-4.</div>
+        </div>
+        <div class="field-row">
+          <div class="field-name">public_key_fingerprint</div>
+          <div class="field-type">string</div>
+          <div class="field-desc">Colon-separated hex fingerprint of the device public key. For quick visual identification.</div>
+        </div>
+        <div class="field-row">
+          <div class="field-name">public_key_pem</div>
+          <div class="field-type">string</div>
+          <div class="field-desc">Full PEM-encoded public key. Included for offline verification — no network call required.</div>
+        </div>
+        <div class="field-row">
+          <div class="field-name">signature</div>
+          <div class="field-type">string (base64)</div>
+          <div class="field-desc">DER-encoded ECDSA signature, base64url-encoded. Verifies against the <code>entry_hash</code> field.</div>
+        </div>
+      </div>
+
+      <h3 class="doc-h3">Independent Signature Verification</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-lang">Python</div><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="kw">from</span> cryptography.hazmat.primitives <span class="kw">import</span> hashes, serialization
+<span class="kw">from</span> cryptography.hazmat.primitives.asymmetric <span class="kw">import</span> ec
+<span class="kw">import</span> base64, hashlib, json
+
+<span class="cm"># Load the attestation artifact</span>
+artifact = json.load(open(<span class="s">"artifact.json"</span>))
+
+<span class="cm"># 1. Verify the entry hash</span>
+entry_copy = {k: v <span class="kw">for</span> k, v <span class="kw">in</span> artifact.items() <span class="kw">if</span> k != <span class="s">"entry_hash"</span>}
+computed = hashlib.sha256(
+    json.dumps(entry_copy, separators=(<span class="s">","</span>, <span class="s">":"</span>), sort_keys=<span class="kw">True</span>).encode()
+).hexdigest()
+assert computed == artifact[<span class="s">"entry_hash"</span>], <span class="s">"Entry hash mismatch"</span>
+
+<span class="cm"># 2. Verify the device signature</span>
+sig = artifact[<span class="s">"device_signature"</span>]
+pub_key = serialization.load_pem_public_key(
+    sig[<span class="s">"public_key_pem"</span>].encode()
+)
+pub_key.verify(
+    base64.urlsafe_b64decode(sig[<span class="s">"signature"</span>]),
+    bytes.fromhex(artifact[<span class="s">"entry_hash"</span>]),
+    ec.ECDSA(hashes.SHA256())
+)
+
+<span class="cm"># 3. Verify chain linkage (if you have prev entry)</span>
+prev_hash = hashlib.sha256(
+    json.dumps(prev_artifact, separators=(<span class="s">","</span>, <span class="s">":"</span>), sort_keys=<span class="kw">True</span>).encode()
+).hexdigest()
+assert prev_hash == artifact[<span class="s">"prev_hash"</span>], <span class="s">"Chain break detected"</span>
+
+<span class="ok">print</span>(<span class="s">"✓ Artifact verified. Chain intact."</span>)</pre>
+      </div>
+    </div>
+
+    <!-- ── CHAIN FORMAT ── -->
+    <div class="doc-section" id="chain-structure">
+      <h2 class="doc-h2">Chain Format</h2>
+
+      <h3 class="doc-h3">Structure</h3>
+      <p class="doc-p">ZK-LocalChain™ is a linear, append-only sequence of attestation artifacts. Each entry references the hash of the prior entry, forming a cryptographic chain. Any modification to any entry invalidates every subsequent entry's <code>prev_hash</code> — making tampering detectable by any party with two consecutive entries.</p>
+
+      <h3 class="doc-h3" id="chain-hashing">Hash Computation</h3>
+      <p class="doc-p">The <code>entry_hash</code> for each entry is computed as:</p>
+      <div class="code-block">
+        <div class="code-header"><div class="code-lang">Algorithm</div></div>
+        <pre><span class="cm">// 1. Take the full entry JSON</span>
+<span class="cm">// 2. Remove the "entry_hash" key</span>
+<span class="cm">// 3. Canonicalize: sort keys, remove whitespace</span>
+<span class="cm">// 4. UTF-8 encode</span>
+<span class="cm">// 5. SHA-256 hash → hex string</span>
+
+entry_hash = SHA256(
+    JSON.stringify(entry_without_entry_hash, {
+        keys: sorted,
+        separators: (",", ":")
+    })
+).hex()</pre>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠</div>
+        <div>Key ordering is significant. Always use <code>sort_keys=True</code> (Python) or equivalent canonical JSON serialization. Whitespace differences will produce a different hash.</div>
+      </div>
+
+      <h3 class="doc-h3" id="chain-verify">Independent Chain Verification</h3>
+      <p class="doc-p">To verify an entire exported chain without ZKNOT™ infrastructure:</p>
+      <div class="code-block">
+        <div class="code-header"><div class="code-lang">Python</div><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="kw">import</span> json, hashlib
+
+entries = json.load(open(<span class="s">"chain_export.json"</span>))  <span class="cm"># list, position order</span>
+
+<span class="kw">for</span> i, entry <span class="kw">in</span> enumerate(entries):
+    <span class="cm"># Verify entry hash</span>
+    e = {k: v <span class="kw">for</span> k, v <span class="kw">in</span> entry.items() <span class="kw">if</span> k != <span class="s">"entry_hash"</span>}
+    computed = hashlib.sha256(
+        json.dumps(e, separators=(<span class="s">","</span>,<span class="s">":"</span>), sort_keys=<span class="kw">True</span>).encode()
+    ).hexdigest()
+    assert computed == entry[<span class="s">"entry_hash"</span>]
+
+    <span class="cm"># Verify chain linkage</span>
+    <span class="kw">if</span> i > <span class="n">0</span>:
+        assert entry[<span class="s">"prev_hash"</span>] == entries[i-<span class="n">1</span>][<span class="s">"entry_hash"</span>]
+
+    <span class="cm"># Verify chain position</span>
+    assert entry[<span class="s">"chain_position"</span>] == i + <span class="n">1</span>
+
+<span class="ok">print</span>(<span class="s">f"✓ Chain verified. {len(entries)} entries. Integrity intact."</span>)</pre>
+      </div>
+    </div>
+
+    <!-- ── PRODUCT SPECS ── -->
+    <div class="doc-section" id="zkkey">
+      <h2 class="doc-h2">ZKKey™ — Technical Reference</h2>
+      <p class="doc-p">Hardware cryptographic signing device. Human-gated. Post-nonce signing structurally impossible.</p>
+      <div class="field-list">
+        <div class="field-row"><div class="field-name">Secure Element</div><div class="field-type">hardware</div><div class="field-desc">Microchip ATECC608B · ECC-P256 · ECDH · SHA-256</div></div>
+        <div class="field-row"><div class="field-name">Host MCU</div><div class="field-type">hardware</div><div class="field-desc">STM32F411 · ARM Cortex-M4 · 100MHz</div></div>
+        <div class="field-row"><div class="field-name">I²C Address</div><div class="field-type">0x60</div><div class="field-desc">Default ATECC608B I²C address on PB6/PB7 (I2C1)</div></div>
+        <div class="field-row"><div class="field-name">Signing Algorithm</div><div class="field-type">ECDSA-P256</div><div class="field-desc">Per NIST FIPS 186-4. Key slot 0. Non-exportable.</div></div>
+        <div class="field-row"><div class="field-name">Interface</div><div class="field-type">USB-A / I²C</div><div class="field-desc">USB HID + Serial. 4-wire I²C header for embedded integration.</div></div>
+        <div class="field-row"><div class="field-name">Nonce enforcement</div><div class="field-type">hardware timer</div><div class="field-desc">Tamper-evident. Non-resettable without new chain entry.</div></div>
+        <div class="field-row"><div class="field-name">Physical trigger</div><div class="field-type">button press</div><div class="field-desc">PC13 GPIO. No remote signing path exists in firmware.</div></div>
+      </div>
+    </div>
+
+    <div class="doc-section" id="powerverify">
+      <h2 class="doc-h2">PowerVerify™ — Technical Reference</h2>
+      <p class="doc-p">Physical write-path elimination device. No firmware. Continuity-testable.</p>
+      <div class="field-list">
+        <div class="field-row"><div class="field-name">Write protection</div><div class="field-type">physical</div><div class="field-desc">Write data lines severed at PCB trace level. No firmware involved.</div></div>
+        <div class="field-row"><div class="field-name">Testability</div><div class="field-type">multimeter</div><div class="field-desc">Open circuit on write lines. Measurable with standard continuity test in any lab or court.</div></div>
+        <div class="field-row"><div class="field-name">Interfaces</div><div class="field-type">USB 3.0 / SATA</div><div class="field-desc">M.2 variant in development. Passive passthrough form factor.</div></div>
+        <div class="field-row"><div class="field-name">Firmware</div><div class="field-type">none</div><div class="field-desc">Zero firmware. No attack surface below the physical protection layer.</div></div>
+        <div class="field-row"><div class="field-name">Failure mode</div><div class="field-type">fail-safe</div><div class="field-desc">Hardware failure results in loss of read path — never restoration of write path.</div></div>
+      </div>
+    </div>
+
+    <div class="doc-section" id="localchain">
+      <h2 class="doc-h2">ZK-LocalChain™ — Technical Reference</h2>
+      <p class="doc-p">Offline-capable append-only hash-chained ledger. No central authority required.</p>
+      <div class="field-list">
+        <div class="field-row"><div class="field-name">Storage</div><div class="field-type">W25Q flash</div><div class="field-desc">SPI NOR flash. Encrypted at rest. Field-replaceable.</div></div>
+        <div class="field-row"><div class="field-name">Hash algorithm</div><div class="field-type">SHA-256</div><div class="field-desc">Per entry and for chain linkage. Hex-encoded in JSON.</div></div>
+        <div class="field-row"><div class="field-name">Connectivity</div><div class="field-type">offline-capable</div><div class="field-desc">Full operation with zero network. Syncs to verifyknot.io on reconnection.</div></div>
+        <div class="field-row"><div class="field-name">Append policy</div><div class="field-type">append-only</div><div class="field-desc">No delete or edit operation exists at any layer of the stack.</div></div>
+        <div class="field-row"><div class="field-name">Export format</div><div class="field-type">JSON / PDF</div><div class="field-desc">Attestation artifact JSON array or signed PDF chain-of-custody report.</div></div>
+      </div>
+    </div>
+
+    <div class="doc-section" id="trustseal">
+      <h2 class="doc-h2">TrustSeal™ — Technical Reference</h2>
+      <div class="field-list">
+        <div class="field-row"><div class="field-name">Tamper evidence</div><div class="field-type">destructive void</div><div class="field-desc">Permanent VOID pattern revealed on item surface and seal backing on removal.</div></div>
+        <div class="field-row"><div class="field-name">Short code</div><div class="field-type">printed on face</div><div class="field-desc">Resolves at verifyknot.io. Also encoded as QR and Code 128 barcode.</div></div>
+        <div class="field-row"><div class="field-name">Scanner</div><div class="field-type">DE2120</div><div class="field-desc">USB HID barcode scanner. 4-wire header for embedded integration. Reads 1D and 2D codes.</div></div>
+        <div class="field-row"><div class="field-name">Binding event</div><div class="field-type">atomic</div><div class="field-desc">Chain entry written simultaneously with seal scan. No gap between physical and digital custody.</div></div>
+        <div class="field-row"><div class="field-name">Chain entry type</div><div class="field-type">TRUSTSEAL_EVENT</div><div class="field-desc">Payload includes seal_id, artifact_hash, operator device_id, timestamp.</div></div>
+      </div>
+    </div>
+
+    <!-- ── SDK ── -->
+    <div class="doc-section" id="sdk-python">
+      <h2 class="doc-h2">SDK</h2>
+      <h3 class="doc-h3">Python</h3>
+      <div class="callout info">
+        <div class="callout-icon">ℹ</div>
+        <div>Python SDK is in development. Contact <a href="mailto:ops@zknot.io" style="color:var(--accent);">ops@zknot.io</a> for early access. The verification snippet below works today against the attestation artifact JSON directly.</div>
+      </div>
+      <div class="code-block">
+        <div class="code-header"><div class="code-lang">Shell</div><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+        <pre>pip install zknot  <span class="cm"># coming soon</span></pre>
+      </div>
+      <div class="code-block">
+        <div class="code-header"><div class="code-lang">Python — Verify via API</div><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="kw">import</span> requests
+
+r = requests.get(<span class="s">"https://api.zknot.io/v1/verify/ZK-4X9R-KM2"</span>)
+artifact = r.json()
+
+<span class="ok">print</span>(artifact[<span class="s">"verification_status"</span>])  <span class="cm"># "VERIFIED"</span>
+<span class="ok">print</span>(artifact[<span class="s">"signed_at"</span>])           <span class="cm"># "2026-03-14T09:22:11Z"</span>
+<span class="ok">print</span>(artifact[<span class="s">"chain_position"</span>])      <span class="cm"># 41887</span></pre>
+      </div>
+    </div>
+
+    <div class="doc-section" id="sdk-js">
+      <h3 class="doc-h3">JavaScript / TypeScript</h3>
+      <div class="code-block">
+        <div class="code-header"><div class="code-lang">JavaScript</div><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cm">// Verify a short code</span>
+<span class="kw">const</span> res = <span class="kw">await</span> fetch(<span class="s">"https://api.zknot.io/v1/verify/ZK-4X9R-KM2"</span>)
+<span class="kw">const</span> artifact = <span class="kw">await</span> res.json()
+
+console.log(artifact.verification_status)  <span class="cm">// "VERIFIED"</span>
+console.log(artifact.chain_position)       <span class="cm">// 41887</span>
+console.log(artifact.artifact_hash)        <span class="cm">// "a3f8c1d2..."</span>
+
+<span class="cm">// The verification_url is always public</span>
+window.open(artifact.verification_url)</pre>
+      </div>
+    </div>
+
+    <div class="doc-section" id="sdk-cli">
+      <h3 class="doc-h3">CLI</h3>
+      <p class="doc-p">Until the CLI tool ships, use <code>curl</code> directly:</p>
+      <div class="code-block">
+        <div class="code-header"><div class="code-lang">Shell</div><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cm"># Verify a short code</span>
+curl https://api.zknot.io/v1/verify/ZK-4X9R-KM2 | jq .
+
+<span class="cm"># Get chain head</span>
+curl https://api.zknot.io/v1/chain/latest | jq .chain_position
+
+<span class="cm"># Get device public key</span>
+curl https://api.zknot.io/v1/device/ZKKEY-003-A7F2E1 | jq .public_key_pem</pre>
+      </div>
+      <div class="callout constraint">
+        <div class="callout-icon">→</div>
+        <div>All verification endpoints are public and require no authentication. Rate limit: 60 requests/minute per IP for unauthenticated callers. Contact <a href="mailto:ops@zknot.io" style="color:var(--accent);">ops@zknot.io</a> for authenticated access with higher limits.</div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">ZKNOT™</div>
+      <div class="footer-meta">ZKNOT, Inc. — Utah-based SDVOSB · UEI: C4SKW13JPEL5<br/>ops@zknot.io · William Shane Wilkinson, Founder & CEO</div>
+    </div>
+    <div class="footer-right">
+      <a href="/">Home</a>
+      <a href="/#products">Products</a>
+      <a href="/protocol">Protocol</a>
+      <a href="https://verifyknot.io">Verify</a>
+      <a href="/about">About</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── Copy buttons ──
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      btn.textContent = 'Copied';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  // ── Active sidebar link on scroll ──
+  const sections = document.querySelectorAll('[id]');
+  const links = document.querySelectorAll('.sidebar-link');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.sidebar-link[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-64px 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
