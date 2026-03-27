@@ -1,27 +1,21 @@
-// _worker.js — ZKNOT™ site router for Cloudflare Workers
-// Maps clean URLs to .html files in the asset bundle
+// router.js — ZKNOT™ site router for Cloudflare Workers
+// Assets live in ./public/ — this script handles clean URL routing
 
 const ROUTES = {
-  // Products
-  "/products/zkkey":          "/zkkey.html",
-  "/products/powerverify":    "/powerverify.html",
-  "/products/zk-localchain":  "/zk-localchain.html",
-  "/products/trustseal":      "/trustseal.html",
-
-  // Protocol
-  "/protocol":                "/protocol.html",
-  "/evidence-protocol":       "/protocol.html",
-
-  // Verticals
-  "/verticals/journalism":       "/journalism.html",
-  "/verticals/pharmaceutical":   "/pharmaceutical.html",
-  "/verticals/law-enforcement":  "/law-enforcement.html",
+  "/":                             "/index.html",
+  "/products/zkkey":               "/zkkey.html",
+  "/products/powerverify":         "/powerverify.html",
+  "/products/zk-localchain":       "/zk-localchain.html",
+  "/products/trustseal":           "/trustseal.html",
+  "/protocol":                     "/protocol.html",
+  "/evidence-protocol":            "/protocol.html",
+  "/verticals/journalism":         "/journalism.html",
+  "/verticals/pharmaceutical":     "/pharmaceutical.html",
+  "/verticals/law-enforcement":    "/law-enforcement.html",
   "/verticals/election-integrity": "/vertical-election.html",
-
-  // Core pages
-  "/about":   "/about.html",
-  "/docs":    "/docs.html",
-  "/verify":  "/verify.html",
+  "/about":                        "/about.html",
+  "/docs":                         "/docs.html",
+  "/verify":                       "/verify.html",
 };
 
 export default {
@@ -37,23 +31,23 @@ export default {
     // Check route map
     const mapped = ROUTES[pathname];
     if (mapped) {
-      const assetUrl = new URL(mapped, url.origin);
-      const assetRequest = new Request(assetUrl.toString(), request);
+      const assetRequest = new Request(
+        new URL(mapped, url.origin).toString(),
+        request
+      );
       const response = await env.ASSETS.fetch(assetRequest);
       if (response.ok) {
-        // Return with correct content type and original URL intact
         return new Response(response.body, {
           status: 200,
           headers: {
             "Content-Type": "text/html; charset=utf-8",
             "Cache-Control": "public, max-age=300",
-            "X-Robots-Tag": "index, follow",
           },
         });
       }
     }
 
-    // Fall through to asset serving (handles index.html, static files, etc.)
+    // Fall through to asset serving (favicon, images, etc.)
     return env.ASSETS.fetch(request);
   },
 };
