@@ -5,6 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ZKNOT™ — Physics Enforces. Math Proves. You Verify.</title>
   <meta name="description" content="ZKNOT™ builds cryptographic hardware attestation and chain-of-custody products for government, law enforcement, and forensic evidence integrity." />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://zknot.io/" />
+  <meta property="og:title" content="ZKNOT™ — Physics Enforces. Math Proves. You Verify." />
+  <meta property="og:description" content="ZKNOT™ is an evidence company. Cryptographic hardware attestation and chain-of-custody products for government, law enforcement, and forensic investigation. Independent verification — no trust required." />
+  <meta property="og:image" content="https://zknot.io/og-image.png" />
+  <meta property="og:site_name" content="ZKNOT™" />
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ZKNOT™ — Physics Enforces. Math Proves. You Verify." />
+  <meta name="twitter:description" content="Hardware attestation and chain-of-custody products. Physics enforces. Math proves. You verify." />
+  <meta name="twitter:image" content="https://zknot.io/og-image.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
@@ -867,6 +880,11 @@
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 3px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .audience-card:hover {
+      background: var(--bg-2);
+      border-color: var(--border-active);
     }
 
     .audience-icon {
@@ -1079,7 +1097,7 @@
     <li><a href="#verticals">Verticals</a></li>
     <li><a href="/docs">Docs</a></li>
     <li><a href="/about">About</a></li>
-    <li><a href="mailto:ops@zknot.io" class="nav-cta">Contact</a></li>
+    <li><a href="/cdn-cgi/l/email-protection#2c435c5f6c5647424358024543" class="nav-cta">Contact</a></li>
   </ul>
 </nav>
 
@@ -1389,7 +1407,7 @@
     <div class="section-label reveal">Who Uses ZKNOT™</div>
     <h2 class="section-title reveal">Built for professionals who cannot afford to be wrong.</h2>
     <div class="audiences-grid reveal">
-      <div class="audience-card">
+      <a class="audience-card" href="/about" style="text-decoration:none;color:inherit;display:block;">
         <svg class="audience-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect x="6" y="8" width="24" height="20" rx="2" stroke="#6b7280" stroke-width="1.5"/>
           <path d="M12 16h12M12 20h8" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round"/>
@@ -1397,16 +1415,16 @@
         </svg>
         <div class="audience-title">Contracting Officers</div>
         <div class="audience-body">DoD, DHS, DOJ. SDVOSB-eligible, SAM.gov registered. Hardware attestation for federal evidence requirements.</div>
-      </div>
-      <div class="audience-card">
+      </a>
+      <a class="audience-card" href="/verticals/election-integrity" style="text-decoration:none;color:inherit;display:block;">
         <svg class="audience-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="18" cy="12" r="5" stroke="#6b7280" stroke-width="1.5"/>
           <path d="M8 28c0-5.5 4.5-10 10-10s10 4.5 10 10" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
         <div class="audience-title">Election Integrity</div>
         <div class="audience-body">Chain of custody for ballot handling equipment, chain-of-evidence attestation for audit events, independently verifiable.</div>
-      </div>
-      <div class="audience-card">
+      </a>
+      <a class="audience-card" href="/verticals/journalism" style="text-decoration:none;color:inherit;display:block;">
         <svg class="audience-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect x="10" y="6" width="16" height="24" rx="2" stroke="#6b7280" stroke-width="1.5"/>
           <circle cx="18" cy="26" r="1.5" fill="#6b7280"/>
@@ -1414,15 +1432,15 @@
         </svg>
         <div class="audience-title">Forensic Journalism</div>
         <div class="audience-body">Verifiable provenance for video and document evidence. Cryptographic timestamps that survive publication and legal scrutiny.</div>
-      </div>
-      <div class="audience-card">
+      </a>
+      <a class="audience-card" href="/verticals/law-enforcement" style="text-decoration:none;color:inherit;display:block;">
         <svg class="audience-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M8 28V12l10-6 10 6v16" stroke="#6b7280" stroke-width="1.5" stroke-linejoin="round"/>
           <rect x="14" y="20" width="8" height="8" stroke="#6b7280" stroke-width="1.5"/>
         </svg>
         <div class="audience-title">Law Enforcement</div>
         <div class="audience-body">Field-deployable evidence attestation for digital forensics. Chain of custody that holds in court without vendor testimony.</div>
-      </div>
+      </a>
     </div>
   </div>
 </section>
@@ -1437,7 +1455,7 @@
       or contracting vehicle. Response within one business day.
     </p>
     <div class="cta-actions">
-      <a href="mailto:ops@zknot.io" class="btn-primary">Contact ops@zknot.io</a>
+      <a href="/cdn-cgi/l/email-protection#5f302f2c1f253431302b713630" class="btn-primary">Contact <span class="__cf_email__" data-cfemail="56392625162c3d383922783f39">[email&#160;protected]</span></a>
       <a href="/docs" class="btn-secondary">Read the Docs →</a>
     </div>
     <div class="cta-detail">
@@ -1457,13 +1475,14 @@
       <div class="footer-meta">
         ZKNOT, Inc. — Utah-based SDVOSB<br/>
         UEI: C4SKW13JPEL5 · EIN: 36-5165991<br/>
-        ops@zknot.io · William Shane Wilkinson, Founder & CEO
+        <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="97f8e7e4d7edfcf9f8e3b9fef8">[email&#160;protected]</a> · William Shane Wilkinson, Founder & CEO
       </div>
     </div>
     <div class="footer-right">
       <a href="/products/zkkey">ZKKey™</a>
       <a href="/products/powerverify">PowerVerify™</a>
       <a href="/products/zk-localchain">ZK-LocalChain™</a>
+      <a href="/products/trustseal">TrustSeal™</a>
       <a href="https://verifyknot.io">verifyknot.io</a>
       <a href="/docs">Docs</a>
       <a href="/about">About</a>
@@ -1471,7 +1490,7 @@
   </div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   // ─── DEMO WIDGET ───
   function runVerify() {
     const input = document.getElementById('verifyInput');
@@ -1502,18 +1521,4 @@
   }, 1500);
 
   // ─── SCROLL REVEAL ───
-  const reveals = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-
-  reveals.forEach(el => observer.observe(el));
-</script>
-
-</body>
-</html>
+  const reveals = document.querySelectorA
