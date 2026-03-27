@@ -2,7 +2,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "zknot-site",
   "compatibility_date": "2025-09-27",
-  "main": "_worker.js",
+  "main": "router.js",
   "observability": {
     "enabled": true
   },
