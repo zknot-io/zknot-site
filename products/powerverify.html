@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PowerVerify™ — Physical Data-Path Elimination | ZKNOT™</title>
+  <meta name="description" content="PowerVerify is an inline USB device in which the D+ and D- data signaling conductors are physically absent — not disconnected, not filtered, not blocked. Data t"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <style>
+
+    :root {
+      --bg: #0a0b0d;
+      --bg-1: #0f1114;
+      --bg-2: #141720;
+      --bg-card: #111318;
+      --border: rgba(255,255,255,0.07);
+      --border-active: rgba(255,255,255,0.18);
+      --text: #e8eaed;
+      --text-muted: #6b7280;
+      --text-dim: #9ca3af;
+      --accent: #22c55e;
+      --accent-dim: rgba(34,197,94,0.12);
+      --accent-glow: rgba(34,197,94,0.25);
+      --amber: #f59e0b;
+      --amber-dim: rgba(245,158,11,0.12);
+      --blue: #3b82f6;
+      --blue-dim: rgba(59,130,246,0.12);
+      --red: #ef4444;
+      --mono: 'DM Mono', monospace;
+      --sans: 'DM Sans', sans-serif;
+      --display: 'Syne', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 64px;
+      background: rgba(10,11,13,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-mark { width: 32px; height: 32px; }
+    .nav-logo-text { font-family: var(--display); font-size: 18px; font-weight: 800; letter-spacing: 0.05em; color: var(--text); }
+    .nav-logo-text sup { font-size: 10px; font-weight: 400; color: var(--text-muted); vertical-align: super; }
+
+    .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+    .nav-links a { font-family: var(--mono); font-size: 12px; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent) !important; border: 1px solid rgba(34,197,94,0.3); padding: 6px 16px; border-radius: 2px; transition: all 0.2s !important; }
+    .nav-cta:hover { color: #000 !important; background: var(--accent); border-color: var(--accent); }
+
+    .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 120px 40px 80px; position: relative; overflow: hidden; }
+    .hero-grid-bg { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px); background-size: 48px 48px; mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 100%); }
+    .hero-glow { position: absolute; top: -200px; left: 50%; transform: translateX(-50%); width: 800px; height: 600px; background: radial-gradient(ellipse, rgba(34,197,94,0.06) 0%, transparent 70%); pointer-events: none; }
+    .hero-glow-2 { position: absolute; bottom: 0; right: -100px; width: 500px; height: 400px; background: radial-gradient(ellipse, rgba(59,130,246,0.04) 0%, transparent 70%); pointer-events: none; }
+    .hero-inner { position: relative; max-width: 1100px; margin: 0 auto; width: 100%; }
+
+    .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 28px; opacity: 0; animation: fadeUp 0.6s 0.1s ease forwards; }
+    .hero-eyebrow::before { content: ''; width: 20px; height: 1px; background: var(--accent); }
+
+    .hero-headline { font-family: var(--display); font-size: clamp(48px, 7vw, 96px); font-weight: 800; line-height: 1.0; letter-spacing: -0.02em; color: var(--text); margin-bottom: 12px; opacity: 0; animation: fadeUp 0.7s 0.2s ease forwards; }
+    .hero-headline .line-2 { color: var(--text-dim); }
+    .hero-headline .line-3 { color: var(--text-muted); }
+    .hero-headline .accent-word { color: var(--accent); }
+
+    .hero-sub { font-family: var(--sans); font-size: clamp(16px, 2vw, 20px); font-weight: 300; color: var(--text-muted); max-width: 600px; margin-top: 28px; margin-bottom: 48px; line-height: 1.7; opacity: 0; animation: fadeUp 0.7s 0.4s ease forwards; }
+    .hero-actions { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.7s 0.5s ease forwards; }
+
+    .btn-primary { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; font-weight: 500; color: #000; background: var(--accent); border: none; padding: 14px 28px; border-radius: 2px; text-decoration: none; cursor: pointer; transition: all 0.2s; }
+    .btn-primary:hover { background: #16a34a; transform: translateY(-1px); box-shadow: 0 8px 32px rgba(34,197,94,0.3); }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; color: var(--text-muted); background: transparent; border: 1px solid var(--border); padding: 14px 28px; border-radius: 2px; text-decoration: none; cursor: pointer; transition: all 0.2s; }
+    .btn-secondary:hover { color: var(--text); border-color: var(--border-active); }
+
+    .hero-status { display: flex; align-items: center; gap: 24px; margin-top: 72px; padding-top: 32px; border-top: 1px solid var(--border); flex-wrap: wrap; opacity: 0; animation: fadeUp 0.7s 0.7s ease forwards; }
+    .status-item { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--text-muted); }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 6px var(--accent); animation: pulse 2s infinite; }
+
+    /* ─── DEMO WIDGET ─── */
+    .demo-section { padding: 80px 40px; background: var(--bg-1); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .demo-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    .demo-copy h2 { font-family: var(--display); font-size: 36px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; }
+    .demo-copy p { font-size: 16px; color: var(--text-muted); line-height: 1.7; margin-bottom: 24px; }
+    .demo-copy .verify-link { font-family: var(--mono); font-size: 12px; color: var(--accent); text-decoration: none; letter-spacing: 0.08em; display: inline-flex; align-items: center; gap: 6px; }
+    .demo-copy .verify-link::after { content: '→'; }
+
+    .demo-widget { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; font-family: var(--mono); }
+    .demo-widget-bar { display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: var(--bg-2); border-bottom: 1px solid var(--border); }
+    .demo-bar-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .demo-bar-dot:nth-child(1) { background: #ef4444; }
+    .demo-bar-dot:nth-child(2) { background: #f59e0b; }
+    .demo-bar-dot:nth-child(3) { background: var(--accent); }
+    .demo-bar-url { flex: 1; text-align: center; font-size: 11px; color: var(--text-muted); letter-spacing: 0.06em; }
+    .demo-widget-body { padding: 24px; }
+    .demo-input-row { display: flex; gap: 8px; margin-bottom: 24px; }
+    .demo-input { flex: 1; background: var(--bg-2); border: 1px solid var(--border); border-radius: 2px; padding: 10px 14px; font-family: var(--mono); font-size: 14px; color: var(--text); letter-spacing: 0.1em; outline: none; transition: border-color 0.2s; }
+    .demo-input:focus { border-color: var(--accent); }
+    .demo-verify-btn { background: var(--accent); color: #000; border: none; padding: 10px 20px; border-radius: 2px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; cursor: pointer; font-weight: 500; transition: all 0.2s; }
+    .demo-verify-btn:hover { background: #16a34a; }
+
+    .demo-result { display: none; }
+    .demo-result.visible { display: block; }
+
+    .demo-result-header { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--accent-dim); border: 1px solid rgba(34,197,94,0.2); border-radius: 2px; margin-bottom: 16px; }
+    .demo-result-header .check { width: 20px; height: 20px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 11px; color: #000; }
+    .demo-result-header .verified-text { font-size: 12px; color: var(--accent); letter-spacing: 0.08em; font-weight: 500; }
+    .demo-result-header .chain-pos { margin-left: auto; font-size: 11px; color: var(--text-muted); }
+
+    .demo-result-error { padding: 12px 16px; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); border-radius: 2px; font-size: 12px; color: #ef4444; letter-spacing: 0.05em; }
+
+    .demo-fields { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--border); border-radius: 2px; overflow: hidden; }
+    .demo-field { display: flex; align-items: flex-start; padding: 9px 16px; border-bottom: 1px solid var(--border); gap: 16px; }
+    .demo-field:last-child { border-bottom: none; }
+    .demo-field-key { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); width: 100px; flex-shrink: 0; padding-top: 1px; }
+    .demo-field-val { font-size: 12px; color: var(--text); word-break: break-all; line-height: 1.5; }
+    .demo-field-val .hash { color: var(--text-dim); font-size: 11px; }
+
+    /* ─── THREE LAYERS ─── */
+    .layers-section { padding: 100px 40px; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+    .section-label::before { content: ''; width: 20px; height: 1px; background: var(--accent); }
+    .section-title { font-family: var(--display); font-size: clamp(32px, 4vw, 52px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; }
+    .section-sub { font-size: 16px; color: var(--text-muted); max-width: 560px; line-height: 1.7; margin-bottom: 64px; }
+
+    .layers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+    .layer-card { background: var(--bg-card); padding: 48px 36px; position: relative; overflow: hidden; transition: background 0.3s; }
+    .layer-card:hover { background: var(--bg-2); }
+    .layer-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+    .layer-card:nth-child(1)::before { background: var(--amber); }
+    .layer-card:nth-child(2)::before { background: var(--blue); }
+    .layer-card:nth-child(3)::before { background: var(--accent); }
+    .layer-num { font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px; }
+    .layer-icon { width: 44px; height: 44px; margin-bottom: 20px; }
+    .layer-title { font-family: var(--display); font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+    .layer-card:nth-child(1) .layer-title { color: var(--amber); }
+    .layer-card:nth-child(2) .layer-title { color: var(--blue); }
+    .layer-card:nth-child(3) .layer-title { color: var(--accent); }
+    .layer-sub { font-family: var(--mono); font-size: 12px; color: var(--text-muted); letter-spacing: 0.05em; margin-bottom: 20px; }
+    .layer-body { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+    .layer-constraint { margin-top: 24px; padding: 12px; border-radius: 2px; font-family: var(--mono); font-size: 11px; line-height: 1.6; }
+    .layer-card:nth-child(1) .layer-constraint { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(245,158,11,0.2); }
+    .layer-card:nth-child(2) .layer-constraint { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(59,130,246,0.2); }
+    .layer-card:nth-child(3) .layer-constraint { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(34,197,94,0.2); }
+
+    /* ─── PRODUCTS ─── */
+    .products-section { padding: 100px 40px; background: var(--bg-1); border-top: 1px solid var(--border); }
+    .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+    .product-card { background: var(--bg-card); padding: 40px; text-decoration: none; color: inherit; display: block; position: relative; overflow: hidden; transition: background 0.3s; }
+    .product-card:hover { background: var(--bg-2); }
+    .product-card:hover .product-arrow { transform: translate(4px, -4px); }
+    .product-tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px; }
+    .product-name { font-family: var(--display); font-size: 26px; font-weight: 700; color: var(--text); margin-bottom: 12px; letter-spacing: -0.01em; }
+    .product-name sup { font-size: 14px; font-weight: 400; color: var(--text-muted); }
+    .product-desc { font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 24px; }
+    .product-specs { display: flex; flex-direction: column; gap: 6px; margin-bottom: 24px; }
+    .product-spec { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; color: var(--text-muted); }
+    .product-spec::before { content: '→'; color: var(--accent); font-size: 10px; }
+    .product-arrow { position: absolute; top: 40px; right: 40px; font-size: 18px; color: var(--text-muted); transition: transform 0.2s; }
+
+    /* ─── DIFF TABLE ─── */
+    .diff-section { padding: 100px 40px; }
+    .diff-table { width: 100%; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; border-collapse: collapse; margin-top: 48px; }
+    .diff-table thead th { padding: 16px 24px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; text-align: left; background: var(--bg-2); border-bottom: 1px solid var(--border); color: var(--text-muted); }
+    .diff-table thead th:last-child { color: var(--accent); }
+    .diff-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.2s; }
+    .diff-table tbody tr:last-child { border-bottom: none; }
+    .diff-table tbody tr:hover { background: var(--bg-1); }
+    .diff-table tbody td { padding: 16px 24px; font-size: 14px; color: var(--text-muted); }
+    .diff-table tbody td:first-child { font-family: var(--mono); font-size: 12px; color: var(--text-dim); }
+    .diff-table tbody td.no { color: var(--text-muted); }
+    .diff-table tbody td.yes { color: var(--accent); font-family: var(--mono); font-size: 12px; }
+
+    /* ─── AUDIENCES ─── */
+    .audiences-section { padding: 80px 40px; background: var(--bg-1); border-top: 1px solid var(--border); }
+    .audiences-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 48px; }
+    .audience-card { padding: 28px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 3px; transition: background 0.2s, border-color 0.2s; text-decoration: none; color: inherit; display: block; }
+    .audience-card:hover { background: var(--bg-2); border-color: var(--border-active); }
+    .audience-icon { width: 36px; height: 36px; margin-bottom: 16px; }
+    .audience-title { font-family: var(--display); font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+    .audience-body { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+    /* ─── CTA ─── */
+    .cta-section { padding: 120px 40px; text-align: center; position: relative; overflow: hidden; }
+    .cta-section::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 400px; background: radial-gradient(ellipse, rgba(34,197,94,0.06) 0%, transparent 70%); pointer-events: none; }
+    .cta-inner { position: relative; max-width: 640px; margin: 0 auto; }
+    .cta-inner h2 { font-family: var(--display); font-size: clamp(32px, 4vw, 52px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 20px; }
+    .cta-inner p { font-size: 16px; color: var(--text-muted); line-height: 1.7; margin-bottom: 40px; }
+    .cta-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .cta-detail { margin-top: 40px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: 24px; flex-wrap: wrap; }
+    .cta-detail span::before { content: '· '; }
+    .cta-detail span:first-child::before { content: ''; }
+
+    /* ─── FOOTER ─── */
+    footer { border-top: 1px solid var(--border); padding: 40px; }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+    .footer-left { display: flex; flex-direction: column; gap: 8px; }
+    .footer-brand { font-family: var(--display); font-size: 15px; font-weight: 700; color: var(--text); }
+    .footer-meta { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: var(--text-muted); line-height: 1.8; }
+    .footer-meta a { color: var(--text-muted); text-decoration: none; }
+    .footer-right { display: flex; gap: 32px; flex-wrap: wrap; }
+    .footer-right a { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; color: var(--text-muted); text-decoration: none; text-transform: uppercase; transition: color 0.2s; }
+    .footer-right a:hover { color: var(--text); }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ─── LOADING STATE ─── */
+    .demo-loading { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; color: var(--text-muted); letter-spacing: 0.08em; }
+    .demo-loading-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); animation: pulse 0.8s infinite; }
+    .demo-loading-dot:nth-child(2) { animation-delay: 0.15s; }
+    .demo-loading-dot:nth-child(3) { animation-delay: 0.3s; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .hero { padding: 100px 20px 60px; }
+      .demo-inner { grid-template-columns: 1fr; }
+      .layers-grid { grid-template-columns: 1fr; }
+      .products-grid { grid-template-columns: 1fr; }
+      .audiences-grid { grid-template-columns: repeat(2, 1fr); }
+      .layers-section, .products-section, .diff-section, .audiences-section, .cta-section { padding: 64px 20px; }
+      .demo-section { padding: 48px 20px; }
+      footer { padding: 32px 20px; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 500px) { .audiences-grid { grid-template-columns: 1fr; } }
+  
+    /* Product page specific */
+    .product-hero { padding: 140px 40px 80px; max-width: 1200px; margin: 0 auto; }
+    .product-type { font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; color: #f59e0b; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+    .product-type::before { content: ''; width: 20px; height: 1px; background: #f59e0b; }
+    .product-headline { font-family: var(--display); font-size: clamp(42px, 6vw, 80px); font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; color: var(--text); margin-bottom: 32px; white-space: pre-line; }
+    .product-summary { font-family: var(--sans); font-size: 17px; line-height: 1.7; color: var(--text-muted); max-width: 640px; margin-bottom: 40px; }
+    .product-badge { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: #f59e0b; border: 1px solid rgba(245,158,11,0.25); padding: 8px 16px; border-radius: 2px; margin-right: 12px; margin-bottom: 12px; }
+    .product-body { max-width: 1200px; margin: 0 auto; padding: 0 40px 100px; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+    .product-doctrine { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid #f59e0b; padding: 28px 32px; margin-bottom: 48px; border-radius: 2px; }
+    .product-doctrine-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: #f59e0b; margin-bottom: 12px; }
+    .product-doctrine-text { font-family: var(--sans); font-size: 15px; line-height: 1.7; color: var(--text-secondary); }
+    .specs-table { width: 100%; border-collapse: collapse; margin-bottom: 48px; }
+    .specs-table .spec-label { font-family: var(--mono); font-size: 12px; color: var(--text-muted); padding: 12px 0; border-bottom: 1px solid var(--border); width: 40%; vertical-align: top; padding-right: 20px; }
+    .specs-table .spec-value { font-family: var(--sans); font-size: 14px; color: var(--text-secondary); padding: 12px 0; border-bottom: 1px solid var(--border); line-height: 1.5; }
+    .section-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px; }
+    .distinction-text { font-family: var(--sans); font-size: 15px; line-height: 1.7; color: var(--text-secondary); margin-bottom: 48px; }
+    .verticals-list { list-style: none; padding: 0; }
+    .verticals-list li { font-family: var(--sans); font-size: 14px; color: var(--text-secondary); padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+    .verticals-list li::before { content: ''; width: 4px; height: 4px; background: #f59e0b; border-radius: 50%; flex-shrink: 0; }
+    .product-cta { background: var(--bg-card); border: 1px solid var(--border); border-radius: 2px; padding: 32px; }
+    .product-cta h3 { font-family: var(--display); font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+    .product-cta p { font-family: var(--sans); font-size: 14px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #000; background: var(--accent); border: none; padding: 12px 24px; border-radius: 2px; text-decoration: none; transition: opacity 0.2s; }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-secondary-sm { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); border: 1px solid var(--border); padding: 12px 24px; border-radius: 2px; text-decoration: none; margin-left: 12px; transition: all 0.2s; }
+    .btn-secondary-sm:hover { color: var(--text); border-color: var(--border-active); }
+    .patent-note { font-family: var(--mono); font-size: 11px; color: var(--text-muted); margin-top: 16px; }
+    @media (max-width: 768px) {
+      .product-hero, .product-body { padding-left: 20px; padding-right: 20px; }
+      .product-body { grid-template-columns: 1fr; gap: 40px; }
+    }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="/" class="nav-logo">
+    <svg class="nav-logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="2" fill="#111318"/>
+      <path d="M8 8L16 16L24 8" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M8 24L16 16L24 24" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/>
+      <circle cx="16" cy="16" r="2.5" fill="#22c55e"/>
+    </svg>
+    <span class="nav-logo-text">ZKNOT<sup>™</sup></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/#products">Products</a></li>
+    <li><a href="/#protocol">Protocol</a></li>
+    <li><a href="/#verticals">Verticals</a></li>
+    <li><a href="/docs">Docs</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="/cdn-cgi/l/email-protection#2946595a69534247465d074046" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<main>
+  <div class="product-hero">
+    <div class="product-type">POWER HARDWARE</div>
+    <h1 class="product-headline">The data conductors<br>are absent. Not blocked.</h1>
+    <p class="product-summary">PowerVerify is an inline USB device in which the D+ and D- data signaling conductors are physically absent — not disconnected, not filtered, not blocked. Data transfer between the upstream power source and the downstream device is physically impossible by construction. The absence is verifiable by any party with a standard electrical continuity tester.</p>
+    <span class="product-badge">Patent: PAT-002</span>
+    <span class="product-badge">ZKNOT™ EvidenceProtocol</span>
+  </div>
+
+  <div class="product-body">
+    <div class="product-left">
+      <div class="product-doctrine">
+        <div class="product-doctrine-label">Doctrine</div>
+        <p class="product-doctrine-text">Physics enforces. A $15 multimeter applied to the D+ pins of the device returns no continuity — because there is no conductor. No software configuration, firmware update, or physical intervention can enable data transfer through a conductor that does not exist.</p>
+      </div>
+
+      <div class="section-label">Technical Specifications</div>
+      <table class="specs-table">
+        <tbody>
+      <tr>
+        <td class="spec-label">Upstream</td>
+        <td class="spec-value">USB-C receptacle — VBUS and GND only</td>
+      </tr>
+      <tr>
+        <td class="spec-label">Downstream</td>
+        <td class="spec-value">USB-A, USB-C, or Micro-B — VBUS and GND only</td>
+      </tr>
+      <tr>
+        <td class="spec-label">Data conductors</td>
+        <td class="spec-value">D+, D- — physically absent from PCB</td>
+      </tr>
+      <tr>
+        <td class="spec-label">Verification</td>
+        <td class="spec-value">Electrical continuity test — no expert required</td>
+      </tr>
+      <tr>
+        <td class="spec-label">Passive variant</td>
+        <td class="spec-value">Zero firmware — no attack surface, no failure modes</td>
+      </tr>
+      <tr>
+        <td class="spec-label">Active variant</td>
+        <td class="spec-value">ATECC608B — generates signed power session record</td>
+      </tr>
+      <tr>
+        <td class="spec-label">Session record</td>
+        <td class="spec-value">Artifact with device ID, session ID, timestamp, ECDSA signature</td>
+      </tr>
+      <tr>
+        <td class="spec-label">Chain integration</td>
+        <td class="spec-value">Power session record binds to ZKKey sign via shared session_id</td>
+      </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="product-right">
+      <div class="section-label">What makes it different</div>
+      <p class="distinction-text">All existing USB write-blockers work by intercepting commands in the data stream — data conductors are present, commands are blocked. PowerVerify has no data conductors. This is a physically different architecture. The claim is conductor absence, not blocking or filtering.</p>
+
+      <div class="section-label">Vertical Applications</div>
+      <ul class="verticals-list"><li>Election equipment power attestation</li><li>Forensic device charging</li><li>Pharmaceutical cold chain power integrity</li><li>Evidence collection device preparation</li>
+      </ul>
+
+      <div style="height:48px;"></div>
+      <div class="product-cta">
+        <h3>Ready to verify?</h3>
+        <p>See a live PowerVerify™ attestation record in the production chain — no account, no login.</p>
+        <a href="https://verifyknot.io" class="btn-primary">Verify a Record →</a>
+        <a href="/#products" class="btn-secondary-sm">← All Products</a>
+        <p class="patent-note">PAT-002 — Patent pending. ZKNOT, Inc.</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-left">
+      <div class="footer-brand">ZKNOT™</div>
+      <div class="footer-meta">
+        ZKNOT, Inc. — Utah-based SDVOSB<br/>
+        UEI: C4SKW13JPEL5 · EIN: 36-5165991<br/>
+        <a href="/cdn-cgi/l/email-protection#ee819e9dae948580819ac08781"><span class="__cf_email__" data-cfemail="3f504f4c7f455451504b115650">[email&#160;protected]</span></a> · William Shane Wilkinson, Founder &amp; CEO
+      </div>
+    </div>
+    <div class="footer-right">
+      <a href="/products/zkkey">ZKKey™</a>
+      <a href="/products/powerverify">PowerVerify™</a>
+      <a href="/products/zk-localchain">ZK-LocalChain™</a>
+      <a href="/products/trustseal">TrustSeal™</a>
+      <a href="https://verifyknot.io">verifyknot.io</a>
+      <a href="/docs">Docs</a>
+      <a href="/about">About</a>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
