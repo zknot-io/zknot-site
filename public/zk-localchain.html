@@ -1,325 +1,415 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ZK-LocalChain™ — Offline Append-Only Ledger | ZKNOT™</title>
-  <meta name="description" content="ZK-LocalChain™ is an offline-capable, append-only hash-chained ledger. No central authority. Independently verifiable." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ZK-LocalChain™ — Offline Hardware-Attested Evidence Ledger | ZKNOT™</title>
+  <meta name="description" content="ZK-LocalChain is an offline-capable append-only hash-chained ledger that records hardware-attested attestation artifacts. Each entry includes the SHA-256 hash o"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
   <style>
+
     :root {
-      --bg:#0a0b0d;--bg-1:#0f1114;--bg-2:#141720;--bg-card:#111318;
-      --border:rgba(255,255,255,0.07);--border-active:rgba(255,255,255,0.18);
-      --text:#e8eaed;--text-muted:#6b7280;--text-dim:#9ca3af;
-      --accent:#3b82f6;--accent-dim:rgba(59,130,246,0.10);
-      --green:#22c55e;--amber:#f59e0b;
-      --mono:'DM Mono',monospace;--sans:'DM Sans',sans-serif;--display:'Syne',sans-serif;
+      --bg: #0a0b0d;
+      --bg-1: #0f1114;
+      --bg-2: #141720;
+      --bg-card: #111318;
+      --border: rgba(255,255,255,0.07);
+      --border-active: rgba(255,255,255,0.18);
+      --text: #e8eaed;
+      --text-muted: #6b7280;
+      --text-dim: #9ca3af;
+      --accent: #22c55e;
+      --accent-dim: rgba(34,197,94,0.12);
+      --accent-glow: rgba(34,197,94,0.25);
+      --amber: #f59e0b;
+      --amber-dim: rgba(245,158,11,0.12);
+      --blue: #3b82f6;
+      --blue-dim: rgba(59,130,246,0.12);
+      --red: #ef4444;
+      --mono: 'DM Mono', monospace;
+      --sans: 'DM Sans', sans-serif;
+      --display: 'Syne', sans-serif;
     }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    html{scroll-behavior:smooth;}
-    body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
-    body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.4;}
 
-    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:64px;background:rgba(10,11,13,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
-    .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
-    .nav-logo-text{font-family:var(--display);font-size:18px;font-weight:800;letter-spacing:0.05em;color:var(--text);}
-    .nav-logo-text sup{font-size:10px;font-weight:400;color:var(--text-muted);vertical-align:super;}
-    .nav-links{display:flex;align-items:center;gap:32px;list-style:none;}
-    .nav-links a{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color 0.2s;}
-    .nav-links a:hover{color:var(--text);}
-    .nav-cta{color:var(--green)!important;border:1px solid rgba(34,197,94,0.3);padding:6px 16px;border-radius:2px;}
-    .nav-cta:hover{color:#000!important;background:var(--green)!important;}
-    .breadcrumb{position:fixed;top:64px;left:0;right:0;z-index:99;padding:10px 40px;background:rgba(10,11,13,0.7);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:0.1em;color:var(--text-muted);}
-    .breadcrumb a{color:var(--text-muted);text-decoration:none;}
-    .breadcrumb .sep{opacity:0.3;}
-    .breadcrumb .current{color:var(--accent);}
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
 
-    .product-hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:140px 60px 80px;gap:80px;max-width:1200px;margin:0 auto;position:relative;}
-    .hero-bg-lc{position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse 80% 60% at 30% 40%,black 20%,transparent 100%);pointer-events:none;}
-    .hero-glow-lc{position:absolute;top:-100px;left:-100px;width:600px;height:600px;background:radial-gradient(ellipse,rgba(59,130,246,0.06) 0%,transparent 70%);pointer-events:none;}
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
 
-    .product-tag{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:24px;opacity:0;animation:fadeUp 0.5s 0.1s ease forwards;}
-    .product-tag::before{content:'';width:20px;height:1px;background:var(--accent);}
-    .product-name{font-family:var(--display);font-size:clamp(40px,6vw,76px);font-weight:800;letter-spacing:-0.03em;line-height:0.95;color:var(--text);margin-bottom:8px;opacity:0;animation:fadeUp 0.6s 0.15s ease forwards;}
-    .product-name sup{font-size:0.3em;vertical-align:super;font-weight:500;color:var(--text-muted);}
-    .product-tagline{font-family:var(--mono);font-size:13px;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:32px;opacity:0;animation:fadeUp 0.6s 0.25s ease forwards;}
-    .product-desc{font-size:17px;line-height:1.75;color:var(--text-dim);max-width:480px;margin-bottom:40px;opacity:0;animation:fadeUp 0.6s 0.35s ease forwards;}
-    .hero-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap;opacity:0;animation:fadeUp 0.6s 0.45s ease forwards;}
-    .btn-primary{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:13px;letter-spacing:0.06em;font-weight:500;color:#fff;background:var(--accent);border:none;padding:13px 26px;border-radius:2px;text-decoration:none;cursor:pointer;transition:all 0.2s;}
-    .btn-primary:hover{background:#2563eb;transform:translateY(-1px);box-shadow:0 8px 32px rgba(59,130,246,0.28);}
-    .btn-secondary{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:13px;letter-spacing:0.06em;color:var(--text-muted);background:transparent;border:1px solid var(--border);padding:13px 26px;border-radius:2px;text-decoration:none;transition:all 0.2s;}
-    .btn-secondary:hover{color:var(--text);border-color:var(--border-active);}
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 64px;
+      background: rgba(10,11,13,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
 
-    .hero-right{opacity:0;animation:fadeUp 0.8s 0.3s ease forwards;display:flex;align-items:center;justify-content:center;}
-    .chain-diagram{width:100%;max-width:380px;}
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-mark { width: 32px; height: 32px; }
+    .nav-logo-text { font-family: var(--display); font-size: 18px; font-weight: 800; letter-spacing: 0.05em; color: var(--text); }
+    .nav-logo-text sup { font-size: 10px; font-weight: 400; color: var(--text-muted); vertical-align: super; }
 
-    section{padding:80px 40px;}
-    .section-inner{max-width:1100px;margin:0 auto;}
-    .section-label{font-family:var(--mono);font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:8px;margin-bottom:16px;}
-    .section-label::before{content:'';width:20px;height:1px;background:var(--accent);}
-    .section-title{font-family:var(--display);font-size:clamp(28px,3.5vw,46px);font-weight:700;letter-spacing:-0.02em;margin-bottom:16px;}
-    .section-sub{font-size:16px;color:var(--text-muted);max-width:560px;line-height:1.7;margin-bottom:56px;}
+    .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+    .nav-links a { font-family: var(--mono); font-size: 12px; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent) !important; border: 1px solid rgba(34,197,94,0.3); padding: 6px 16px; border-radius: 2px; transition: all 0.2s !important; }
+    .nav-cta:hover { color: #000 !important; background: var(--accent); border-color: var(--accent); }
 
-    /* JSON SCHEMA DISPLAY */
-    .schema-section{background:var(--bg-1);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
-    .schema-display{margin-top:48px;background:var(--bg);border:1px solid var(--border);border-radius:4px;overflow:hidden;}
-    .schema-bar{display:flex;align-items:center;gap:8px;padding:12px 20px;background:var(--bg-2);border-bottom:1px solid var(--border);}
-    .schema-bar-dot{width:10px;height:10px;border-radius:50%;}
-    .schema-bar-label{font-family:var(--mono);font-size:11px;color:var(--text-muted);letter-spacing:0.08em;margin-left:8px;}
-    .schema-code{padding:28px;font-family:var(--mono);font-size:12px;line-height:1.8;overflow-x:auto;}
-    .k{color:#9ca3af;} .s{color:#22c55e;} .n{color:#3b82f6;} .b{color:#f59e0b;} .cm{color:#4b5563;font-style:italic;}
+    .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 120px 40px 80px; position: relative; overflow: hidden; }
+    .hero-grid-bg { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px); background-size: 48px 48px; mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 100%); }
+    .hero-glow { position: absolute; top: -200px; left: 50%; transform: translateX(-50%); width: 800px; height: 600px; background: radial-gradient(ellipse, rgba(34,197,94,0.06) 0%, transparent 70%); pointer-events: none; }
+    .hero-glow-2 { position: absolute; bottom: 0; right: -100px; width: 500px; height: 400px; background: radial-gradient(ellipse, rgba(59,130,246,0.04) 0%, transparent 70%); pointer-events: none; }
+    .hero-inner { position: relative; max-width: 1100px; margin: 0 auto; width: 100%; }
 
-    .specs-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-top:48px;}
-    .spec-row{display:flex;align-items:flex-start;gap:24px;padding:18px 24px;background:var(--bg-card);border-bottom:1px solid var(--border);}
-    .spec-row:nth-last-child(-n+2){border-bottom:none;}
-    .spec-key{font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);width:160px;flex-shrink:0;padding-top:2px;}
-    .spec-val{font-size:14px;color:var(--text);line-height:1.6;}
-    .spec-val .mono{font-family:var(--mono);font-size:12px;color:var(--text-dim);}
+    .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 28px; opacity: 0; animation: fadeUp 0.6s 0.1s ease forwards; }
+    .hero-eyebrow::before { content: ''; width: 20px; height: 1px; background: var(--accent); }
 
-    .constraint-box{border:1px solid rgba(59,130,246,0.2);border-radius:4px;background:rgba(59,130,246,0.04);padding:40px 48px;margin-top:48px;}
-    .constraint-title{font-family:var(--display);font-size:24px;font-weight:700;color:var(--accent);margin-bottom:20px;}
-    .constraint-list{display:flex;flex-direction:column;gap:14px;}
-    .constraint-item{display:flex;align-items:flex-start;gap:16px;font-size:15px;color:var(--text-dim);line-height:1.65;}
-    .constraint-item::before{content:'//';font-family:var(--mono);font-size:12px;color:var(--accent);flex-shrink:0;padding-top:3px;}
+    .hero-headline { font-family: var(--display); font-size: clamp(48px, 7vw, 96px); font-weight: 800; line-height: 1.0; letter-spacing: -0.02em; color: var(--text); margin-bottom: 12px; opacity: 0; animation: fadeUp 0.7s 0.2s ease forwards; }
+    .hero-headline .line-2 { color: var(--text-dim); }
+    .hero-headline .line-3 { color: var(--text-muted); }
+    .hero-headline .accent-word { color: var(--accent); }
 
-    .product-cta{text-align:center;padding:100px 40px;position:relative;overflow:hidden;}
-    .product-cta::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:400px;background:radial-gradient(ellipse,rgba(59,130,246,0.05) 0%,transparent 70%);}
-    .product-cta h2{font-family:var(--display);font-size:clamp(28px,3.5vw,48px);font-weight:700;letter-spacing:-0.02em;margin-bottom:16px;position:relative;}
-    .product-cta p{font-size:16px;color:var(--text-muted);line-height:1.7;max-width:520px;margin:0 auto 40px;position:relative;}
-    .cta-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;position:relative;}
+    .hero-sub { font-family: var(--sans); font-size: clamp(16px, 2vw, 20px); font-weight: 300; color: var(--text-muted); max-width: 600px; margin-top: 28px; margin-bottom: 48px; line-height: 1.7; opacity: 0; animation: fadeUp 0.7s 0.4s ease forwards; }
+    .hero-actions { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.7s 0.5s ease forwards; }
 
-    .next-products{background:var(--bg-1);border-top:1px solid var(--border);padding:60px 40px;}
-    .next-label{font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:24px;}
-    .next-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden;}
-    .next-card{background:var(--bg-card);padding:28px 24px;text-decoration:none;color:inherit;display:block;transition:background 0.2s;position:relative;}
-    .next-card:hover{background:var(--bg-2);}
-    .next-card-tag{font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;}
-    .next-card-name{font-family:var(--display);font-size:20px;font-weight:700;margin-bottom:8px;}
-    .next-card-desc{font-size:13px;color:var(--text-muted);line-height:1.6;}
-    .next-card-arrow{position:absolute;top:28px;right:24px;color:var(--text-muted);font-size:16px;transition:transform 0.2s;}
-    .next-card:hover .next-card-arrow{transform:translate(3px,-3px);}
+    .btn-primary { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; font-weight: 500; color: #000; background: var(--accent); border: none; padding: 14px 28px; border-radius: 2px; text-decoration: none; cursor: pointer; transition: all 0.2s; }
+    .btn-primary:hover { background: #16a34a; transform: translateY(-1px); box-shadow: 0 8px 32px rgba(34,197,94,0.3); }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; color: var(--text-muted); background: transparent; border: 1px solid var(--border); padding: 14px 28px; border-radius: 2px; text-decoration: none; cursor: pointer; transition: all 0.2s; }
+    .btn-secondary:hover { color: var(--text); border-color: var(--border-active); }
 
-    footer{border-top:1px solid var(--border);padding:40px;}
-    .footer-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;}
-    .footer-brand{font-family:var(--display);font-size:15px;font-weight:700;}
-    .footer-meta{font-family:var(--mono);font-size:10px;letter-spacing:0.1em;color:var(--text-muted);line-height:1.8;margin-top:6px;}
-    .footer-right{display:flex;gap:28px;}
-    .footer-right a{font-family:var(--mono);font-size:11px;letter-spacing:0.08em;color:var(--text-muted);text-decoration:none;text-transform:uppercase;transition:color 0.2s;}
-    .footer-right a:hover{color:var(--text);}
+    .hero-status { display: flex; align-items: center; gap: 24px; margin-top: 72px; padding-top: 32px; border-top: 1px solid var(--border); flex-wrap: wrap; opacity: 0; animation: fadeUp 0.7s 0.7s ease forwards; }
+    .status-item { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--text-muted); }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 6px var(--accent); animation: pulse 2s infinite; }
 
-    @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
-    .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s ease,transform 0.7s ease;}
-    .reveal.visible{opacity:1;transform:none;}
+    /* ─── DEMO WIDGET ─── */
+    .demo-section { padding: 80px 40px; background: var(--bg-1); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .demo-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    .demo-copy h2 { font-family: var(--display); font-size: 36px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; }
+    .demo-copy p { font-size: 16px; color: var(--text-muted); line-height: 1.7; margin-bottom: 24px; }
+    .demo-copy .verify-link { font-family: var(--mono); font-size: 12px; color: var(--accent); text-decoration: none; letter-spacing: 0.08em; display: inline-flex; align-items: center; gap: 6px; }
+    .demo-copy .verify-link::after { content: '→'; }
 
-    @media(max-width:900px){
-      nav{padding:0 20px;}.nav-links{display:none;}
-      .product-hero{grid-template-columns:1fr;padding:130px 20px 60px;gap:40px;}
-      .hero-right{display:none;}
-      .specs-grid{grid-template-columns:1fr;}
-      .next-grid{grid-template-columns:1fr;}
-      section{padding:56px 20px;}
-      .next-products{padding:48px 20px;}
-      .breadcrumb{padding:10px 20px;}
-      footer{padding:32px 20px;}
-      .constraint-box{padding:28px 24px;}
+    .demo-widget { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; font-family: var(--mono); }
+    .demo-widget-bar { display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: var(--bg-2); border-bottom: 1px solid var(--border); }
+    .demo-bar-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .demo-bar-dot:nth-child(1) { background: #ef4444; }
+    .demo-bar-dot:nth-child(2) { background: #f59e0b; }
+    .demo-bar-dot:nth-child(3) { background: var(--accent); }
+    .demo-bar-url { flex: 1; text-align: center; font-size: 11px; color: var(--text-muted); letter-spacing: 0.06em; }
+    .demo-widget-body { padding: 24px; }
+    .demo-input-row { display: flex; gap: 8px; margin-bottom: 24px; }
+    .demo-input { flex: 1; background: var(--bg-2); border: 1px solid var(--border); border-radius: 2px; padding: 10px 14px; font-family: var(--mono); font-size: 14px; color: var(--text); letter-spacing: 0.1em; outline: none; transition: border-color 0.2s; }
+    .demo-input:focus { border-color: var(--accent); }
+    .demo-verify-btn { background: var(--accent); color: #000; border: none; padding: 10px 20px; border-radius: 2px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; cursor: pointer; font-weight: 500; transition: all 0.2s; }
+    .demo-verify-btn:hover { background: #16a34a; }
+
+    .demo-result { display: none; }
+    .demo-result.visible { display: block; }
+
+    .demo-result-header { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--accent-dim); border: 1px solid rgba(34,197,94,0.2); border-radius: 2px; margin-bottom: 16px; }
+    .demo-result-header .check { width: 20px; height: 20px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 11px; color: #000; }
+    .demo-result-header .verified-text { font-size: 12px; color: var(--accent); letter-spacing: 0.08em; font-weight: 500; }
+    .demo-result-header .chain-pos { margin-left: auto; font-size: 11px; color: var(--text-muted); }
+
+    .demo-result-error { padding: 12px 16px; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); border-radius: 2px; font-size: 12px; color: #ef4444; letter-spacing: 0.05em; }
+
+    .demo-fields { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--border); border-radius: 2px; overflow: hidden; }
+    .demo-field { display: flex; align-items: flex-start; padding: 9px 16px; border-bottom: 1px solid var(--border); gap: 16px; }
+    .demo-field:last-child { border-bottom: none; }
+    .demo-field-key { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); width: 100px; flex-shrink: 0; padding-top: 1px; }
+    .demo-field-val { font-size: 12px; color: var(--text); word-break: break-all; line-height: 1.5; }
+    .demo-field-val .hash { color: var(--text-dim); font-size: 11px; }
+
+    /* ─── THREE LAYERS ─── */
+    .layers-section { padding: 100px 40px; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+    .section-label::before { content: ''; width: 20px; height: 1px; background: var(--accent); }
+    .section-title { font-family: var(--display); font-size: clamp(32px, 4vw, 52px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; }
+    .section-sub { font-size: 16px; color: var(--text-muted); max-width: 560px; line-height: 1.7; margin-bottom: 64px; }
+
+    .layers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+    .layer-card { background: var(--bg-card); padding: 48px 36px; position: relative; overflow: hidden; transition: background 0.3s; }
+    .layer-card:hover { background: var(--bg-2); }
+    .layer-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+    .layer-card:nth-child(1)::before { background: var(--amber); }
+    .layer-card:nth-child(2)::before { background: var(--blue); }
+    .layer-card:nth-child(3)::before { background: var(--accent); }
+    .layer-num { font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px; }
+    .layer-icon { width: 44px; height: 44px; margin-bottom: 20px; }
+    .layer-title { font-family: var(--display); font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+    .layer-card:nth-child(1) .layer-title { color: var(--amber); }
+    .layer-card:nth-child(2) .layer-title { color: var(--blue); }
+    .layer-card:nth-child(3) .layer-title { color: var(--accent); }
+    .layer-sub { font-family: var(--mono); font-size: 12px; color: var(--text-muted); letter-spacing: 0.05em; margin-bottom: 20px; }
+    .layer-body { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+    .layer-constraint { margin-top: 24px; padding: 12px; border-radius: 2px; font-family: var(--mono); font-size: 11px; line-height: 1.6; }
+    .layer-card:nth-child(1) .layer-constraint { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(245,158,11,0.2); }
+    .layer-card:nth-child(2) .layer-constraint { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(59,130,246,0.2); }
+    .layer-card:nth-child(3) .layer-constraint { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(34,197,94,0.2); }
+
+    /* ─── PRODUCTS ─── */
+    .products-section { padding: 100px 40px; background: var(--bg-1); border-top: 1px solid var(--border); }
+    .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+    .product-card { background: var(--bg-card); padding: 40px; text-decoration: none; color: inherit; display: block; position: relative; overflow: hidden; transition: background 0.3s; }
+    .product-card:hover { background: var(--bg-2); }
+    .product-card:hover .product-arrow { transform: translate(4px, -4px); }
+    .product-tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px; }
+    .product-name { font-family: var(--display); font-size: 26px; font-weight: 700; color: var(--text); margin-bottom: 12px; letter-spacing: -0.01em; }
+    .product-name sup { font-size: 14px; font-weight: 400; color: var(--text-muted); }
+    .product-desc { font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 24px; }
+    .product-specs { display: flex; flex-direction: column; gap: 6px; margin-bottom: 24px; }
+    .product-spec { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; color: var(--text-muted); }
+    .product-spec::before { content: '→'; color: var(--accent); font-size: 10px; }
+    .product-arrow { position: absolute; top: 40px; right: 40px; font-size: 18px; color: var(--text-muted); transition: transform 0.2s; }
+
+    /* ─── DIFF TABLE ─── */
+    .diff-section { padding: 100px 40px; }
+    .diff-table { width: 100%; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; border-collapse: collapse; margin-top: 48px; }
+    .diff-table thead th { padding: 16px 24px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; text-align: left; background: var(--bg-2); border-bottom: 1px solid var(--border); color: var(--text-muted); }
+    .diff-table thead th:last-child { color: var(--accent); }
+    .diff-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.2s; }
+    .diff-table tbody tr:last-child { border-bottom: none; }
+    .diff-table tbody tr:hover { background: var(--bg-1); }
+    .diff-table tbody td { padding: 16px 24px; font-size: 14px; color: var(--text-muted); }
+    .diff-table tbody td:first-child { font-family: var(--mono); font-size: 12px; color: var(--text-dim); }
+    .diff-table tbody td.no { color: var(--text-muted); }
+    .diff-table tbody td.yes { color: var(--accent); font-family: var(--mono); font-size: 12px; }
+
+    /* ─── AUDIENCES ─── */
+    .audiences-section { padding: 80px 40px; background: var(--bg-1); border-top: 1px solid var(--border); }
+    .audiences-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 48px; }
+    .audience-card { padding: 28px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 3px; transition: background 0.2s, border-color 0.2s; text-decoration: none; color: inherit; display: block; }
+    .audience-card:hover { background: var(--bg-2); border-color: var(--border-active); }
+    .audience-icon { width: 36px; height: 36px; margin-bottom: 16px; }
+    .audience-title { font-family: var(--display); font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+    .audience-body { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+    /* ─── CTA ─── */
+    .cta-section { padding: 120px 40px; text-align: center; position: relative; overflow: hidden; }
+    .cta-section::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 400px; background: radial-gradient(ellipse, rgba(34,197,94,0.06) 0%, transparent 70%); pointer-events: none; }
+    .cta-inner { position: relative; max-width: 640px; margin: 0 auto; }
+    .cta-inner h2 { font-family: var(--display); font-size: clamp(32px, 4vw, 52px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 20px; }
+    .cta-inner p { font-size: 16px; color: var(--text-muted); line-height: 1.7; margin-bottom: 40px; }
+    .cta-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .cta-detail { margin-top: 40px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: 24px; flex-wrap: wrap; }
+    .cta-detail span::before { content: '· '; }
+    .cta-detail span:first-child::before { content: ''; }
+
+    /* ─── FOOTER ─── */
+    footer { border-top: 1px solid var(--border); padding: 40px; }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+    .footer-left { display: flex; flex-direction: column; gap: 8px; }
+    .footer-brand { font-family: var(--display); font-size: 15px; font-weight: 700; color: var(--text); }
+    .footer-meta { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: var(--text-muted); line-height: 1.8; }
+    .footer-meta a { color: var(--text-muted); text-decoration: none; }
+    .footer-right { display: flex; gap: 32px; flex-wrap: wrap; }
+    .footer-right a { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; color: var(--text-muted); text-decoration: none; text-transform: uppercase; transition: color 0.2s; }
+    .footer-right a:hover { color: var(--text); }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ─── LOADING STATE ─── */
+    .demo-loading { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; color: var(--text-muted); letter-spacing: 0.08em; }
+    .demo-loading-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); animation: pulse 0.8s infinite; }
+    .demo-loading-dot:nth-child(2) { animation-delay: 0.15s; }
+    .demo-loading-dot:nth-child(3) { animation-delay: 0.3s; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .hero { padding: 100px 20px 60px; }
+      .demo-inner { grid-template-columns: 1fr; }
+      .layers-grid { grid-template-columns: 1fr; }
+      .products-grid { grid-template-columns: 1fr; }
+      .audiences-grid { grid-template-columns: repeat(2, 1fr); }
+      .layers-section, .products-section, .diff-section, .audiences-section, .cta-section { padding: 64px 20px; }
+      .demo-section { padding: 48px 20px; }
+      footer { padding: 32px 20px; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 500px) { .audiences-grid { grid-template-columns: 1fr; } }
+  
+    /* Product page specific */
+    .product-hero { padding: 140px 40px 80px; max-width: 1200px; margin: 0 auto; }
+    .product-type { font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; color: #22c55e; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+    .product-type::before { content: ''; width: 20px; height: 1px; background: #22c55e; }
+    .product-headline { font-family: var(--display); font-size: clamp(42px, 6vw, 80px); font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; color: var(--text); margin-bottom: 32px; white-space: pre-line; }
+    .product-summary { font-family: var(--sans); font-size: 17px; line-height: 1.7; color: var(--text-muted); max-width: 640px; margin-bottom: 40px; }
+    .product-badge { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: #22c55e; border: 1px solid rgba(34,197,94,0.25); padding: 8px 16px; border-radius: 2px; margin-right: 12px; margin-bottom: 12px; }
+    .product-body { max-width: 1200px; margin: 0 auto; padding: 0 40px 100px; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+    .product-doctrine { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid #22c55e; padding: 28px 32px; margin-bottom: 48px; border-radius: 2px; }
+    .product-doctrine-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: #22c55e; margin-bottom: 12px; }
+    .product-doctrine-text { font-family: var(--sans); font-size: 15px; line-height: 1.7; color: var(--text-secondary); }
+    .specs-table { width: 100%; border-collapse: collapse; margin-bottom: 48px; }
+    .specs-table .spec-label { font-family: var(--mono); font-size: 12px; color: var(--text-muted); padding: 12px 0; border-bottom: 1px solid var(--border); width: 40%; vertical-align: top; padding-right: 20px; }
+    .specs-table .spec-value { font-family: var(--sans); font-size: 14px; color: var(--text-secondary); padding: 12px 0; border-bottom: 1px solid var(--border); line-height: 1.5; }
+    .section-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px; }
+    .distinction-text { font-family: var(--sans); font-size: 15px; line-height: 1.7; color: var(--text-secondary); margin-bottom: 48px; }
+    .verticals-list { list-style: none; padding: 0; }
+    .verticals-list li { font-family: var(--sans); font-size: 14px; color: var(--text-secondary); padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+    .verticals-list li::before { content: ''; width: 4px; height: 4px; background: #22c55e; border-radius: 50%; flex-shrink: 0; }
+    .product-cta { background: var(--bg-card); border: 1px solid var(--border); border-radius: 2px; padding: 32px; }
+    .product-cta h3 { font-family: var(--display); font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+    .product-cta p { font-family: var(--sans); font-size: 14px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #000; background: var(--accent); border: none; padding: 12px 24px; border-radius: 2px; text-decoration: none; transition: opacity 0.2s; }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-secondary-sm { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); border: 1px solid var(--border); padding: 12px 24px; border-radius: 2px; text-decoration: none; margin-left: 12px; transition: all 0.2s; }
+    .btn-secondary-sm:hover { color: var(--text); border-color: var(--border-active); }
+    .patent-note { font-family: var(--mono); font-size: 11px; color: var(--text-muted); margin-top: 16px; }
+    @media (max-width: 768px) {
+      .product-hero, .product-body { padding-left: 20px; padding-right: 20px; }
+      .product-body { grid-template-columns: 1fr; gap: 40px; }
     }
   </style>
 </head>
 <body>
 <nav>
   <a href="/" class="nav-logo">
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="2" fill="#111318"/><path d="M8 8L16 16L24 8" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 24L16 16L24 24" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><circle cx="16" cy="16" r="2.5" fill="#22c55e"/></svg>
+    <svg class="nav-logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="2" fill="#111318"/>
+      <path d="M8 8L16 16L24 8" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M8 24L16 16L24 24" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/>
+      <circle cx="16" cy="16" r="2.5" fill="#22c55e"/>
+    </svg>
     <span class="nav-logo-text">ZKNOT<sup>™</sup></span>
   </a>
   <ul class="nav-links">
-    <li><a href="/#products">Products</a></li><li><a href="/#protocol">Protocol</a></li>
-    <li><a href="/#verticals">Verticals</a></li><li><a href="/docs">Docs</a></li>
-    <li><a href="/about">About</a></li><li><a href="mailto:ops@zknot.io" class="nav-cta">Contact</a></li>
+    <li><a href="/#products">Products</a></li>
+    <li><a href="/#protocol">Protocol</a></li>
+    <li><a href="/#verticals">Verticals</a></li>
+    <li><a href="/docs">Docs</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="/cdn-cgi/l/email-protection#2946595a69534247465d074046" class="nav-cta">Contact</a></li>
   </ul>
 </nav>
-<div class="breadcrumb">
-  <a href="/">zknot.io</a><span class="sep">/</span>
-  <a href="/#products">Products</a><span class="sep">/</span>
-  <span class="current">ZK-LocalChain™</span>
-</div>
 
-<div style="position:relative;overflow:hidden;">
-  <div class="hero-bg-lc"></div>
-  <div style="position:absolute;inset:0;pointer-events:none;"><div class="hero-glow-lc"></div></div>
+<main>
   <div class="product-hero">
-    <div>
-      <div class="product-tag">Offline Ledger · Layer 02</div>
-      <h1 class="product-name">ZK-LocalChain<sup>™</sup></h1>
-      <div class="product-tagline">Offline-capable append-only hash-chained ledger</div>
-      <p class="product-desc">
-        No central authority. No internet dependency. No deletion. No edit.
-        Every record is mathematically bound to every record before it.
-        Any party with a single exported entry can verify the entire chain independently
-        — without ever contacting ZKNOT™.
-      </p>
-      <div class="hero-actions">
-        <a href="mailto:ops@zknot.io?subject=ZK-LocalChain Inquiry" class="btn-primary">Request Access</a>
-        <a href="/docs#localchain" class="btn-secondary">Chain Format Spec →</a>
-      </div>
-    </div>
-    <div class="hero-right">
-      <!-- Chain visualization -->
-      <svg class="chain-diagram" viewBox="0 0 360 480" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Block 41885 -->
-        <rect x="40" y="20" width="280" height="80" rx="4" fill="#111318" stroke="rgba(59,130,246,0.25)" stroke-width="1.5"/>
-        <text x="56" y="44" font-family="DM Mono, monospace" font-size="9" fill="#6b7280" letter-spacing="1">BLOCK #00041885</text>
-        <text x="56" y="62" font-family="DM Mono, monospace" font-size="10" fill="#e8eaed">COMBINED_SESSION</text>
-        <text x="56" y="78" font-family="DM Mono, monospace" font-size="8" fill="#3b82f6">a3f8c1d2e4b5f9a0c7d3e2f1b8a4c6d9...</text>
-        <text x="290" y="44" text-anchor="end" font-family="DM Mono, monospace" font-size="8" fill="#22c55e">✓ VALID</text>
-
-        <!-- Chain link -->
-        <line x1="180" y1="100" x2="180" y2="140" stroke="rgba(59,130,246,0.3)" stroke-width="2" stroke-dasharray="3 3"/>
-        <rect x="164" y="115" width="32" height="10" rx="2" fill="rgba(59,130,246,0.1)" stroke="rgba(59,130,246,0.2)" stroke-width="1"/>
-        <text x="180" y="123" text-anchor="middle" font-family="DM Mono, monospace" font-size="7" fill="#3b82f6">HASH</text>
-
-        <!-- Block 41886 -->
-        <rect x="40" y="140" width="280" height="80" rx="4" fill="#111318" stroke="rgba(59,130,246,0.25)" stroke-width="1.5"/>
-        <text x="56" y="164" font-family="DM Mono, monospace" font-size="9" fill="#6b7280" letter-spacing="1">BLOCK #00041886</text>
-        <text x="56" y="182" font-family="DM Mono, monospace" font-size="10" fill="#e8eaed">TRUSTSEAL_EVENT</text>
-        <text x="56" y="198" font-family="DM Mono, monospace" font-size="8" fill="#3b82f6">c7d3e2f1b8a4c6d9e0f2b3c5d7a8e1f4...</text>
-        <text x="290" y="164" text-anchor="end" font-family="DM Mono, monospace" font-size="8" fill="#22c55e">✓ VALID</text>
-
-        <line x1="180" y1="220" x2="180" y2="260" stroke="rgba(59,130,246,0.3)" stroke-width="2" stroke-dasharray="3 3"/>
-        <rect x="164" y="235" width="32" height="10" rx="2" fill="rgba(59,130,246,0.1)" stroke="rgba(59,130,246,0.2)" stroke-width="1"/>
-        <text x="180" y="243" text-anchor="middle" font-family="DM Mono, monospace" font-size="7" fill="#3b82f6">HASH</text>
-
-        <!-- Block 41887 (current) -->
-        <rect x="40" y="260" width="280" height="80" rx="4" fill="#0f1520" stroke="rgba(59,130,246,0.5)" stroke-width="2"/>
-        <rect x="40" y="260" width="280" height="3" rx="2" fill="#3b82f6"/>
-        <text x="56" y="284" font-family="DM Mono, monospace" font-size="9" fill="#3b82f6" letter-spacing="1">BLOCK #00041887 ← LATEST</text>
-        <text x="56" y="302" font-family="DM Mono, monospace" font-size="10" fill="#e8eaed">ZKKEY_SIGNATURE</text>
-        <text x="56" y="318" font-family="DM Mono, monospace" font-size="8" fill="#3b82f6">e0f2b3c5d7a8e1f4b2c9d0e3f6a7b1c4...</text>
-        <text x="290" y="284" text-anchor="end" font-family="DM Mono, monospace" font-size="8" fill="#22c55e">✓ VALID</text>
-
-        <!-- Offline badge -->
-        <rect x="40" y="370" width="130" height="32" rx="3" fill="rgba(34,197,94,0.06)" stroke="rgba(34,197,94,0.2)" stroke-width="1"/>
-        <text x="105" y="388" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="#22c55e" letter-spacing="1">OFFLINE-CAPABLE</text>
-
-        <!-- Independent verify badge -->
-        <rect x="190" y="370" width="130" height="32" rx="3" fill="rgba(59,130,246,0.06)" stroke="rgba(59,130,246,0.2)" stroke-width="1"/>
-        <text x="255" y="388" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="#3b82f6" letter-spacing="1">INDEPENDENTLY</text>
-
-        <rect x="40" y="416" width="130" height="32" rx="3" fill="rgba(245,158,11,0.05)" stroke="rgba(245,158,11,0.2)" stroke-width="1"/>
-        <text x="105" y="434" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="#f59e0b" letter-spacing="1">APPEND-ONLY</text>
-
-        <rect x="190" y="416" width="130" height="32" rx="3" fill="rgba(59,130,246,0.06)" stroke="rgba(59,130,246,0.2)" stroke-width="1"/>
-        <text x="255" y="434" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="#3b82f6" letter-spacing="1">VERIFIABLE</text>
-      </svg>
-    </div>
+    <div class="product-type">SOFTWARE LEDGER</div>
+    <h1 class="product-headline">The chain is intact.<br>Verify it yourself.</h1>
+    <p class="product-summary">ZK-LocalChain is an offline-capable append-only hash-chained ledger that records hardware-attested attestation artifacts. Each entry includes the SHA-256 hash of the preceding entry, creating a tamper-evident chain in which any modification to any entry is detectable by recomputation. The ledger operates entirely without network connectivity and is independently verifiable by any party with access to an exported copy.</p>
+    <span class="product-badge">Patent: PAT-004</span>
+    <span class="product-badge">ZKNOT™ EvidenceProtocol</span>
   </div>
-</div>
 
-<!-- SCHEMA -->
-<section class="schema-section">
-  <div class="section-inner">
-    <div class="section-label reveal">Attestation Artifact</div>
-    <h2 class="section-title reveal">The chain entry format — open and auditable</h2>
-    <p class="section-sub reveal">Every chain entry follows a published JSON schema. Any party can parse, verify, and audit a chain export with nothing but an internet connection and a SHA-256 library.</p>
-    <div class="schema-display reveal">
-      <div class="schema-bar">
-        <div class="schema-bar-dot" style="background:#ef4444"></div>
-        <div class="schema-bar-dot" style="background:#f59e0b"></div>
-        <div class="schema-bar-dot" style="background:#22c55e"></div>
-        <div class="schema-bar-label">attestation_artifact.json — ZK-LocalChain™ v1</div>
+  <div class="product-body">
+    <div class="product-left">
+      <div class="product-doctrine">
+        <div class="product-doctrine-label">Doctrine</div>
+        <p class="product-doctrine-text">Math proves. SHA-256 and ECDSA. Not ZKNOT's policy — mathematics. Any party can verify the chain by iterating entries and recomputing hashes. No vendor call required. No account needed. Export the file and verify it yourself.</p>
       </div>
-      <div class="schema-code">
-<span class="k">{</span><br/>
-&nbsp;&nbsp;<span class="s">"schema_version"</span><span class="k">:</span> <span class="s">"1.0"</span><span class="k">,</span><br/>
-&nbsp;&nbsp;<span class="s">"short_code"</span><span class="k">:</span> <span class="s">"ZK-4X9R-KM2"</span><span class="k">,</span>&nbsp;&nbsp;<span class="cm">// human-readable, public</span><br/>
-&nbsp;&nbsp;<span class="s">"artifact_type"</span><span class="k">:</span> <span class="s">"COMBINED_SESSION"</span><span class="k">,</span><br/>
-&nbsp;&nbsp;<span class="s">"device_id"</span><span class="k">:</span> <span class="s">"ZKKEY-003-A7F2E1"</span><span class="k">,</span><br/>
-&nbsp;&nbsp;<span class="s">"signed_at"</span><span class="k">:</span> <span class="s">"2026-03-14T09:22:11Z"</span><span class="k">,</span><br/>
-&nbsp;&nbsp;<span class="s">"chain_position"</span><span class="k">:</span> <span class="n">41887</span><span class="k">,</span><br/>
-&nbsp;&nbsp;<span class="s">"chain_length_at_signing"</span><span class="k">:</span> <span class="n">41887</span><span class="k">,</span><br/>
-&nbsp;&nbsp;<span class="s">"prev_hash"</span><span class="k">:</span> <span class="s">"c7d3e2f1b8a4c6d9e0f2b3c5d7a8e1f4b2c9..."</span><span class="k">,</span><br/>
-&nbsp;&nbsp;<span class="s">"artifact_hash"</span><span class="k">:</span> <span class="s">"a3f8c1d2e4b5f9a0c7d3e2f1b8a4c6d9e0f2..."</span><span class="k">,</span>&nbsp;&nbsp;<span class="cm">// SHA-256</span><br/>
-&nbsp;&nbsp;<span class="s">"entry_hash"</span><span class="k">:</span> <span class="s">"e0f2b3c5d7a8e1f4b2c9d0e3f6a7b1c4d5e8..."</span><span class="k">,</span>&nbsp;&nbsp;<span class="cm">// hash of this entry</span><br/>
-&nbsp;&nbsp;<span class="s">"device_signature"</span><span class="k">:</span> <span class="k">{</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="s">"algorithm"</span><span class="k">:</span> <span class="s">"ECDSA-P256"</span><span class="k">,</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="s">"public_key_fingerprint"</span><span class="k">:</span> <span class="s">"3a:7c:f1:..."</span><span class="k">,</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="s">"signature"</span><span class="k">:</span> <span class="s">"MEQCIBx..."</span><br/>
-&nbsp;&nbsp;<span class="k">}</span><span class="k">,</span><br/>
-&nbsp;&nbsp;<span class="s">"verification_url"</span><span class="k">:</span> <span class="s">"https://verifyknot.io/ZK-4X9R-KM2"</span><br/>
-<span class="k">}</span>
+
+      <div class="section-label">Technical Specifications</div>
+      <table class="specs-table">
+        <tbody>
+      <tr>
+        <td class="spec-label">Architecture</td>
+        <td class="spec-value">Append-only — no deletes, no edits, ever</td>
+      </tr>
+      <tr>
+        <td class="spec-label">Linking</td>
+        <td class="spec-value">Each entry hashes the preceding entry — SHA-256</td>
+      </tr>
+      <tr>
+        <td class="spec-label">Attestation</td>
+        <td class="spec-value">All entries produced by hardware secure elements</td>
+      </tr>
+      <tr>
+        <td class="spec-label">Offline</td>
+        <td class="spec-value">Full operation without network connectivity</td>
+      </tr>
+      <tr>
+        <td class="spec-label">Verification</td>
+        <td class="spec-value">Export file + SHA-256 library — no vendor required</td>
+      </tr>
+      <tr>
+        <td class="spec-label">Sync</td>
+        <td class="spec-value">Optional: sync to remote ledger when connectivity restores</td>
+      </tr>
+      <tr>
+        <td class="spec-label">Export</td>
+        <td class="spec-value">JSON Lines, CSV, or signed PDF evidence report</td>
+      </tr>
+      <tr>
+        <td class="spec-label">Short codes</td>
+        <td class="spec-value">Human-readable ZK-XXXX-XXX per entry (PAT-010)</td>
+      </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="product-right">
+      <div class="section-label">What makes it different</div>
+      <p class="distinction-text">Blockchain-based chain-of-custody systems require network access to record entries and distributed consensus to verify. ZK-LocalChain operates offline, in rural areas, restricted facilities, and air-gapped environments. Verification requires only the exported file and a SHA-256 implementation.</p>
+
+      <div class="section-label">Vertical Applications</div>
+      <ul class="verticals-list"><li>Field evidence collection in disconnected environments</li><li>Election day ballot custody documentation</li><li>Pharmaceutical courier chain of custody</li><li>Law enforcement rural operations</li>
+      </ul>
+
+      <div style="height:48px;"></div>
+      <div class="product-cta">
+        <h3>Ready to verify?</h3>
+        <p>See a live ZK-LocalChain™ attestation record in the production chain — no account, no login.</p>
+        <a href="https://verifyknot.io" class="btn-primary">Verify a Record →</a>
+        <a href="/#products" class="btn-secondary-sm">← All Products</a>
+        <p class="patent-note">PAT-004 — Patent pending. ZKNOT, Inc.</p>
       </div>
     </div>
   </div>
-</section>
-
-<!-- SPECS -->
-<section>
-  <div class="section-inner">
-    <div class="section-label reveal">Specifications</div>
-    <h2 class="section-title reveal">Built for environments without network assumptions</h2>
-    <p class="section-sub reveal">Full chain operation with zero cloud dependency.</p>
-    <div class="specs-grid reveal">
-      <div class="spec-row"><div class="spec-key">Ledger Type</div><div class="spec-val">Append-only, hash-chained<br/><span class="mono">No delete, no edit, no reorder</span></div></div>
-      <div class="spec-row"><div class="spec-key">Hash Algorithm</div><div class="spec-val">SHA-256 per entry<br/><span class="mono">Chain integrity verifiable from any node</span></div></div>
-      <div class="spec-row"><div class="spec-key">Connectivity</div><div class="spec-val">Offline-capable<br/><span class="mono">Sync on reconnect, no data loss</span></div></div>
-      <div class="spec-row"><div class="spec-key">Authority Model</div><div class="spec-val">No central authority required<br/><span class="mono">Any exported entry is self-verifying</span></div></div>
-      <div class="spec-row"><div class="spec-key">Export Format</div><div class="spec-val">JSON (attestation_artifact v1)<br/><span class="mono">Signed PDF report</span></div></div>
-      <div class="spec-row"><div class="spec-key">Public Verification</div><div class="spec-val">verifyknot.io<br/><span class="mono">No login, no account</span></div></div>
-      <div class="spec-row"><div class="spec-key">Signing Integration</div><div class="spec-val">ZKKey™ native<br/><span class="mono">Hardware-attested entries only</span></div></div>
-      <div class="spec-row"><div class="spec-key">Storage</div><div class="spec-val">Local flash · W25Q series<br/><span class="mono">Encrypted at rest</span></div></div>
-    </div>
-  </div>
-</section>
-
-<!-- CONSTRAINTS -->
-<section style="background:var(--bg-1);border-top:1px solid var(--border);">
-  <div class="section-inner">
-    <div class="section-label reveal">Structural Constraints</div>
-    <h2 class="section-title reveal">What ZK-LocalChain™ cannot do</h2>
-    <div class="constraint-box reveal">
-      <div class="constraint-title">By design, ZK-LocalChain™ cannot:</div>
-      <div class="constraint-list">
-        <div class="constraint-item">Delete any chain entry — the append-only structure has no delete operation</div>
-        <div class="constraint-item">Edit any prior chain entry without breaking every subsequent entry hash</div>
-        <div class="constraint-item">Accept an unsigned entry — ZKKey™ hardware attestation is required at write time</div>
-        <div class="constraint-item">Produce a valid chain export that conceals a gap or reordering in chain positions</div>
-        <div class="constraint-item">Require ZKNOT™ infrastructure to verify — any exported entry is independently verifiable</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="product-cta">
-  <h2>Deploy ZK-LocalChain™ in your evidence workflow</h2>
-  <p>Available as embedded firmware for ZKKey™, standalone edge appliance, or SDK for integration into existing forensic toolchains.</p>
-  <div class="cta-actions">
-    <a href="mailto:ops@zknot.io?subject=ZK-LocalChain%20Inquiry" class="btn-primary">Contact ops@zknot.io</a>
-    <a href="/docs#localchain" class="btn-secondary">Chain Format Spec →</a>
-  </div>
-</section>
-
-<div class="next-products">
-  <div class="section-inner">
-    <div class="next-label">Also in the ZKNOT™ product line</div>
-    <div class="next-grid">
-      <a href="/products/zkkey" class="next-card"><div class="next-card-arrow">↗</div><div class="next-card-tag">Signing Hardware</div><div class="next-card-name">ZKKey™</div><div class="next-card-desc">Human-gated signing device. Post-nonce enforcement.</div></a>
-      <a href="/products/powerverify" class="next-card"><div class="next-card-arrow">↗</div><div class="next-card-tag">Data Path Control</div><div class="next-card-name">PowerVerify™</div><div class="next-card-desc">Physical write-path elimination. Zero firmware.</div></a>
-      <a href="/products/trustseal" class="next-card"><div class="next-card-arrow">↗</div><div class="next-card-tag">Physical Binding</div><div class="next-card-name">TrustSeal™</div><div class="next-card-desc">Tamper-evident seal cryptographically bound to chain.</div></a>
-    </div>
-  </div>
-</div>
+</main>
 
 <footer>
   <div class="footer-inner">
-    <div><div class="footer-brand">ZKNOT™</div><div class="footer-meta">ZKNOT, Inc. — Utah-based SDVOSB · UEI: C4SKW13JPEL5<br/>ops@zknot.io · William Shane Wilkinson, Founder & CEO</div></div>
-    <div class="footer-right"><a href="/">Home</a><a href="/#products">Products</a><a href="https://verifyknot.io">Verify</a><a href="/docs">Docs</a><a href="/about">About</a></div>
+    <div class="footer-left">
+      <div class="footer-brand">ZKNOT™</div>
+      <div class="footer-meta">
+        ZKNOT, Inc. — Utah-based SDVOSB<br/>
+        UEI: C4SKW13JPEL5 · EIN: 36-5165991<br/>
+        <a href="/cdn-cgi/l/email-protection#ee819e9dae948580819ac08781"><span class="__cf_email__" data-cfemail="3f504f4c7f455451504b115650">[email&#160;protected]</span></a> · William Shane Wilkinson, Founder &amp; CEO
+      </div>
+    </div>
+    <div class="footer-right">
+      <a href="/products/zkkey">ZKKey™</a>
+      <a href="/products/powerverify">PowerVerify™</a>
+      <a href="/products/zk-localchain">ZK-LocalChain™</a>
+      <a href="/products/trustseal">TrustSeal™</a>
+      <a href="https://verifyknot.io">verifyknot.io</a>
+      <a href="/docs">Docs</a>
+      <a href="/about">About</a>
+    </div>
   </div>
 </footer>
-<script>
-  const reveals=document.querySelectorAll('.reveal');
-  const observer=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target);}});},{threshold:0.07,rootMargin:'0px 0px -40px 0px'});
-  reveals.forEach(el=>observer.observe(el));
-</script>
 </body>
 </html>

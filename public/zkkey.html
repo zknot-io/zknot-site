@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ZKKey™ — Human-Gated Signing Device | ZKNOT™</title>
-  <meta name="description" content="ZKKey™ is a hardware cryptographic signing device with physical presence enforcement. Post-nonce signing is structurally impossible." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ZKKey™ — User-Actuated Cryptographic Attestation | ZKNOT™</title>
+  <meta name="description" content="ZKKey enforces physical human presence as a hardware constraint on digital signature generation. A user views the SHA-256 hash of the evidence on an OLED displa"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
   <style>
+
     :root {
       --bg: #0a0b0d;
       --bg-1: #0f1114;
@@ -20,14 +21,18 @@
       --text-muted: #6b7280;
       --text-dim: #9ca3af;
       --accent: #22c55e;
-      --accent-dim: rgba(34,197,94,0.10);
-      --accent-glow: rgba(34,197,94,0.22);
+      --accent-dim: rgba(34,197,94,0.12);
+      --accent-glow: rgba(34,197,94,0.25);
       --amber: #f59e0b;
+      --amber-dim: rgba(245,158,11,0.12);
       --blue: #3b82f6;
+      --blue-dim: rgba(59,130,246,0.12);
+      --red: #ef4444;
       --mono: 'DM Mono', monospace;
       --sans: 'DM Sans', sans-serif;
       --display: 'Syne', sans-serif;
     }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body {
@@ -39,6 +44,7 @@
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
     }
+
     body::before {
       content: '';
       position: fixed;
@@ -49,638 +55,361 @@
       opacity: 0.4;
     }
 
-    /* NAV */
     nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 40px; height: 64px;
-      background: rgba(10,11,13,0.88); backdrop-filter: blur(20px);
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 64px;
+      background: rgba(10,11,13,0.85);
+      backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
     }
+
     .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-mark { width: 32px; height: 32px; }
     .nav-logo-text { font-family: var(--display); font-size: 18px; font-weight: 800; letter-spacing: 0.05em; color: var(--text); }
     .nav-logo-text sup { font-size: 10px; font-weight: 400; color: var(--text-muted); vertical-align: super; }
+
     .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
     .nav-links a { font-family: var(--mono); font-size: 12px; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
-    .nav-links a:hover, .nav-links a.active { color: var(--text); }
-    .nav-cta { color: var(--accent) !important; border: 1px solid rgba(34,197,94,0.3); padding: 6px 16px; border-radius: 2px; transition: all 0.2s !important; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent) !important; border: 1px solid rgba(34,197,94,0.3); padding: 6px 16px; border-radius: 2px; transition: all 0.2s !important; }
     .nav-cta:hover { color: #000 !important; background: var(--accent); border-color: var(--accent); }
 
-    /* BREADCRUMB */
-    .breadcrumb {
-      position: fixed; top: 64px; left: 0; right: 0; z-index: 99;
-      padding: 10px 40px;
-      background: rgba(10,11,13,0.7); backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; gap: 8px;
-      font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--text-muted);
-    }
-    .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
-    .breadcrumb a:hover { color: var(--text); }
-    .breadcrumb .sep { opacity: 0.3; }
-    .breadcrumb .current { color: var(--accent); }
+    .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 120px 40px 80px; position: relative; overflow: hidden; }
+    .hero-grid-bg { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px); background-size: 48px 48px; mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 100%); }
+    .hero-glow { position: absolute; top: -200px; left: 50%; transform: translateX(-50%); width: 800px; height: 600px; background: radial-gradient(ellipse, rgba(34,197,94,0.06) 0%, transparent 70%); pointer-events: none; }
+    .hero-glow-2 { position: absolute; bottom: 0; right: -100px; width: 500px; height: 400px; background: radial-gradient(ellipse, rgba(59,130,246,0.04) 0%, transparent 70%); pointer-events: none; }
+    .hero-inner { position: relative; max-width: 1100px; margin: 0 auto; width: 100%; }
 
-    /* HERO */
-    .product-hero {
-      min-height: 100vh;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      align-items: center;
-      padding: 140px 40px 80px;
-      position: relative;
-      overflow: hidden;
-      gap: 80px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .hero-grid-bg {
-      position: fixed; inset: 0;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-      background-size: 48px 48px;
-      mask-image: radial-gradient(ellipse 80% 60% at 30% 40%, black 20%, transparent 100%);
-      pointer-events: none;
-    }
-    .hero-glow {
-      position: absolute; top: -100px; left: -100px;
-      width: 600px; height: 600px;
-      background: radial-gradient(ellipse, rgba(34,197,94,0.05) 0%, transparent 70%);
-      pointer-events: none;
-    }
+    .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 28px; opacity: 0; animation: fadeUp 0.6s 0.1s ease forwards; }
+    .hero-eyebrow::before { content: ''; width: 20px; height: 1px; background: var(--accent); }
 
-    .hero-left { position: relative; }
-    .product-tag {
-      display: inline-flex; align-items: center; gap: 8px;
-      font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--accent); margin-bottom: 24px;
-      opacity: 0; animation: fadeUp 0.5s 0.1s ease forwards;
-    }
-    .product-tag::before { content: ''; width: 20px; height: 1px; background: var(--accent); }
+    .hero-headline { font-family: var(--display); font-size: clamp(48px, 7vw, 96px); font-weight: 800; line-height: 1.0; letter-spacing: -0.02em; color: var(--text); margin-bottom: 12px; opacity: 0; animation: fadeUp 0.7s 0.2s ease forwards; }
+    .hero-headline .line-2 { color: var(--text-dim); }
+    .hero-headline .line-3 { color: var(--text-muted); }
+    .hero-headline .accent-word { color: var(--accent); }
 
-    .product-name {
-      font-family: var(--display); font-size: clamp(56px, 8vw, 100px);
-      font-weight: 800; letter-spacing: -0.03em; line-height: 0.95;
-      color: var(--text); margin-bottom: 8px;
-      opacity: 0; animation: fadeUp 0.6s 0.15s ease forwards;
-    }
-    .product-name sup { font-size: 0.3em; vertical-align: super; font-weight: 500; color: var(--text-muted); }
+    .hero-sub { font-family: var(--sans); font-size: clamp(16px, 2vw, 20px); font-weight: 300; color: var(--text-muted); max-width: 600px; margin-top: 28px; margin-bottom: 48px; line-height: 1.7; opacity: 0; animation: fadeUp 0.7s 0.4s ease forwards; }
+    .hero-actions { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.7s 0.5s ease forwards; }
 
-    .product-tagline {
-      font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em;
-      color: var(--text-muted); margin-bottom: 32px;
-      opacity: 0; animation: fadeUp 0.6s 0.25s ease forwards;
-    }
-
-    .product-desc {
-      font-size: 17px; line-height: 1.75; color: var(--text-dim);
-      max-width: 480px; margin-bottom: 40px;
-      opacity: 0; animation: fadeUp 0.6s 0.35s ease forwards;
-    }
-
-    .hero-actions {
-      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-      opacity: 0; animation: fadeUp 0.6s 0.45s ease forwards;
-    }
-    .btn-primary {
-      display: inline-flex; align-items: center; gap: 8px;
-      font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; font-weight: 500;
-      color: #000; background: var(--accent); border: none; padding: 13px 26px;
-      border-radius: 2px; text-decoration: none; cursor: pointer; transition: all 0.2s;
-    }
-    .btn-primary:hover { background: #16a34a; transform: translateY(-1px); box-shadow: 0 8px 32px rgba(34,197,94,0.28); }
-    .btn-secondary {
-      display: inline-flex; align-items: center; gap: 8px;
-      font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em;
-      color: var(--text-muted); background: transparent; border: 1px solid var(--border);
-      padding: 13px 26px; border-radius: 2px; text-decoration: none; transition: all 0.2s;
-    }
+    .btn-primary { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; font-weight: 500; color: #000; background: var(--accent); border: none; padding: 14px 28px; border-radius: 2px; text-decoration: none; cursor: pointer; transition: all 0.2s; }
+    .btn-primary:hover { background: #16a34a; transform: translateY(-1px); box-shadow: 0 8px 32px rgba(34,197,94,0.3); }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; color: var(--text-muted); background: transparent; border: 1px solid var(--border); padding: 14px 28px; border-radius: 2px; text-decoration: none; cursor: pointer; transition: all 0.2s; }
     .btn-secondary:hover { color: var(--text); border-color: var(--border-active); }
 
-    /* DEVICE ILLUSTRATION */
-    .hero-right {
-      display: flex; align-items: center; justify-content: center;
-      opacity: 0; animation: fadeUp 0.8s 0.3s ease forwards;
-      position: relative;
-    }
-    .device-wrap {
-      position: relative; width: 320px; height: 420px;
-    }
-    .device-glow {
-      position: absolute; top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 400px; height: 400px;
-      background: radial-gradient(ellipse, rgba(34,197,94,0.12) 0%, transparent 65%);
-      pointer-events: none;
-    }
-    .device-svg { position: relative; z-index: 2; width: 100%; }
+    .hero-status { display: flex; align-items: center; gap: 24px; margin-top: 72px; padding-top: 32px; border-top: 1px solid var(--border); flex-wrap: wrap; opacity: 0; animation: fadeUp 0.7s 0.7s ease forwards; }
+    .status-item { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--text-muted); }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 6px var(--accent); animation: pulse 2s infinite; }
 
-    /* CONSTRAINT CALLOUTS */
-    .callout {
-      position: absolute; z-index: 3;
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: 3px; padding: 10px 14px;
-      font-family: var(--mono); font-size: 11px; line-height: 1.5;
-    }
-    .callout-1 { top: 20px; right: -40px; color: var(--amber); border-color: rgba(245,158,11,0.2); background: rgba(245,158,11,0.05); }
-    .callout-2 { bottom: 60px; left: -60px; color: var(--accent); border-color: rgba(34,197,94,0.2); background: rgba(34,197,94,0.05); }
-    .callout-3 { top: 50%; right: -50px; transform: translateY(-50%); color: var(--blue); border-color: rgba(59,130,246,0.2); background: rgba(59,130,246,0.05); }
+    /* ─── DEMO WIDGET ─── */
+    .demo-section { padding: 80px 40px; background: var(--bg-1); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .demo-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    .demo-copy h2 { font-family: var(--display); font-size: 36px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; }
+    .demo-copy p { font-size: 16px; color: var(--text-muted); line-height: 1.7; margin-bottom: 24px; }
+    .demo-copy .verify-link { font-family: var(--mono); font-size: 12px; color: var(--accent); text-decoration: none; letter-spacing: 0.08em; display: inline-flex; align-items: center; gap: 6px; }
+    .demo-copy .verify-link::after { content: '→'; }
 
-    /* SECTIONS */
-    section { padding: 80px 40px; }
+    .demo-widget { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; font-family: var(--mono); }
+    .demo-widget-bar { display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: var(--bg-2); border-bottom: 1px solid var(--border); }
+    .demo-bar-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .demo-bar-dot:nth-child(1) { background: #ef4444; }
+    .demo-bar-dot:nth-child(2) { background: #f59e0b; }
+    .demo-bar-dot:nth-child(3) { background: var(--accent); }
+    .demo-bar-url { flex: 1; text-align: center; font-size: 11px; color: var(--text-muted); letter-spacing: 0.06em; }
+    .demo-widget-body { padding: 24px; }
+    .demo-input-row { display: flex; gap: 8px; margin-bottom: 24px; }
+    .demo-input { flex: 1; background: var(--bg-2); border: 1px solid var(--border); border-radius: 2px; padding: 10px 14px; font-family: var(--mono); font-size: 14px; color: var(--text); letter-spacing: 0.1em; outline: none; transition: border-color 0.2s; }
+    .demo-input:focus { border-color: var(--accent); }
+    .demo-verify-btn { background: var(--accent); color: #000; border: none; padding: 10px 20px; border-radius: 2px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; cursor: pointer; font-weight: 500; transition: all 0.2s; }
+    .demo-verify-btn:hover { background: #16a34a; }
+
+    .demo-result { display: none; }
+    .demo-result.visible { display: block; }
+
+    .demo-result-header { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--accent-dim); border: 1px solid rgba(34,197,94,0.2); border-radius: 2px; margin-bottom: 16px; }
+    .demo-result-header .check { width: 20px; height: 20px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 11px; color: #000; }
+    .demo-result-header .verified-text { font-size: 12px; color: var(--accent); letter-spacing: 0.08em; font-weight: 500; }
+    .demo-result-header .chain-pos { margin-left: auto; font-size: 11px; color: var(--text-muted); }
+
+    .demo-result-error { padding: 12px 16px; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); border-radius: 2px; font-size: 12px; color: #ef4444; letter-spacing: 0.05em; }
+
+    .demo-fields { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--border); border-radius: 2px; overflow: hidden; }
+    .demo-field { display: flex; align-items: flex-start; padding: 9px 16px; border-bottom: 1px solid var(--border); gap: 16px; }
+    .demo-field:last-child { border-bottom: none; }
+    .demo-field-key { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); width: 100px; flex-shrink: 0; padding-top: 1px; }
+    .demo-field-val { font-size: 12px; color: var(--text); word-break: break-all; line-height: 1.5; }
+    .demo-field-val .hash { color: var(--text-dim); font-size: 11px; }
+
+    /* ─── THREE LAYERS ─── */
+    .layers-section { padding: 100px 40px; }
     .section-inner { max-width: 1100px; margin: 0 auto; }
-    .section-label {
-      font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--accent); display: flex; align-items: center; gap: 8px; margin-bottom: 16px;
-    }
+    .section-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
     .section-label::before { content: ''; width: 20px; height: 1px; background: var(--accent); }
-    .section-title {
-      font-family: var(--display); font-size: clamp(28px, 3.5vw, 46px);
-      font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px;
-    }
-    .section-sub { font-size: 16px; color: var(--text-muted); max-width: 560px; line-height: 1.7; margin-bottom: 56px; }
+    .section-title { font-family: var(--display); font-size: clamp(32px, 4vw, 52px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; }
+    .section-sub { font-size: 16px; color: var(--text-muted); max-width: 560px; line-height: 1.7; margin-bottom: 64px; }
 
-    /* ENFORCEMENT DIAGRAM */
-    .enforcement-section { background: var(--bg-1); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    .enforcement-grid {
-      display: grid; grid-template-columns: 1fr 80px 1fr 80px 1fr;
-      align-items: center; gap: 0; margin-top: 48px;
-    }
-    .enf-step {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: 3px; padding: 28px 24px; text-align: center;
-    }
-    .enf-step-num {
-      font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em;
-      text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px;
-    }
-    .enf-step-icon { margin: 0 auto 12px; }
-    .enf-step-title { font-family: var(--display); font-size: 16px; font-weight: 700; margin-bottom: 8px; }
-    .enf-step-body { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
-    .enf-arrow { display: flex; align-items: center; justify-content: center; }
-    .enf-arrow svg { color: var(--text-muted); }
+    .layers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+    .layer-card { background: var(--bg-card); padding: 48px 36px; position: relative; overflow: hidden; transition: background 0.3s; }
+    .layer-card:hover { background: var(--bg-2); }
+    .layer-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+    .layer-card:nth-child(1)::before { background: var(--amber); }
+    .layer-card:nth-child(2)::before { background: var(--blue); }
+    .layer-card:nth-child(3)::before { background: var(--accent); }
+    .layer-num { font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px; }
+    .layer-icon { width: 44px; height: 44px; margin-bottom: 20px; }
+    .layer-title { font-family: var(--display); font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+    .layer-card:nth-child(1) .layer-title { color: var(--amber); }
+    .layer-card:nth-child(2) .layer-title { color: var(--blue); }
+    .layer-card:nth-child(3) .layer-title { color: var(--accent); }
+    .layer-sub { font-family: var(--mono); font-size: 12px; color: var(--text-muted); letter-spacing: 0.05em; margin-bottom: 20px; }
+    .layer-body { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+    .layer-constraint { margin-top: 24px; padding: 12px; border-radius: 2px; font-family: var(--mono); font-size: 11px; line-height: 1.6; }
+    .layer-card:nth-child(1) .layer-constraint { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(245,158,11,0.2); }
+    .layer-card:nth-child(2) .layer-constraint { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(59,130,246,0.2); }
+    .layer-card:nth-child(3) .layer-constraint { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(34,197,94,0.2); }
 
-    .nonce-invalid { color: var(--red, #ef4444); }
-    .enf-step.blocked { border-color: rgba(239,68,68,0.2); background: rgba(239,68,68,0.04); }
-    .enf-step.active { border-color: rgba(34,197,94,0.2); }
+    /* ─── PRODUCTS ─── */
+    .products-section { padding: 100px 40px; background: var(--bg-1); border-top: 1px solid var(--border); }
+    .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+    .product-card { background: var(--bg-card); padding: 40px; text-decoration: none; color: inherit; display: block; position: relative; overflow: hidden; transition: background 0.3s; }
+    .product-card:hover { background: var(--bg-2); }
+    .product-card:hover .product-arrow { transform: translate(4px, -4px); }
+    .product-tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px; }
+    .product-name { font-family: var(--display); font-size: 26px; font-weight: 700; color: var(--text); margin-bottom: 12px; letter-spacing: -0.01em; }
+    .product-name sup { font-size: 14px; font-weight: 400; color: var(--text-muted); }
+    .product-desc { font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 24px; }
+    .product-specs { display: flex; flex-direction: column; gap: 6px; margin-bottom: 24px; }
+    .product-spec { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; color: var(--text-muted); }
+    .product-spec::before { content: '→'; color: var(--accent); font-size: 10px; }
+    .product-arrow { position: absolute; top: 40px; right: 40px; font-size: 18px; color: var(--text-muted); transition: transform 0.2s; }
 
-    /* SPECS TABLE */
-    .specs-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
-      background: var(--border); border: 1px solid var(--border);
-      border-radius: 4px; overflow: hidden; margin-top: 48px;
-    }
-    .spec-row {
-      display: flex; align-items: flex-start; gap: 24px;
-      padding: 18px 24px; background: var(--bg-card);
-      border-bottom: 1px solid var(--border);
-    }
-    .spec-row:nth-last-child(-n+2) { border-bottom: none; }
-    .spec-key {
-      font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em;
-      text-transform: uppercase; color: var(--text-muted); width: 160px; flex-shrink: 0; padding-top: 2px;
-    }
-    .spec-val { font-size: 14px; color: var(--text); line-height: 1.6; }
-    .spec-val .mono { font-family: var(--mono); font-size: 12px; color: var(--text-dim); }
+    /* ─── DIFF TABLE ─── */
+    .diff-section { padding: 100px 40px; }
+    .diff-table { width: 100%; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; border-collapse: collapse; margin-top: 48px; }
+    .diff-table thead th { padding: 16px 24px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; text-align: left; background: var(--bg-2); border-bottom: 1px solid var(--border); color: var(--text-muted); }
+    .diff-table thead th:last-child { color: var(--accent); }
+    .diff-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.2s; }
+    .diff-table tbody tr:last-child { border-bottom: none; }
+    .diff-table tbody tr:hover { background: var(--bg-1); }
+    .diff-table tbody td { padding: 16px 24px; font-size: 14px; color: var(--text-muted); }
+    .diff-table tbody td:first-child { font-family: var(--mono); font-size: 12px; color: var(--text-dim); }
+    .diff-table tbody td.no { color: var(--text-muted); }
+    .diff-table tbody td.yes { color: var(--accent); font-family: var(--mono); font-size: 12px; }
 
-    /* USE CASES */
-    .use-cases-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; margin-top: 48px; }
-    .use-case {
-      background: var(--bg-card); padding: 36px 28px;
-      transition: background 0.3s;
-    }
-    .use-case:hover { background: var(--bg-2); }
-    .use-case-icon { width: 36px; height: 36px; margin-bottom: 16px; }
-    .use-case-title { font-family: var(--display); font-size: 17px; font-weight: 700; margin-bottom: 10px; }
-    .use-case-body { font-size: 13px; color: var(--text-muted); line-height: 1.7; }
+    /* ─── AUDIENCES ─── */
+    .audiences-section { padding: 80px 40px; background: var(--bg-1); border-top: 1px solid var(--border); }
+    .audiences-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 48px; }
+    .audience-card { padding: 28px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 3px; transition: background 0.2s, border-color 0.2s; text-decoration: none; color: inherit; display: block; }
+    .audience-card:hover { background: var(--bg-2); border-color: var(--border-active); }
+    .audience-icon { width: 36px; height: 36px; margin-bottom: 16px; }
+    .audience-title { font-family: var(--display); font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+    .audience-body { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
 
-    /* CONSTRAINT BOX */
-    .constraint-section { background: var(--bg-1); border-top: 1px solid var(--border); }
-    .constraint-box {
-      border: 1px solid rgba(34,197,94,0.2); border-radius: 4px;
-      background: rgba(34,197,94,0.04); padding: 40px 48px; margin-top: 48px;
-    }
-    .constraint-title {
-      font-family: var(--display); font-size: 24px; font-weight: 700;
-      color: var(--accent); margin-bottom: 20px;
-    }
-    .constraint-list { display: flex; flex-direction: column; gap: 14px; }
-    .constraint-item {
-      display: flex; align-items: flex-start; gap: 16px;
-      font-size: 15px; color: var(--text-dim); line-height: 1.65;
-    }
-    .constraint-item::before { content: '//'; font-family: var(--mono); font-size: 12px; color: var(--accent); flex-shrink: 0; padding-top: 3px; }
+    /* ─── CTA ─── */
+    .cta-section { padding: 120px 40px; text-align: center; position: relative; overflow: hidden; }
+    .cta-section::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 400px; background: radial-gradient(ellipse, rgba(34,197,94,0.06) 0%, transparent 70%); pointer-events: none; }
+    .cta-inner { position: relative; max-width: 640px; margin: 0 auto; }
+    .cta-inner h2 { font-family: var(--display); font-size: clamp(32px, 4vw, 52px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 20px; }
+    .cta-inner p { font-size: 16px; color: var(--text-muted); line-height: 1.7; margin-bottom: 40px; }
+    .cta-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .cta-detail { margin-top: 40px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: 24px; flex-wrap: wrap; }
+    .cta-detail span::before { content: '· '; }
+    .cta-detail span:first-child::before { content: ''; }
 
-    /* CTA */
-    .product-cta { text-align: center; padding: 100px 40px; position: relative; overflow: hidden; }
-    .product-cta::before {
-      content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      width: 500px; height: 400px;
-      background: radial-gradient(ellipse, rgba(34,197,94,0.06) 0%, transparent 70%);
-    }
-    .product-cta h2 { font-family: var(--display); font-size: clamp(28px, 3.5vw, 48px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; position: relative; }
-    .product-cta p { font-size: 16px; color: var(--text-muted); line-height: 1.7; max-width: 520px; margin: 0 auto 40px; position: relative; }
-    .cta-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; position: relative; }
-
-    /* NEXT PRODUCTS */
-    .next-products { background: var(--bg-1); border-top: 1px solid var(--border); padding: 60px 40px; }
-    .next-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 24px; }
-    .next-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
-    .next-card { background: var(--bg-card); padding: 28px 24px; text-decoration: none; color: inherit; display: block; transition: background 0.2s; position: relative; }
-    .next-card:hover { background: var(--bg-2); }
-    .next-card-tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; }
-    .next-card-name { font-family: var(--display); font-size: 20px; font-weight: 700; margin-bottom: 8px; }
-    .next-card-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
-    .next-card-arrow { position: absolute; top: 28px; right: 24px; color: var(--text-muted); font-size: 16px; transition: transform 0.2s; }
-    .next-card:hover .next-card-arrow { transform: translate(3px, -3px); }
-
-    /* FOOTER */
+    /* ─── FOOTER ─── */
     footer { border-top: 1px solid var(--border); padding: 40px; }
     .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+    .footer-left { display: flex; flex-direction: column; gap: 8px; }
     .footer-brand { font-family: var(--display); font-size: 15px; font-weight: 700; color: var(--text); }
-    .footer-meta { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: var(--text-muted); line-height: 1.8; margin-top: 6px; }
-    .footer-right { display: flex; gap: 28px; }
+    .footer-meta { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: var(--text-muted); line-height: 1.8; }
+    .footer-meta a { color: var(--text-muted); text-decoration: none; }
+    .footer-right { display: flex; gap: 32px; flex-wrap: wrap; }
     .footer-right a { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; color: var(--text-muted); text-decoration: none; text-transform: uppercase; transition: color 0.2s; }
     .footer-right a:hover { color: var(--text); }
 
-    /* ANIMATIONS */
+    /* ─── ANIMATIONS ─── */
     @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
     .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
     .reveal.visible { opacity: 1; transform: none; }
 
-    /* LED indicator animation */
-    .led { animation: pulse 2s infinite; }
+    /* ─── LOADING STATE ─── */
+    .demo-loading { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; color: var(--text-muted); letter-spacing: 0.08em; }
+    .demo-loading-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); animation: pulse 0.8s infinite; }
+    .demo-loading-dot:nth-child(2) { animation-delay: 0.15s; }
+    .demo-loading-dot:nth-child(3) { animation-delay: 0.3s; }
 
+    /* ─── RESPONSIVE ─── */
     @media (max-width: 900px) {
       nav { padding: 0 20px; }
       .nav-links { display: none; }
-      .product-hero { grid-template-columns: 1fr; padding: 130px 20px 60px; gap: 40px; }
-      .hero-right { display: none; }
-      .enforcement-grid { grid-template-columns: 1fr; gap: 8px; }
-      .enf-arrow { display: none; }
-      .specs-grid { grid-template-columns: 1fr; }
-      .use-cases-grid { grid-template-columns: 1fr; }
-      .next-grid { grid-template-columns: 1fr; }
-      section { padding: 56px 20px; }
-      .next-products { padding: 48px 20px; }
-      .breadcrumb { padding: 10px 20px; }
+      .hero { padding: 100px 20px 60px; }
+      .demo-inner { grid-template-columns: 1fr; }
+      .layers-grid { grid-template-columns: 1fr; }
+      .products-grid { grid-template-columns: 1fr; }
+      .audiences-grid { grid-template-columns: repeat(2, 1fr); }
+      .layers-section, .products-section, .diff-section, .audiences-section, .cta-section { padding: 64px 20px; }
+      .demo-section { padding: 48px 20px; }
       footer { padding: 32px 20px; }
-      .constraint-box { padding: 28px 24px; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 500px) { .audiences-grid { grid-template-columns: 1fr; } }
+  
+    /* Product page specific */
+    .product-hero { padding: 140px 40px 80px; max-width: 1200px; margin: 0 auto; }
+    .product-type { font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; color: #3b82f6; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+    .product-type::before { content: ''; width: 20px; height: 1px; background: #3b82f6; }
+    .product-headline { font-family: var(--display); font-size: clamp(42px, 6vw, 80px); font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; color: var(--text); margin-bottom: 32px; white-space: pre-line; }
+    .product-summary { font-family: var(--sans); font-size: 17px; line-height: 1.7; color: var(--text-muted); max-width: 640px; margin-bottom: 40px; }
+    .product-badge { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: #3b82f6; border: 1px solid rgba(59,130,246,0.25); padding: 8px 16px; border-radius: 2px; margin-right: 12px; margin-bottom: 12px; }
+    .product-body { max-width: 1200px; margin: 0 auto; padding: 0 40px 100px; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+    .product-doctrine { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid #3b82f6; padding: 28px 32px; margin-bottom: 48px; border-radius: 2px; }
+    .product-doctrine-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: #3b82f6; margin-bottom: 12px; }
+    .product-doctrine-text { font-family: var(--sans); font-size: 15px; line-height: 1.7; color: var(--text-secondary); }
+    .specs-table { width: 100%; border-collapse: collapse; margin-bottom: 48px; }
+    .specs-table .spec-label { font-family: var(--mono); font-size: 12px; color: var(--text-muted); padding: 12px 0; border-bottom: 1px solid var(--border); width: 40%; vertical-align: top; padding-right: 20px; }
+    .specs-table .spec-value { font-family: var(--sans); font-size: 14px; color: var(--text-secondary); padding: 12px 0; border-bottom: 1px solid var(--border); line-height: 1.5; }
+    .section-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px; }
+    .distinction-text { font-family: var(--sans); font-size: 15px; line-height: 1.7; color: var(--text-secondary); margin-bottom: 48px; }
+    .verticals-list { list-style: none; padding: 0; }
+    .verticals-list li { font-family: var(--sans); font-size: 14px; color: var(--text-secondary); padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+    .verticals-list li::before { content: ''; width: 4px; height: 4px; background: #3b82f6; border-radius: 50%; flex-shrink: 0; }
+    .product-cta { background: var(--bg-card); border: 1px solid var(--border); border-radius: 2px; padding: 32px; }
+    .product-cta h3 { font-family: var(--display); font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+    .product-cta p { font-family: var(--sans); font-size: 14px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #000; background: var(--accent); border: none; padding: 12px 24px; border-radius: 2px; text-decoration: none; transition: opacity 0.2s; }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-secondary-sm { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); border: 1px solid var(--border); padding: 12px 24px; border-radius: 2px; text-decoration: none; margin-left: 12px; transition: all 0.2s; }
+    .btn-secondary-sm:hover { color: var(--text); border-color: var(--border-active); }
+    .patent-note { font-family: var(--mono); font-size: 11px; color: var(--text-muted); margin-top: 16px; }
+    @media (max-width: 768px) {
+      .product-hero, .product-body { padding-left: 20px; padding-right: 20px; }
+      .product-body { grid-template-columns: 1fr; gap: 40px; }
     }
   </style>
 </head>
 <body>
-
-<!-- NAV -->
 <nav>
   <a href="/" class="nav-logo">
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="2" fill="#111318"/><path d="M8 8L16 16L24 8" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 24L16 16L24 24" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><circle cx="16" cy="16" r="2.5" fill="#22c55e"/></svg>
+    <svg class="nav-logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="2" fill="#111318"/>
+      <path d="M8 8L16 16L24 8" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M8 24L16 16L24 24" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/>
+      <circle cx="16" cy="16" r="2.5" fill="#22c55e"/>
+    </svg>
     <span class="nav-logo-text">ZKNOT<sup>™</sup></span>
   </a>
   <ul class="nav-links">
-    <li><a href="/#products" class="active">Products</a></li>
+    <li><a href="/#products">Products</a></li>
     <li><a href="/#protocol">Protocol</a></li>
     <li><a href="/#verticals">Verticals</a></li>
     <li><a href="/docs">Docs</a></li>
     <li><a href="/about">About</a></li>
-    <li><a href="mailto:ops@zknot.io" class="nav-cta">Contact</a></li>
+    <li><a href="/cdn-cgi/l/email-protection#2946595a69534247465d074046" class="nav-cta">Contact</a></li>
   </ul>
 </nav>
 
-<!-- BREADCRUMB -->
-<div class="breadcrumb">
-  <a href="/">zknot.io</a>
-  <span class="sep">/</span>
-  <a href="/#products">Products</a>
-  <span class="sep">/</span>
-  <span class="current">ZKKey™</span>
-</div>
-
-<!-- HERO -->
-<div style="position:relative; overflow:hidden;">
-  <div class="hero-grid-bg"></div>
-  <div class="hero-glow" style="position:absolute;"></div>
+<main>
   <div class="product-hero">
-    <div class="hero-left">
-      <div class="product-tag">Signing Hardware · Layer 01</div>
-      <h1 class="product-name">ZKKey<sup>™</sup></h1>
-      <div class="product-tagline">Human-gated cryptographic signing device</div>
-      <p class="product-desc">
-        Post-nonce signing is not policy-prohibited — it is structurally impossible.
-        ZKKey™ enforces physical presence at every signature event. No administrator
-        override. No software exception. No firmware bypass.
-      </p>
-      <div class="hero-actions">
-        <a href="mailto:ops@zknot.io?subject=ZKKey Pilot" class="btn-primary">Request a Pilot Unit</a>
-        <a href="/docs#zkkey" class="btn-secondary">Read the Spec →</a>
-      </div>
-    </div>
-    <div class="hero-right">
-      <div class="device-wrap">
-        <div class="device-glow"></div>
-        <!-- ZKKey Device SVG Illustration -->
-        <svg class="device-svg" viewBox="0 0 320 420" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- Device body -->
-          <rect x="60" y="40" width="200" height="340" rx="12" fill="#111318" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
-          <rect x="65" y="45" width="190" height="330" rx="10" fill="#0d0f12" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
-          <!-- Top port (USB) -->
-          <rect x="126" y="40" width="68" height="12" rx="2" fill="#1a1d24" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
-          <rect x="132" y="43" width="56" height="6" rx="1" fill="#0a0b0d"/>
-          <!-- Screen area -->
-          <rect x="84" y="80" width="152" height="90" rx="4" fill="#070809" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-          <!-- Screen content -->
-          <text x="160" y="108" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="#6b7280" letter-spacing="2">ZKNOT™ ZKKey</text>
-          <text x="160" y="126" text-anchor="middle" font-family="DM Mono, monospace" font-size="11" fill="#e8eaed" letter-spacing="1">READY TO SIGN</text>
-          <text x="160" y="142" text-anchor="middle" font-family="DM Mono, monospace" font-size="8" fill="#22c55e" letter-spacing="1">NONCE ACTIVE · BLOCK #41887</text>
-          <rect x="110" y="154" width="100" height="1" fill="rgba(34,197,94,0.2)"/>
-          <!-- LED indicator -->
-          <circle cx="160" cy="196" r="6" fill="#22c55e" opacity="0.9" class="led"/>
-          <circle cx="160" cy="196" r="10" fill="rgba(34,197,94,0.15)" class="led"/>
-          <!-- Button -->
-          <rect x="110" y="216" width="100" height="36" rx="4" fill="#1a1d24" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
-          <text x="160" y="239" text-anchor="middle" font-family="DM Mono, monospace" font-size="10" fill="#e8eaed" letter-spacing="2">SIGN</text>
-          <!-- Fingerprint zone hint -->
-          <circle cx="160" cy="300" r="32" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1" stroke-dasharray="4 4"/>
-          <circle cx="160" cy="300" r="20" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-          <!-- Fingerprint lines -->
-          <path d="M148 300 Q160 288 172 300 Q160 312 148 300Z" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-          <path d="M144 296 Q160 282 176 296 Q160 316 144 296Z" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-          <path d="M141 292 Q160 276 179 292 Q160 320 141 292Z" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
-          <!-- Physical presence label -->
-          <text x="160" y="344" text-anchor="middle" font-family="DM Mono, monospace" font-size="8" fill="rgba(255,255,255,0.2)" letter-spacing="1.5">PHYSICAL PRESENCE ZONE</text>
-          <!-- Side indicators -->
-          <rect x="60" y="180" width="4" height="40" rx="2" fill="rgba(34,197,94,0.3)"/>
-          <rect x="256" y="180" width="4" height="40" rx="2" fill="rgba(34,197,94,0.3)"/>
-          <!-- Bottom USB-C -->
-          <rect x="126" y="368" width="68" height="12" rx="2" fill="#1a1d24" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
-          <rect x="136" y="371" width="48" height="6" rx="1" fill="#0a0b0d"/>
-          <!-- Chip label -->
-          <rect x="104" y="358" width="112" height="2" fill="rgba(255,255,255,0.03)"/>
-          <text x="160" y="362" text-anchor="middle" font-family="DM Mono, monospace" font-size="7" fill="rgba(255,255,255,0.15)" letter-spacing="1">ATECC608B · ECC-P256</text>
-        </svg>
-
-        <!-- Callout annotations -->
-        <div class="callout callout-1">Physical presence<br/>required per signature</div>
-        <div class="callout callout-3">ATECC608B<br/>hardware key storage</div>
-        <div class="callout callout-2">Post-nonce signing<br/>structurally blocked</div>
-      </div>
-    </div>
+    <div class="product-type">SIGNING HARDWARE</div>
+    <h1 class="product-headline">The human was there.<br>The hardware proves it.</h1>
+    <p class="product-summary">ZKKey enforces physical human presence as a hardware constraint on digital signature generation. A user views the SHA-256 hash of the evidence on an OLED display, presses a dedicated button, and only then does the hardware secure element sign. No software command, network packet, or automated process can trigger a signing event.</p>
+    <span class="product-badge">Patent: PAT-001</span>
+    <span class="product-badge">ZKNOT™ EvidenceProtocol</span>
   </div>
-</div>
 
-<!-- ENFORCEMENT FLOW -->
-<section class="enforcement-section">
-  <div class="section-inner">
-    <div class="section-label reveal">How It Enforces</div>
-    <h2 class="section-title reveal">The post-nonce enforcement mechanism</h2>
-    <p class="section-sub reveal">
-      A nonce is issued at session start and expires on a hardware timer.
-      After expiry, the signing circuit is physically open. No key, no code,
-      no administrator can close it.
-    </p>
-    <div class="enforcement-grid reveal">
-      <div class="enf-step active">
-        <div class="enf-step-num">Step 01</div>
-        <svg class="enf-step-icon" width="36" height="36" viewBox="0 0 36 36" fill="none">
-          <rect x="4" y="8" width="28" height="20" rx="3" stroke="#22c55e" stroke-width="1.5"/>
-          <circle cx="18" cy="18" r="4" fill="#22c55e" opacity="0.4"/>
-          <path d="M14 18l3 3 5-5" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <div class="enf-step-title" style="color:var(--accent)">Session Opens</div>
-        <div class="enf-step-body">Operator initiates capture session. ZKKey™ issues a hardware nonce with a tamper-evident timer. The nonce is written to chain.</div>
+  <div class="product-body">
+    <div class="product-left">
+      <div class="product-doctrine">
+        <div class="product-doctrine-label">Doctrine</div>
+        <p class="product-doctrine-text">Physics enforces. The state machine cannot reach the signing state without physical button actuation. This is not a policy — it is a hardware constraint.</p>
       </div>
-      <div class="enf-arrow">
-        <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M8 16h16M18 10l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="enf-step active">
-        <div class="enf-step-num">Step 02</div>
-        <svg class="enf-step-icon" width="36" height="36" viewBox="0 0 36 36" fill="none">
-          <circle cx="18" cy="18" r="12" stroke="#3b82f6" stroke-width="1.5"/>
-          <path d="M18 12v6l4 2" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-        <div class="enf-step-title" style="color:var(--blue)">Nonce Window</div>
-        <div class="enf-step-body">While nonce is valid, the signing button is enabled. Physical presence — an actual button press — is required for each artifact signed.</div>
-      </div>
-      <div class="enf-arrow">
-        <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M8 16h16M18 10l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="enf-step blocked">
-        <div class="enf-step-num">Step 03</div>
-        <svg class="enf-step-icon" width="36" height="36" viewBox="0 0 36 36" fill="none">
-          <circle cx="18" cy="18" r="12" stroke="#ef4444" stroke-width="1.5"/>
-          <path d="M14 14l8 8M22 14l-8 8" stroke="#ef4444" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-        <div class="enf-step-title" style="color:#ef4444">Nonce Expires</div>
-        <div class="enf-step-body">Timer elapses. Signing circuit opens. No software, firmware update, or administrator command can authorize another signature for this session.</div>
+
+      <div class="section-label">Technical Specifications</div>
+      <table class="specs-table">
+        <tbody>
+      <tr>
+        <td class="spec-label">Secure Element</td>
+        <td class="spec-value">ATECC608B — private key never leaves hardware</td>
+      </tr>
+      <tr>
+        <td class="spec-label">Display</td>
+        <td class="spec-value">128×64 OLED — shows challenge hash before signing</td>
+      </tr>
+      <tr>
+        <td class="spec-label">Actuation</td>
+        <td class="spec-value">Dedicated tactile button — minimum 2.0N force</td>
+      </tr>
+      <tr>
+        <td class="spec-label">Algorithm</td>
+        <td class="spec-value">ECDSA P-256 — verifiable against registered public key</td>
+      </tr>
+      <tr>
+        <td class="spec-label">Interface</td>
+        <td class="spec-value">USB-C (primary) or QR optical (ZKKey Air variant)</td>
+      </tr>
+      <tr>
+        <td class="spec-label">State Machine</td>
+        <td class="spec-value">IDLE → ARMED → DISPLAY → SIGNING → OUTPUT</td>
+      </tr>
+      <tr>
+        <td class="spec-label">Timeout</td>
+        <td class="spec-value">Configurable — clears challenge if not actuated</td>
+      </tr>
+      <tr>
+        <td class="spec-label">Artifact</td>
+        <td class="spec-value">JSON attestation record with short code (PAT-010)</td>
+      </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="product-right">
+      <div class="section-label">What makes it different</div>
+      <p class="distinction-text">YubiKey and FIDO2 devices confirm that a human is <em>present</em>. ZKKey proves a human <em>approved this specific content</em>. The user sees the hash of what they are signing before the hardware secure element signs it. Remote or automated signing is physically impossible.</p>
+
+      <div class="section-label">Vertical Applications</div>
+      <ul class="verticals-list"><li>Election ballot custody transfer</li><li>Digital evidence attestation</li><li>Pharmaceutical dispensing authorization</li><li>Forensic evidence chain of custody</li>
+      </ul>
+
+      <div style="height:48px;"></div>
+      <div class="product-cta">
+        <h3>Ready to verify?</h3>
+        <p>See a live ZKKey™ attestation record in the production chain — no account, no login.</p>
+        <a href="https://verifyknot.io" class="btn-primary">Verify a Record →</a>
+        <a href="/#products" class="btn-secondary-sm">← All Products</a>
+        <p class="patent-note">PAT-001 — Patent pending. ZKNOT, Inc.</p>
       </div>
     </div>
   </div>
-</section>
+</main>
 
-<!-- SPECS -->
-<section>
-  <div class="section-inner">
-    <div class="section-label reveal">Technical Specifications</div>
-    <h2 class="section-title reveal">Built on verified hardware</h2>
-    <p class="section-sub reveal">Every component is chosen for what it cannot do, not just what it can.</p>
-    <div class="specs-grid reveal">
-      <div class="spec-row">
-        <div class="spec-key">Secure Element</div>
-        <div class="spec-val">Microchip ATECC608B<br/><span class="mono">ECC-P256 · ECDH · SHA-256</span></div>
-      </div>
-      <div class="spec-row">
-        <div class="spec-key">Host MCU</div>
-        <div class="spec-val">STM32F411 (WeAct Black Pill)<br/><span class="mono">ARM Cortex-M4 · 100MHz</span></div>
-      </div>
-      <div class="spec-row">
-        <div class="spec-key">Key Storage</div>
-        <div class="spec-val">Hardware-locked inside secure element<br/><span class="mono">Non-exportable by design</span></div>
-      </div>
-      <div class="spec-row">
-        <div class="spec-key">Interface</div>
-        <div class="spec-val">USB-A (primary) · I²C header<br/><span class="mono">USB HID + Serial</span></div>
-      </div>
-      <div class="spec-row">
-        <div class="spec-key">Signing Algorithm</div>
-        <div class="spec-val">ECDSA P-256<br/><span class="mono">Per NIST FIPS 186-4</span></div>
-      </div>
-      <div class="spec-row">
-        <div class="spec-key">Nonce Mechanism</div>
-        <div class="spec-val">Hardware timer, tamper-evident<br/><span class="mono">Non-resettable without chain entry</span></div>
-      </div>
-      <div class="spec-row">
-        <div class="spec-key">Display</div>
-        <div class="spec-val">SSD1306 OLED · 128×64<br/><span class="mono">Session state · Chain position</span></div>
-      </div>
-      <div class="spec-row">
-        <div class="spec-key">Form Factor</div>
-        <div class="spec-val">Compact handheld<br/><span class="mono">Field-deployable · No external power req.</span></div>
-      </div>
-      <div class="spec-row">
-        <div class="spec-key">Chain Integration</div>
-        <div class="spec-val">ZK-LocalChain™ native<br/><span class="mono">Attestation artifact JSON schema v1</span></div>
-      </div>
-      <div class="spec-row">
-        <div class="spec-key">Physical Enforcement</div>
-        <div class="spec-val">Button press required per signature<br/><span class="mono">No remote, no scripted signing</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- USE CASES -->
-<section style="background: var(--bg-1); border-top: 1px solid var(--border);">
-  <div class="section-inner">
-    <div class="section-label reveal">Use Cases</div>
-    <h2 class="section-title reveal">Where physical presence matters most</h2>
-    <p class="section-sub reveal">Any domain where the chain of custody must survive legal challenge, FOIA request, or hostile cross-examination.</p>
-    <div class="use-cases-grid reveal">
-      <div class="use-case">
-        <svg class="use-case-icon" viewBox="0 0 36 36" fill="none">
-          <path d="M6 28V14l12-8 12 8v14" stroke="#6b7280" stroke-width="1.5" stroke-linejoin="round"/>
-          <rect x="12" y="20" width="12" height="8" stroke="#6b7280" stroke-width="1.5"/>
-          <path d="M18 20v8" stroke="#6b7280" stroke-width="1" stroke-dasharray="2 2"/>
-        </svg>
-        <div class="use-case-title">Law Enforcement Forensics</div>
-        <div class="use-case-body">Sign digital evidence artifacts at point of collection. The physical button press creates an unforgeable timestamped chain entry tied to the examining officer's presence.</div>
-      </div>
-      <div class="use-case">
-        <svg class="use-case-icon" viewBox="0 0 36 36" fill="none">
-          <rect x="4" y="8" width="28" height="20" rx="2" stroke="#6b7280" stroke-width="1.5"/>
-          <circle cx="18" cy="18" r="4" stroke="#6b7280" stroke-width="1.5"/>
-          <path d="M8 8V6M28 8V6M8 28v2M28 28v2" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-        <div class="use-case-title">Election Equipment Audit</div>
-        <div class="use-case-body">Ballot tabulator audits require signed attestation of device state before and after handling. ZKKey™ ensures no post-audit signing is possible.</div>
-      </div>
-      <div class="use-case">
-        <svg class="use-case-icon" viewBox="0 0 36 36" fill="none">
-          <path d="M10 6h16l4 4v20H6V10l4-4z" stroke="#6b7280" stroke-width="1.5" stroke-linejoin="round"/>
-          <path d="M12 18h12M12 22h8" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round"/>
-          <path d="M22 6v5h8" stroke="#6b7280" stroke-width="1.5" stroke-linejoin="round"/>
-        </svg>
-        <div class="use-case-title">Investigative Journalism</div>
-        <div class="use-case-body">Cryptographically timestamp sensitive documents at point of receipt. Prove the document existed, was unaltered, and was received at a specific moment.</div>
-      </div>
-      <div class="use-case">
-        <svg class="use-case-icon" viewBox="0 0 36 36" fill="none">
-          <path d="M8 28V12l10-6 10 6v16" stroke="#6b7280" stroke-width="1.5" stroke-linejoin="round"/>
-          <rect x="14" y="18" width="8" height="10" stroke="#6b7280" stroke-width="1.5"/>
-        </svg>
-        <div class="use-case-title">Pharmaceutical Chain of Custody</div>
-        <div class="use-case-body">Sign custody transfer events for controlled substances or clinical trial samples. Each handoff is physically attested and permanently recorded.</div>
-      </div>
-      <div class="use-case">
-        <svg class="use-case-icon" viewBox="0 0 36 36" fill="none">
-          <circle cx="18" cy="18" r="12" stroke="#6b7280" stroke-width="1.5"/>
-          <path d="M18 10v8l5 3" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-        <div class="use-case-title">Corporate Investigations</div>
-        <div class="use-case-body">Internal forensic examinations where the integrity of the chain must be provable to outside auditors, regulators, or opposing counsel.</div>
-      </div>
-      <div class="use-case">
-        <svg class="use-case-icon" viewBox="0 0 36 36" fill="none">
-          <rect x="6" y="6" width="24" height="24" rx="3" stroke="#6b7280" stroke-width="1.5"/>
-          <path d="M12 12h12M12 18h12M12 24h8" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-        <div class="use-case-title">DoD Field Operations</div>
-        <div class="use-case-body">Offline-capable evidence attestation for forward-deployed operations. No network required. Chain syncs on reconnection with full integrity preserved.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- STRUCTURAL CONSTRAINTS -->
-<section class="constraint-section">
-  <div class="section-inner">
-    <div class="section-label reveal">Structural Constraints</div>
-    <h2 class="section-title reveal">What ZKKey™ cannot do</h2>
-    <p class="section-sub reveal">
-      A system's trustworthiness is defined by its impossibilities, not its features.
-      These are not policy settings. They are physical and mathematical facts.
-    </p>
-    <div class="constraint-box reveal">
-      <div class="constraint-title">By design, ZKKey™ cannot:</div>
-      <div class="constraint-list">
-        <div class="constraint-item">Sign any artifact after the session nonce has expired — the signing circuit is physically open</div>
-        <div class="constraint-item">Export the private key from the ATECC608B secure element under any condition</div>
-        <div class="constraint-item">Be commanded to sign remotely — physical button press is the only valid trigger</div>
-        <div class="constraint-item">Produce a signature without writing a corresponding entry to ZK-LocalChain™</div>
-        <div class="constraint-item">Be firmware-updated in a way that unlocks any of the above constraints</div>
-        <div class="constraint-item">Produce a valid signature indistinguishable from one made on the legitimate device (each key is unique to the hardware)</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CTA -->
-<section class="product-cta">
-  <h2>Ready to deploy ZKKey™?</h2>
-  <p>Pilot units available for government agencies, forensic labs, and qualified teaming partners. Contact us to discuss your use case.</p>
-  <div class="cta-actions">
-    <a href="mailto:ops@zknot.io?subject=ZKKey%20Pilot%20Request" class="btn-primary">Request Pilot Unit</a>
-    <a href="/docs#zkkey" class="btn-secondary">Technical Spec →</a>
-  </div>
-</section>
-
-<!-- NEXT PRODUCTS -->
-<div class="next-products">
-  <div class="section-inner">
-    <div class="next-label">Also in the ZKNOT™ product line</div>
-    <div class="next-grid">
-      <a href="/products/powerverify" class="next-card">
-        <div class="next-card-arrow">↗</div>
-        <div class="next-card-tag">Data Path Control</div>
-        <div class="next-card-name">PowerVerify™</div>
-        <div class="next-card-desc">Physical write-path elimination. No firmware, no attack surface.</div>
-      </a>
-      <a href="/products/zk-localchain" class="next-card">
-        <div class="next-card-arrow">↗</div>
-        <div class="next-card-tag">Offline Ledger</div>
-        <div class="next-card-name">ZK-LocalChain™</div>
-        <div class="next-card-desc">Append-only hash-chained ledger. No central authority required.</div>
-      </a>
-      <a href="/products/trustseal" class="next-card">
-        <div class="next-card-arrow">↗</div>
-        <div class="next-card-tag">Physical Binding</div>
-        <div class="next-card-name">TrustSeal™</div>
-        <div class="next-card-desc">Tamper-evident seal cryptographically bound to the chain at moment of application.</div>
-      </a>
-    </div>
-  </div>
-</div>
-
-<!-- FOOTER -->
 <footer>
   <div class="footer-inner">
-    <div>
+    <div class="footer-left">
       <div class="footer-brand">ZKNOT™</div>
       <div class="footer-meta">
-        ZKNOT, Inc. — Utah-based SDVOSB · UEI: C4SKW13JPEL5<br/>
-        ops@zknot.io · William Shane Wilkinson, Founder & CEO
+        ZKNOT, Inc. — Utah-based SDVOSB<br/>
+        UEI: C4SKW13JPEL5 · EIN: 36-5165991<br/>
+        <a href="/cdn-cgi/l/email-protection#ee819e9dae948580819ac08781"><span class="__cf_email__" data-cfemail="3f504f4c7f455451504b115650">[email&#160;protected]</span></a> · William Shane Wilkinson, Founder &amp; CEO
       </div>
     </div>
     <div class="footer-right">
-      <a href="/">Home</a>
-      <a href="/#products">Products</a>
-      <a href="https://verifyknot.io">Verify</a>
+      <a href="/products/zkkey">ZKKey™</a>
+      <a href="/products/powerverify">PowerVerify™</a>
+      <a href="/products/zk-localchain">ZK-LocalChain™</a>
+      <a href="/products/trustseal">TrustSeal™</a>
+      <a href="https://verifyknot.io">verifyknot.io</a>
       <a href="/docs">Docs</a>
       <a href="/about">About</a>
     </div>
   </div>
 </footer>
-
-<script>
-  const reveals = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
-    });
-  }, { threshold: 0.07, rootMargin: '0px 0px -40px 0px' });
-  reveals.forEach(el => observer.observe(el));
-</script>
 </body>
 </html>
