@@ -1,21 +1,5 @@
-# ZKNOT.io — Cloudflare Pages routing
-
-# Product pages
-/products/zkkey              /zkkey.html              200
-/products/powerverify        /powerverify.html        200
-/products/zk-localchain      /zk-localchain.html      200
-/products/trustseal          /trustseal.html          200
-
-# Protocol page
-/protocol                    /protocol.html           200
-/evidence-protocol           /protocol.html           200
-
-# Verticals
-/verticals/journalism        /journalism.html         200
-/verticals/pharmaceutical    /pharmaceutical.html     200
-/verticals/law-enforcement   /law-enforcement.html    200
-
-# Core pages
-/about                       /about.html              200
-/docs                        /docs.html               200
-/verify                      /verify.html             200
+/products/zkkey           /products/zkkey.html          200
+/products/powerverify     /products/powerverify.html    200
+/products/zk-localchain   /products/zk-localchain.html  200
+/products/trustseal       /products/trustseal.html      200
+/*                        /index.html                   200
