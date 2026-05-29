@@ -1,4 +1,475 @@
-<!-- ===== ZKNOT /docs body — drop between your existing <nav> and <footer> ===== -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Docs — ZKNOT</title>
+  <meta name="description" content="ZKNOT Docs: integration and verification reference — attestation API, device lifecycle, artifact schema, and the offline verification path (SHA-256 + ECDSA P-256)." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0b0d;
+      --bg-1: #0f1114;
+      --bg-2: #141720;
+      --bg-card: #111318;
+      --border: rgba(255,255,255,0.07);
+      --border-active: rgba(255,255,255,0.18);
+      --text: #e8eaed;
+      --text-muted: #6b7280;
+      --text-dim: #9ca3af;
+      --green: #22c55e;
+      --amber: #f59e0b;
+      --blue: #3b82f6;
+      --purple: #a855f7;
+      --red: #ef4444;
+      --mono: 'DM Mono', monospace;
+      --sans: 'DM Sans', sans-serif;
+      --display: 'Syne', sans-serif;
+
+      /* Step colors */
+      --s1: #f59e0b;
+      --s2: #22c55e;
+      --s3: #a855f7;
+      --s4: #3b82f6;
+      --s5: #22c55e;
+      --s6: #e8eaed;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999; opacity: 0.4;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px; height: 64px;
+      background: rgba(10,11,13,0.88); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-text { font-family: var(--display); font-size: 18px; font-weight: 800; letter-spacing: 0.05em; color: var(--text); }
+    .nav-logo-text sup { font-size: 10px; font-weight: 400; color: var(--text-muted); vertical-align: super; }
+    .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+    .nav-links a { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta { color: var(--green) !important; border: 1px solid rgba(34,197,94,0.3); padding: 6px 16px; border-radius: 2px; }
+    .nav-cta:hover { color: #000 !important; background: var(--green) !important; }
+
+    .breadcrumb {
+      position: fixed; top: 64px; left: 0; right: 0; z-index: 99;
+      padding: 10px 40px;
+      background: rgba(10,11,13,0.7); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 8px;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--text-muted);
+    }
+    .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+    .breadcrumb .sep { opacity: 0.3; }
+    .breadcrumb .current { color: var(--green); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 140px 40px 80px;
+      position: relative; overflow: hidden;
+    }
+    .hero-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, black 20%, transparent 100%);
+    }
+    .hero-glow {
+      position: absolute; top: -200px; left: 50%; transform: translateX(-50%);
+      width: 900px; height: 700px;
+      background: radial-gradient(ellipse, rgba(34,197,94,0.05) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-inner { position: relative; max-width: 900px; margin: 0 auto; width: 100%; text-align: center; }
+
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--green); margin-bottom: 28px;
+      opacity: 0; animation: fadeUp 0.5s 0.1s ease forwards;
+    }
+    .hero-eyebrow::before { content: ''; width: 20px; height: 1px; background: var(--green); }
+    .hero-eyebrow::after { content: ''; width: 20px; height: 1px; background: var(--green); }
+
+    h1 {
+      font-family: var(--display); font-size: clamp(44px, 7vw, 88px);
+      font-weight: 800; letter-spacing: -0.025em; line-height: 1.0;
+      margin-bottom: 28px;
+      opacity: 0; animation: fadeUp 0.6s 0.2s ease forwards;
+    }
+    h1 .tm { font-size: 0.35em; font-weight: 400; color: var(--text-muted); vertical-align: super; }
+
+    .hero-sub {
+      font-size: clamp(16px, 2vw, 19px); color: var(--text-muted);
+      line-height: 1.7; max-width: 640px; margin: 0 auto 48px;
+      opacity: 0; animation: fadeUp 0.6s 0.35s ease forwards;
+    }
+
+    /* ── FLOW PILLS ── */
+    .flow-pills {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0; flex-wrap: nowrap; overflow-x: auto;
+      padding: 0 0 4px;
+      opacity: 0; animation: fadeUp 0.6s 0.5s ease forwards;
+    }
+    .flow-pill {
+      display: flex; align-items: center; gap: 6px;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+      padding: 8px 14px; border-radius: 2px; white-space: nowrap;
+      border: 1px solid transparent;
+    }
+    .flow-pill.s1 { color: var(--s1); background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.2); }
+    .flow-pill.s2 { color: var(--s2); background: rgba(34,197,94,0.08); border-color: rgba(34,197,94,0.2); }
+    .flow-pill.s3 { color: var(--s3); background: rgba(168,85,247,0.08); border-color: rgba(168,85,247,0.2); }
+    .flow-pill.s4 { color: var(--s4); background: rgba(59,130,246,0.08); border-color: rgba(59,130,246,0.2); }
+    .flow-pill.s5 { color: var(--s5); background: rgba(34,197,94,0.08); border-color: rgba(34,197,94,0.2); }
+    .flow-pill.s6 { color: var(--text-dim); background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); }
+    .flow-arrow { font-family: var(--mono); font-size: 14px; color: var(--text-muted); padding: 0 4px; opacity: 0.4; }
+
+    .hero-scroll-hint {
+      margin-top: 56px;
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--text-muted); opacity: 0; animation: fadeUp 0.6s 0.7s ease forwards;
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+    }
+    .hero-scroll-hint::after {
+      content: '';
+      width: 1px; height: 40px;
+      background: linear-gradient(var(--text-muted), transparent);
+      animation: scrollLine 1.5s ease infinite;
+    }
+    @keyframes scrollLine { 0% { height: 0; opacity: 0; } 50% { height: 40px; opacity: 1; } 100% { height: 40px; opacity: 0; } }
+
+    /* ── STEP SECTIONS ── */
+    .steps-wrapper { position: relative; }
+
+    /* Vertical timeline line */
+    .steps-wrapper::before {
+      content: '';
+      position: absolute;
+      left: 50%; transform: translateX(-50%);
+      top: 0; bottom: 0; width: 1px;
+      background: linear-gradient(
+        var(--border),
+        rgba(245,158,11,0.3) 15%,
+        rgba(34,197,94,0.3) 30%,
+        rgba(168,85,247,0.3) 48%,
+        rgba(59,130,246,0.3) 64%,
+        rgba(34,197,94,0.3) 80%,
+        rgba(255,255,255,0.15) 95%,
+        var(--border)
+      );
+    }
+
+    .step-section {
+      padding: 80px 40px;
+      position: relative;
+    }
+    .step-section:nth-child(even) { background: var(--bg-1); }
+
+    .step-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 64px 1fr;
+      gap: 0; align-items: start;
+    }
+
+    /* Alternate layout for even steps */
+    .step-section:nth-child(even) .step-inner { direction: rtl; }
+    .step-section:nth-child(even) .step-inner > * { direction: ltr; }
+
+    /* Step node in center */
+    .step-node {
+      display: flex; flex-direction: column; align-items: center;
+      position: relative; z-index: 2;
+    }
+    .step-node-circle {
+      width: 48px; height: 48px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--mono); font-size: 13px; font-weight: 500;
+      position: relative; margin-bottom: 8px;
+    }
+    .step-node-circle::before {
+      content: '';
+      position: absolute; inset: -4px; border-radius: 50%;
+      opacity: 0.2;
+    }
+    .step-num-label {
+      font-family: var(--mono); font-size: 9px; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--text-muted); text-align: center;
+    }
+
+    /* Step content */
+    .step-content { padding: 0 40px; }
+    .step-diagram { padding: 0 40px; }
+
+    .step-tag {
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em;
+      text-transform: uppercase; margin-bottom: 12px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .step-tag::before { content: ''; width: 16px; height: 1px; }
+
+    .step-title {
+      font-family: var(--display); font-size: clamp(24px, 3vw, 38px);
+      font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px;
+    }
+    .step-body { font-size: 15px; color: var(--text-muted); line-height: 1.75; margin-bottom: 24px; }
+
+    .step-constraints { display: flex; flex-direction: column; gap: 10px; }
+    .step-constraint {
+      display: flex; align-items: flex-start; gap: 12px;
+      font-family: var(--mono); font-size: 12px; color: var(--text-muted); line-height: 1.5;
+    }
+    .step-constraint-bullet {
+      font-size: 11px; flex-shrink: 0; padding-top: 1px;
+    }
+
+    .step-product-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+      text-decoration: none; padding: 8px 14px; border-radius: 2px;
+      border: 1px solid transparent; margin-top: 20px;
+      transition: all 0.2s;
+    }
+    .step-product-link::after { content: ' →'; }
+
+    /* Step diagram panels */
+    .diagram-panel {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px;
+      overflow: hidden; font-family: var(--mono);
+    }
+    .diagram-header {
+      padding: 10px 16px;
+      background: var(--bg-2); border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .diagram-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .diagram-label { font-size: 10px; letter-spacing: 0.1em; color: var(--text-muted); }
+    .diagram-body { padding: 20px; }
+
+    /* Terminal output style */
+    .terminal { background: #070809; border-radius: 2px; padding: 16px; font-size: 11px; line-height: 1.9; }
+    .t-comment { color: #4b5563; }
+    .t-cmd { color: #e8eaed; }
+    .t-key { color: #9ca3af; }
+    .t-val-green { color: #22c55e; }
+    .t-val-blue { color: #3b82f6; }
+    .t-val-amber { color: #f59e0b; }
+    .t-val-purple { color: #a855f7; }
+    .t-val-dim { color: #6b7280; }
+    .t-prompt { color: #4b5563; }
+
+    /* Status indicators */
+    .status-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 0; border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .status-row:last-child { border-bottom: none; }
+    .status-indicator {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    }
+    .status-label { color: var(--text-muted); font-family: var(--mono); font-size: 11px; flex: 1; }
+    .status-value { font-family: var(--mono); font-size: 11px; }
+
+    /* ── STEP COLORS ── */
+    /* Step 1 - Amber - PowerVerify */
+    .step-1 .step-tag { color: var(--s1); }
+    .step-1 .step-tag::before { background: var(--s1); }
+    .step-1 .step-node-circle { background: rgba(245,158,11,0.12); color: var(--s1); border: 1px solid rgba(245,158,11,0.3); }
+    .step-1 .step-node-circle::before { background: var(--s1); }
+    .step-1 .step-product-link { color: var(--s1); border-color: rgba(245,158,11,0.25); background: rgba(245,158,11,0.05); }
+    .step-1 .step-product-link:hover { background: rgba(245,158,11,0.12); }
+    .step-1 .step-constraint-bullet { color: var(--s1); }
+
+    /* Step 2 - Green - Capture */
+    .step-2 .step-tag { color: var(--s2); }
+    .step-2 .step-tag::before { background: var(--s2); }
+    .step-2 .step-node-circle { background: rgba(34,197,94,0.12); color: var(--s2); border: 1px solid rgba(34,197,94,0.3); }
+    .step-2 .step-node-circle::before { background: var(--s2); }
+    .step-2 .step-product-link { color: var(--s2); border-color: rgba(34,197,94,0.25); background: rgba(34,197,94,0.05); }
+    .step-2 .step-product-link:hover { background: rgba(34,197,94,0.12); }
+    .step-2 .step-constraint-bullet { color: var(--s2); }
+
+    /* Step 3 - Purple - TrustSeal */
+    .step-3 .step-tag { color: var(--s3); }
+    .step-3 .step-tag::before { background: var(--s3); }
+    .step-3 .step-node-circle { background: rgba(168,85,247,0.12); color: var(--s3); border: 1px solid rgba(168,85,247,0.3); }
+    .step-3 .step-node-circle::before { background: var(--s3); }
+    .step-3 .step-product-link { color: var(--s3); border-color: rgba(168,85,247,0.25); background: rgba(168,85,247,0.05); }
+    .step-3 .step-product-link:hover { background: rgba(168,85,247,0.12); }
+    .step-3 .step-constraint-bullet { color: var(--s3); }
+
+    /* Step 4 - Blue - ZKKey */
+    .step-4 .step-tag { color: var(--s4); }
+    .step-4 .step-tag::before { background: var(--s4); }
+    .step-4 .step-node-circle { background: rgba(59,130,246,0.12); color: var(--s4); border: 1px solid rgba(59,130,246,0.3); }
+    .step-4 .step-node-circle::before { background: var(--s4); }
+    .step-4 .step-product-link { color: var(--s4); border-color: rgba(59,130,246,0.25); background: rgba(59,130,246,0.05); }
+    .step-4 .step-product-link:hover { background: rgba(59,130,246,0.12); }
+    .step-4 .step-constraint-bullet { color: var(--s4); }
+
+    /* Step 5 - Green - Chain */
+    .step-5 .step-tag { color: var(--s5); }
+    .step-5 .step-tag::before { background: var(--s5); }
+    .step-5 .step-node-circle { background: rgba(34,197,94,0.12); color: var(--s5); border: 1px solid rgba(34,197,94,0.3); }
+    .step-5 .step-node-circle::before { background: var(--s5); }
+    .step-5 .step-product-link { color: var(--s5); border-color: rgba(34,197,94,0.25); background: rgba(34,197,94,0.05); }
+    .step-5 .step-product-link:hover { background: rgba(34,197,94,0.12); }
+    .step-5 .step-constraint-bullet { color: var(--s5); }
+
+    /* Step 6 - White - Report */
+    .step-6 .step-tag { color: var(--text-dim); }
+    .step-6 .step-tag::before { background: var(--text-dim); }
+    .step-6 .step-node-circle { background: rgba(255,255,255,0.06); color: var(--text); border: 1px solid rgba(255,255,255,0.15); }
+    .step-6 .step-product-link { color: var(--text-dim); border-color: rgba(255,255,255,0.15); background: rgba(255,255,255,0.04); }
+    .step-6 .step-product-link:hover { background: rgba(255,255,255,0.08); }
+    .step-6 .step-constraint-bullet { color: var(--text-dim); }
+
+    /* ── COMPLETE FLOW SUMMARY ── */
+    .summary-section { padding: 80px 40px; background: var(--bg-1); border-top: 1px solid var(--border); }
+    .summary-inner { max-width: 1100px; margin: 0 auto; }
+    .summary-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--green); display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+    .summary-label::before { content: ''; width: 20px; height: 1px; background: var(--green); }
+    .summary-title { font-family: var(--display); font-size: clamp(28px, 3.5vw, 46px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; }
+    .summary-sub { font-size: 16px; color: var(--text-muted); max-width: 560px; line-height: 1.7; margin-bottom: 48px; }
+
+    .summary-chain {
+      display: grid; grid-template-columns: repeat(6, 1fr);
+      gap: 1px; background: var(--border); border: 1px solid var(--border);
+      border-radius: 4px; overflow: hidden;
+    }
+    .summary-step {
+      background: var(--bg-card); padding: 24px 20px;
+      position: relative; overflow: hidden;
+    }
+    .summary-step::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    }
+    .summary-step:nth-child(1)::before { background: var(--s1); }
+    .summary-step:nth-child(2)::before { background: var(--s2); }
+    .summary-step:nth-child(3)::before { background: var(--s3); }
+    .summary-step:nth-child(4)::before { background: var(--s4); }
+    .summary-step:nth-child(5)::before { background: var(--s5); }
+    .summary-step:nth-child(6)::before { background: rgba(255,255,255,0.3); }
+
+    .summary-step-num { font-family: var(--mono); font-size: 9px; letter-spacing: 0.15em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; }
+    .summary-step-name { font-family: var(--display); font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+    .summary-step:nth-child(1) .summary-step-name { color: var(--s1); }
+    .summary-step:nth-child(2) .summary-step-name { color: var(--s2); }
+    .summary-step:nth-child(3) .summary-step-name { color: var(--s3); }
+    .summary-step:nth-child(4) .summary-step-name { color: var(--s4); }
+    .summary-step:nth-child(5) .summary-step-name { color: var(--s5); }
+    .summary-step:nth-child(6) .summary-step-name { color: var(--text); }
+    .summary-step-product { font-family: var(--mono); font-size: 10px; color: var(--text-muted); }
+    .summary-step-enforced { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); }
+
+    /* ── GUARANTEES ── */
+    .guarantees-section { padding: 80px 40px; }
+    .guarantees-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; margin-top: 48px; }
+    .guarantee-card { background: var(--bg-card); padding: 36px 28px; }
+    .guarantee-num { font-family: var(--mono); font-size: 48px; font-weight: 700; color: rgba(255,255,255,0.05); line-height: 1; margin-bottom: 16px; }
+    .guarantee-title { font-family: var(--display); font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+    .guarantee-body { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+
+    /* ── CTA ── */
+    .cta-section { padding: 100px 40px; text-align: center; position: relative; overflow: hidden; }
+    .cta-section::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 400px; background: radial-gradient(ellipse, rgba(34,197,94,0.06) 0%, transparent 70%); }
+    .cta-inner { position: relative; max-width: 600px; margin: 0 auto; }
+    .cta-inner h2 { font-family: var(--display); font-size: clamp(28px, 3.5vw, 48px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; }
+    .cta-inner p { font-size: 16px; color: var(--text-muted); line-height: 1.7; margin-bottom: 40px; }
+    .cta-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; font-weight: 500; color: #000; background: var(--green); border: none; padding: 14px 28px; border-radius: 2px; text-decoration: none; transition: all 0.2s; }
+    .btn-primary:hover { background: #16a34a; transform: translateY(-1px); box-shadow: 0 8px 32px rgba(34,197,94,0.28); }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; color: var(--text-muted); background: transparent; border: 1px solid var(--border); padding: 14px 28px; border-radius: 2px; text-decoration: none; transition: all 0.2s; }
+    .btn-secondary:hover { color: var(--text); border-color: var(--border-active); }
+
+    /* ── FOOTER ── */
+    footer { border-top: 1px solid var(--border); padding: 40px; }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+    .footer-brand { font-family: var(--display); font-size: 15px; font-weight: 700; }
+    .footer-meta { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: var(--text-muted); line-height: 1.8; margin-top: 6px; }
+    .footer-right { display: flex; gap: 28px; }
+    .footer-right a { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; color: var(--text-muted); text-decoration: none; text-transform: uppercase; transition: color 0.2s; }
+    .footer-right a:hover { color: var(--text); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .hero { padding: 120px 20px 60px; }
+      .flow-pills { justify-content: flex-start; }
+      .steps-wrapper::before { display: none; }
+      .step-inner { grid-template-columns: 1fr; }
+      .step-section:nth-child(even) .step-inner { direction: ltr; }
+      .step-node { flex-direction: row; margin-bottom: 20px; }
+      .step-node-circle { margin-bottom: 0; margin-right: 12px; flex-shrink: 0; }
+      .step-content, .step-diagram { padding: 0; }
+      .step-section { padding: 56px 20px; }
+      .summary-chain { grid-template-columns: repeat(2, 1fr); }
+      .guarantees-grid { grid-template-columns: 1fr; }
+      .summary-section, .guarantees-section { padding: 56px 20px; }
+      .cta-section { padding: 64px 20px; }
+      .breadcrumb { padding: 10px 20px; }
+      footer { padding: 32px 20px; }
+    }
+    @media (max-width: 500px) {
+      .summary-chain { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="2" fill="#111318"/><path d="M8 8L16 16L24 8" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 24L16 16L24 24" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><circle cx="16" cy="16" r="2.5" fill="#22c55e"/></svg>
+    <span class="nav-logo-text">ZKNOT<sup>™</sup></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/#products">Products</a></li>
+    <li><a href="/protocol">Protocol</a></li>
+    <li><a href="/#verticals">Verticals</a></li>
+    <li><a href="/docs">Docs</a></li>
+    <li><a href="https://zknotio.gumroad.com" target="_blank" rel="noopener">Guides</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="mailto:ops@zknot.io" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+<!-- ===== ZKNOT /docs body v2 — drop between a working <nav> and <footer> ===== -->
 <style>
 .zk-docs{line-height:1.6;max-width:880px;margin:0 auto;padding:2rem 1.25rem}
 .zk-docs h1{font-size:2rem;margin:0 0 .25em}
@@ -11,6 +482,7 @@
 .zk-docs th{font-weight:600}
 .zk-docs pre{overflow:auto;padding:1em;border:1px solid rgba(128,128,128,.4);border-radius:6px;font-size:.88rem;line-height:1.45}
 .zk-docs code{font-size:.92em}
+.zk-docs .req{opacity:.6;font-size:.85em}
 .zk-docs .ptr{border-left:3px solid currentColor;padding:.4em 1em;margin:.8em 0;opacity:.85;font-size:.95rem}
 .zk-docs dl{margin:1em 0}
 .zk-docs dt{font-weight:600;margin-top:.7em}
@@ -29,7 +501,7 @@
   <h2 id="concepts">Concepts</h2>
   <dl>
     <dt>Attestation</dt><dd>A signed record that a physical actuation occurred on a specific device after a challenge was presented.</dd>
-    <dt>Challenge hash</dt><dd>The SHA-256 hash of an unpredictable, single-use challenge issued by the verifier; the value the device signs.</dd>
+    <dt>Challenge hash</dt><dd>The SHA-256 hash of the input data the user approved; the value the device signs.</dd>
     <dt>Secure element (SE)</dt><dd>Hardware holding the device's non-extractable ECDSA P-256 key.</dd>
     <dt>Optical PUF</dt><dd>(PowerVerify only) A photographed physical feature matched against an enrolled baseline; not a challenge-response PUF.</dd>
     <dt>FSM-gating / post-nonce ordering</dt><dd>The device firmware only reaches its signing state after the challenge is displayed and an actuation registered — the human action proves ordering, not entropy.</dd>
@@ -53,42 +525,74 @@
       <tr><td>Register</td><td><code>POST /v1/units/{short_code}/register</code></td><td>Customer claims a purchased unit.</td></tr>
       <tr><td>Enroll</td><td><code>POST /v1/units/{short_code}/puf/enroll</code></td><td>Enroll the optical PUF baseline photo. Once per unit.</td></tr>
       <tr><td>Attest</td><td><code>POST /v1/attest</code></td><td>Ingest a signed attestation per session.</td></tr>
-      <tr><td>Verify</td><td><code>GET /v1/verify/{code}</code></td><td>Resolve a code or UUID to a verified chain entry.</td></tr>
+      <tr><td>Verify (signature)</td><td><code>GET /v1/verify/{code}</code></td><td>Resolve a code or UUID to a verified chain entry.</td></tr>
+      <tr><td>Verify (optical)</td><td><code>POST /v1/units/{short_code}/puf/verify</code></td><td>Match a freshly captured photo against the unit's enrolled baseline.</td></tr>
     </tbody>
   </table>
-  <p>ZKKey units use the same attest/verify path without the optical enrollment step (see <a href="#hardware">Hardware</a>).</p>
+  <p>ZKKey units use the same attest/verify path without the optical steps (see <a href="#hardware">Hardware</a>).</p>
 
   <h2 id="schema-device-sig">Verification</h2>
   <p>Verification splits into checks any relying party can perform <strong>offline</strong> and checks that require the issuer (or the published chain).</p>
   <h3>Offline (SHA-256 + ECDSA P-256 only)</h3>
   <ol>
-    <li>Parse the artifact: device public key, challenge hash, signature, and (if present) the client-authoritative short code.</li>
-    <li>Verify the ECDSA P-256 signature against the device public key over the SHA-256 challenge hash. A pass establishes device binding (Protocol P1).</li>
+    <li>Parse the artifact: <code>public_key</code>, <code>challenge_hash</code>, <code>signature</code>, and (if present) the client-authoritative short code.</li>
+    <li>Verify the ECDSA P-256 signature against <code>public_key</code> over <code>challenge_hash</code>. A pass establishes device binding (Protocol P1).</li>
     <li>Recompute the client-authoritative short code from the artifact (PAT-010 §3) and confirm it matches the code presented to you — so the human-readable code is not server-assigned trust.</li>
   </ol>
   <p>No proprietary library is required, and you need not trust ZKNOT's servers to confirm that a specific device key signed a specific challenge hash.</p>
-  <h3>Server-mediated (or via the published chain)</h3>
+  <h3>Server-mediated</h3>
   <ul>
-    <li><strong>Freshness / single-use</strong> (Protocol P2) depends on the issuer's challenge ledger — an offline client cannot, by itself, know a challenge was unconsumed. This is the one property that requires the issuer or an out-of-band freshness signal.</li>
-    <li><strong>Chain position and tamper-evidence</strong> are confirmed by walking the LocalChain: <code>POST /v1/chain/verify</code> returns the first failing position, if any. Any party holding the chain can run this.</li>
+    <li><strong>Freshness / single-use</strong> (Protocol P2) depends on the issuer's challenge ledger — an offline client cannot, by itself, know a challenge was unconsumed. This is the one property of the signature path that requires the issuer or an out-of-band freshness signal.</li>
+    <li><strong>Chain position and tamper-evidence</strong> are confirmed by walking the LocalChain (<code>POST /v1/chain/verify</code>), which returns the first failing position. Any party holding the chain can run this.</li>
+    <li><strong>Optical-PUF match</strong> (PowerVerify) is inherently server-side: the baseline is secret and the matcher runs server-side, so <code>puf/verify</code> cannot be reproduced offline.</li>
   </ul>
 
   <h2 id="api">API reference</h2>
-  <p>Base URL <code>https://api.zknot.io</code>. Field-level request/response schemas are published in the live OpenAPI document at <code>https://api.zknot.io/openapi.json</code>; this table covers method, purpose, and status codes.</p>
+  <p>Base URL <code>https://api.zknot.io</code>. Full schemas are published at <code>https://api.zknot.io/openapi.json</code>; the most-used request/response schemas are tabulated below.</p>
   <table>
     <thead><tr><th>Method &amp; path</th><th>Purpose</th><th>Status codes</th></tr></thead>
     <tbody>
-      <tr><td><code>POST /v1/attest</code></td><td>Ingest a signed attestation artifact from a device. Verifies the P-256 signature over the challenge hash, determines the short code, appends to the LocalChain.</td><td>201 created · 200 idempotent re-post · 400 bad signature / malformed · 409 short-code collision</td></tr>
-      <tr><td><code>GET /v1/verify/{code}</code></td><td>Resolve a client-authoritative code (<code>XXXX-XXXX-XXXX</code>), a server-derived code (<code>ZK-XXX-XXXX</code>), or a raw UUID to a verified chain entry. No authentication.</td><td>200 · 422 validation</td></tr>
+      <tr><td><code>POST /v1/attest</code></td><td>Ingest a signed attestation artifact. Verifies the P-256 signature over the challenge hash, determines the short code, appends to the LocalChain.</td><td>201 created · 200 idempotent re-post · 400 bad signature / malformed · 409 short-code collision</td></tr>
+      <tr><td><code>GET /v1/verify/{code}</code></td><td>Resolve a client-authoritative code (<code>XXXX-XXXX-XXXX</code>), a server-derived code (<code>ZK-XXX-XXXX</code>), or a raw UUID to a verified chain entry. No authentication.</td><td>200 · 422</td></tr>
       <tr><td><code>POST /v1/chain/verify</code></td><td>Walk and verify the entire LocalChain; returns the first failing position if found.</td><td>200</td></tr>
-      <tr><td><code>POST /v1/units/provision</code></td><td>Mint a PowerVerify unit artifact; returns a label payload. Idempotent on serial number.</td><td>201 · 422 validation</td></tr>
-      <tr><td><code>POST /v1/units/{short_code}/register</code></td><td>Customer claims a purchased unit; stored in artifact metadata.</td><td>200 · 422 validation</td></tr>
-      <tr><td><code>POST /v1/units/{short_code}/puf/enroll</code></td><td>Enroll the optical PUF baseline photo for a unit. Once per unit.</td><td>201 · 422 validation</td></tr>
+      <tr><td><code>POST /v1/units/provision</code></td><td>Mint a PowerVerify unit artifact; returns a label payload. Idempotent on serial number.</td><td>201 · 422</td></tr>
+      <tr><td><code>POST /v1/units/{short_code}/register</code></td><td>Customer claims a purchased unit; stored in artifact metadata.</td><td>200 · 422</td></tr>
+      <tr><td><code>POST /v1/units/{short_code}/puf/enroll</code></td><td>Enroll the optical PUF baseline photo (multipart image). Once per unit.</td><td>201 · 422</td></tr>
+      <tr><td><code>POST /v1/units/{short_code}/puf/verify</code></td><td>Match a captured photo (multipart image) against the enrolled baseline.</td><td>200 · 422</td></tr>
     </tbody>
   </table>
 
+  <h3>Attestation request — <code>ArtifactIngest</code> (POST /v1/attest)</h3>
+  <table>
+    <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>artifact_id</code></td><td>string (UUID)</td><td>Client-generated artifact identifier. <span class="req">required</span></td></tr>
+      <tr><td><code>artifact_type</code></td><td>enum</td><td>One of <code>ZKEY_SIGN</code>, <code>POWER_SESSION</code>, <code>TRUST_SEAL</code>, <code>COMBINED_SESSION</code>, <code>POWERVERIFY_UNIT</code>. <span class="req">required</span></td></tr>
+      <tr><td><code>device_id</code></td><td>string</td><td>Hardware serial of the device's secure element. <span class="req">required</span></td></tr>
+      <tr><td><code>session_id</code></td><td>string · nullable</td><td>Shared UUID binding a <code>POWER_SESSION</code> and a <code>ZKEY_SIGN</code> into a combined session.</td></tr>
+      <tr><td><code>challenge_hash</code></td><td>string</td><td>SHA-256 of the input data the user approved. <span class="req">required</span></td></tr>
+      <tr><td><code>signature</code></td><td>string</td><td>ECDSA P-256 signature from the secure element (hex or base64). <span class="req">required</span></td></tr>
+      <tr><td><code>public_key</code></td><td>string</td><td>Device public key, for independent verification. <span class="req">required</span></td></tr>
+      <tr><td><code>signed_at</code></td><td>string (RFC 3339)</td><td>Device-reported signing timestamp. <span class="req">required</span></td></tr>
+      <tr><td><code>metadata</code></td><td>object · nullable</td><td>Optional free-form context (e.g. case ID, operator, location, notes). Defaults to empty.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Attestation response — <code>ArtifactResponse</code></h3>
+  <p>Returned by <code>/v1/attest</code> and resolved by <code>/v1/verify/{code}</code>. Adds the short code and the chain-link fields:</p>
+  <table>
+    <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>short_code</code></td><td>string</td><td>Human-readable identifier for the attestation.</td></tr>
+      <tr><td><code>chain_position</code></td><td>integer</td><td>Index of this record in the LocalChain.</td></tr>
+      <tr><td><code>chain_prev_hash</code></td><td>string · nullable</td><td>Hash of the predecessor record (null at position 0); the link that makes reordering/deletion detectable.</td></tr>
+      <tr><td><code>entry_hash</code></td><td>string</td><td>Hash of this record. The next record commits to it.</td></tr>
+    </tbody>
+  </table>
+  <p>(Plus the echoed <code>artifact_id</code>, <code>artifact_type</code>, <code>device_id</code>, <code>session_id</code>, <code>challenge_hash</code>, <code>signed_at</code>, and <code>metadata</code>.)</p>
+
   <h2 id="schema-artifact">Artifact &amp; short codes</h2>
-  <p>An attestation artifact carries, at minimum, the device public key, the SHA-256 challenge hash, the ECDSA P-256 signature over that hash, actuation evidence, and a short code. The cryptographic primitives are SHA-256 (hashing) and ECDSA over NIST P-256 (signing) — both available in every major language, which is what makes offline verification possible.</p>
+  <p>The cryptographic primitives are SHA-256 (hashing) and ECDSA over NIST P-256 (signing) — both available in every major language, which is what makes offline verification possible. Tamper-evidence comes from the chain link: each record's <code>entry_hash</code> is committed to by the next record's <code>chain_prev_hash</code>, so any reordering, deletion, or edit of a prior record breaks the walk.</p>
   <p>Short codes follow PAT-010 §3 in two forms: <code>XXXX-XXXX-XXXX</code> is <em>client-authoritative</em> — derivable from the artifact without the server — and <code>ZK-XXX-XXXX</code> is server-derived. The verify endpoint accepts either, plus the raw artifact UUID.</p>
 
   <h2 id="hardware">Hardware &amp; product lines</h2>
@@ -102,7 +606,7 @@
   <p>The optical PUF is exclusive to PowerVerify; ZKKey roots identity in the secure element alone.</p>
 
   <h2 id="security">Security model</h2>
-  <p class="ptr">The full adversary model, the security properties with their assumptions, and an explicit account of what the protocol does <em>not</em> protect against (relay/MITM, optical-PUF spoofing, display-path integrity, and more) live in <a href="/protocol#6-what-this-does-not-protect-against">Protocol §6</a>, with assumptions consolidated in §8. Read those before relying on any guarantee.</p>
+  <p class="ptr">The full adversary model, the security properties with their assumptions, and an explicit account of what the protocol does <em>not</em> protect against (relay/MITM, optical-PUF spoofing, display-path integrity, and more) live in <a href="/protocol">Protocol §6</a>, with assumptions consolidated in §8. Read those before relying on any guarantee.</p>
 
   <h2 id="faq">FAQ</h2>
   <dl>
@@ -115,4 +619,4 @@
   <h2 id="support">Support</h2>
   <p>Technical, integration, and security questions: <a href="mailto:ops@zknot.io">ops@zknot.io</a>. Consumer verification help: <a href="mailto:support@zknot.io">support@zknot.io</a> and <a href="https://verifyknot.io">verifyknot.io</a>.</p>
 </main>
-<!-- ===== end ZKNOT /docs body ===== -->
+<!-- ===== end ZKNOT /docs body v2 ===== -->
