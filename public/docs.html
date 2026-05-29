@@ -568,7 +568,7 @@
     <tbody>
       <tr><td><code>artifact_id</code></td><td>string (UUID)</td><td>Client-generated artifact identifier. <span class="req">required</span></td></tr>
       <tr><td><code>artifact_type</code></td><td>enum</td><td>One of <code>ZKEY_SIGN</code>, <code>POWER_SESSION</code>, <code>TRUST_SEAL</code>, <code>COMBINED_SESSION</code>, <code>POWERVERIFY_UNIT</code>. <span class="req">required</span></td></tr>
-      <tr><td><code>device_id</code></td><td>string</td><td>Hardware serial of the device's secure element. <span class="req">required</span></td></tr>
+      <tr><td><code>device_id</code></td><td>string</td><td>Hardware serial of the device's secure element (Microchip ATECC608B). <span class="req">required</span></td></tr>
       <tr><td><code>session_id</code></td><td>string · nullable</td><td>Shared UUID binding a <code>POWER_SESSION</code> and a <code>ZKEY_SIGN</code> into a combined session.</td></tr>
       <tr><td><code>challenge_hash</code></td><td>string</td><td>SHA-256 of the input data the user approved. <span class="req">required</span></td></tr>
       <tr><td><code>signature</code></td><td>string</td><td>ECDSA P-256 signature from the secure element (hex or base64). <span class="req">required</span></td></tr>
