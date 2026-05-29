@@ -463,563 +463,127 @@
     <li><a href="/#products">Products</a></li>
     <li><a href="/protocol">Protocol</a></li>
     <li><a href="/#verticals">Verticals</a></li>
-    <li><a href="/docs">Docs</a></li>
+    <!-- docs hidden until live -->
     <li><a href="https://zknotio.gumroad.com" target="_blank" rel="noopener">Guides</a></li>
     <li><a href="/about">About</a></li>
     <li><a href="mailto:ops@zknot.io" class="nav-cta">Contact</a></li>
   </ul>
 </nav>
+<!-- ===== ZKNOT /protocol body — drop between your existing <nav> and <footer> ===== -->
+<style>
+.zk-protocol{line-height:1.6;max-width:840px;margin:0 auto;padding:2rem 1.25rem}
+.zk-protocol h1{font-size:2rem;margin:0 0 .25em}
+.zk-protocol h2{font-size:1.35rem;margin:2.4em 0 .5em;padding-top:.4em;border-top:1px solid rgba(128,128,128,.25)}
+.zk-protocol h3{font-size:1.05rem;margin:1.6em 0 .3em}
+.zk-protocol p,.zk-protocol li{font-size:1rem}
+.zk-protocol .banner{border-left:3px solid currentColor;padding:.6em 1em;margin:1em 0;opacity:.85;font-size:.92rem}
+.zk-protocol table{border-collapse:collapse;width:100%;margin:1em 0;font-size:.95rem}
+.zk-protocol th,.zk-protocol td{border:1px solid rgba(128,128,128,.4);padding:.5em .7em;text-align:left;vertical-align:top}
+.zk-protocol th{font-weight:600}
+.zk-protocol pre{overflow:auto;padding:1em;border:1px solid rgba(128,128,128,.4);border-radius:6px;font-size:.9rem;line-height:1.45}
+.zk-protocol code{font-size:.92em}
+.zk-protocol .prop{margin:.8em 0}
+.zk-protocol .prop b{display:inline}
+.zk-protocol .notdefend{border-left:3px solid rgba(210,90,80,.7);padding:.45em 1em;margin:.6em 0}
+.zk-protocol .assume{font-style:italic;opacity:.85}
+.zk-protocol ol,.zk-protocol ul{padding-left:1.3em}
+</style>
 
-<div class="breadcrumb">
-  <a href="/">zknot.io</a>
-  <span class="sep">/</span>
-  <span class="current">EvidenceProtocol™</span>
-</div>
+<main class="zk-protocol">
+  <h1>Protocol</h1>
+  <p class="banner">Disclosed across filed applications: PAT-001 (U.S. provisional #63/960,933), PAT-004 (LocalChain), PAT-005 (attestation ingest), PAT-010 (short-code verification). This page states claims with their assumptions and an explicit account of what the protocol does <em>not</em> protect against.</p>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-grid"></div>
-  <div class="hero-glow"></div>
-  <div class="hero-inner">
-    <div class="hero-eyebrow">End-to-End Chain of Custody</div>
-    <h1>EvidenceProtocol<span class="tm">™</span></h1>
-    <p class="hero-sub">
-      Six steps. Every constraint enforced by a different layer of physics or mathematics.
-      No single point of failure. No trust assumption at any stage.
-      From device connection to signed PDF — independently verifiable.
-    </p>
-    <div class="flow-pills">
-      <div class="flow-pill s1">01 PowerVerify™</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-pill s2">02 Capture</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-pill s3">03 TrustSeal™</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-pill s4">04 ZKKey™ Sign</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-pill s5">05 Chain Record</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-pill s6">06 PDF Report</div>
-    </div>
-    <div class="hero-scroll-hint">Walk the protocol</div>
-  </div>
-</section>
+  <h2>1. Overview</h2>
+  <p>ZKNOT produces an <strong>attestation</strong> that a physical actuation occurred on a specific device <em>after</em> an unpredictable challenge was presented, signed by an ECDSA P-256 key held in that device's hardware secure element, and appended to a tamper-evident local log (the <strong>ZKNOT LocalChain</strong>).</p>
+  <p>Three separated concerns:</p>
+  <ul>
+    <li><strong>Possession</strong> of a non-extractable key (device binding), via the secure element — plus, on the PowerVerify line, an <strong>optical</strong> physically unclonable feature captured by camera and matched against an enrolled baseline.</li>
+    <li><strong>Freshness</strong>, via binding each attestation to a single-use, verifier-issued challenge hash.</li>
+    <li><strong>Temporal ordering</strong> ("post-nonce"): a finite-state machine prevents the device from assembling an attestation until <em>after</em> the challenge has been displayed and a physical actuation registered, in that order.</li>
+  </ul>
+  <p>The human actuation contributes <strong>ordering, not entropy</strong> — it is not mixed into the signed material as a secret.</p>
 
-<!-- STEPS -->
-<div class="steps-wrapper">
+  <h2>2. Components and trust boundaries</h2>
+  <table>
+    <thead><tr><th>Component</th><th>Role</th><th>Trusted for</th></tr></thead>
+    <tbody>
+      <tr><td>Secure element (SE)</td><td>Holds the ECDSA P-256 key; signs the challenge hash</td><td>Key non-extractability; correct signing</td></tr>
+      <tr><td>Optical PUF (PowerVerify only)</td><td>Roots identity in a photographed physical feature</td><td>Spoof-resistance of the captured feature</td></tr>
+      <tr><td>Controller / FSM (firmware)</td><td>Enforces state ordering; assembles the artifact</td><td>Correct ordering enforcement</td></tr>
+      <tr><td>Display path</td><td>Presents the challenge to the actuator</td><td>Integrity of <em>what is shown vs. what is signed</em></td></tr>
+      <tr><td>Verifier / issuer</td><td>Issues challenges; checks signature, freshness, chain</td><td>Challenge entropy, single-use, freshness windowing</td></tr>
+      <tr><td>ZKNOT LocalChain</td><td>Appends accepted attestations</td><td>Tamper-evidence / append-only ordering</td></tr>
+    </tbody>
+  </table>
 
-  <!-- ── STEP 1: PowerVerify ── -->
-  <section class="step-section step-1">
-    <div class="step-inner">
-      <div class="step-content reveal">
-        <div class="step-tag">Step 01 · Hardware</div>
-        <h2 class="step-title">Connect PowerVerify™</h2>
-        <p class="step-body">
-          Before any data is touched, PowerVerify™ is inserted between the evidence
-          device and the forensic workstation. The write data path is physically severed
-          at the PCB level. From this point forward, the evidence device cannot be
-          written to — not by the operator, not by the OS, not by any software on the workstation.
-          This is not a policy. It is a physical fact testable with a multimeter.
-        </p>
-        <div class="step-constraints">
-          <div class="step-constraint">
-            <div class="step-constraint-bullet">→</div>
-            Write path eliminated before any software runs
-          </div>
-          <div class="step-constraint">
-            <div class="step-constraint-bullet">→</div>
-            No firmware to exploit or misconfigure
-          </div>
-          <div class="step-constraint">
-            <div class="step-constraint-bullet">→</div>
-            Continuity-testable in any court or lab
-          </div>
-        </div>
-        <a href="/products/powerverify" class="step-product-link">PowerVerify™ product page</a>
-      </div>
-      <div class="step-node">
-        <div class="step-node-circle">01</div>
-        <div class="step-num-label">Physical<br/>Constraint</div>
-      </div>
-      <div class="step-diagram reveal">
-        <div class="diagram-panel">
-          <div class="diagram-header">
-            <div class="diagram-dot" style="background:#f59e0b"></div>
-            <div class="diagram-label">PowerVerify™ — Write Path Status</div>
-          </div>
-          <div class="diagram-body">
-            <div class="status-row">
-              <div class="status-indicator" style="background:#22c55e; box-shadow:0 0 6px #22c55e;"></div>
-              <div class="status-label">Device Connected</div>
-              <div class="status-value" style="color:#22c55e">ACTIVE</div>
-            </div>
-            <div class="status-row">
-              <div class="status-indicator" style="background:#ef4444;"></div>
-              <div class="status-label">Write Path</div>
-              <div class="status-value" style="color:#ef4444">ELIMINATED</div>
-            </div>
-            <div class="status-row">
-              <div class="status-indicator" style="background:#22c55e; box-shadow:0 0 6px #22c55e;"></div>
-              <div class="status-label">Read Path</div>
-              <div class="status-value" style="color:#22c55e">OPEN</div>
-            </div>
-            <div class="status-row">
-              <div class="status-indicator" style="background:#f59e0b;"></div>
-              <div class="status-label">Firmware Required</div>
-              <div class="status-value" style="color:#f59e0b">NONE</div>
-            </div>
-            <div class="status-row">
-              <div class="status-indicator" style="background:#22c55e;"></div>
-              <div class="status-label">Continuity Testable</div>
-              <div class="status-value" style="color:#22c55e">YES</div>
-            </div>
-            <div class="terminal" style="margin-top:14px;">
-              <div class="t-comment">// Hardware attestation event</div>
-              <div><span class="t-key">event:</span> <span class="t-val-amber">"POWERVERIFY_CONNECT"</span></div>
-              <div><span class="t-key">device_serial:</span> <span class="t-val-dim">"PV-001-B3F9"</span></div>
-              <div><span class="t-key">write_path:</span> <span class="t-val-green">"SEVERED"</span></div>
-              <div><span class="t-key">ts:</span> <span class="t-val-dim">"2026-03-14T09:18:44Z"</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  <h2>3. Adversary model</h2>
+  <p>Assumed capabilities: observe and record any number of completed attestations and challenges; replay at will; run arbitrary software on a general-purpose host in the display path; attempt pre-computation ahead of challenge issuance; (PowerVerify) present forged or replayed optical material to a verifier's camera.</p>
+  <p>Out of scope (not defended — see §6): SE key extraction within budget; real-time relay; compromised provisioning.</p>
 
-  <!-- ── STEP 2: Capture ── -->
-  <section class="step-section step-2">
-    <div class="step-inner">
-      <div class="step-content reveal">
-        <div class="step-tag">Step 02 · Acquisition</div>
-        <h2 class="step-title">Forensic Capture</h2>
-        <p class="step-body">
-          With the write path eliminated, data acquisition proceeds using standard
-          forensic imaging tools. Because PowerVerify™ operates below the software layer,
-          any imaging tool — dd, FTK, Cellebrite, custom — can be used without modification.
-          The tool cannot accidentally write to the source because the hardware
-          does not permit it. The resulting image or file set is hashed before proceeding.
-        </p>
-        <div class="step-constraints">
-          <div class="step-constraint">
-            <div class="step-constraint-bullet">→</div>
-            Compatible with any forensic imaging tool
-          </div>
-          <div class="step-constraint">
-            <div class="step-constraint-bullet">→</div>
-            SHA-256 hash computed on captured artifact
-          </div>
-          <div class="step-constraint">
-            <div class="step-constraint-bullet">→</div>
-            Hash becomes the binding element for all subsequent steps
-          </div>
-        </div>
-      </div>
-      <div class="step-node">
-        <div class="step-node-circle">02</div>
-        <div class="step-num-label">Acquisition</div>
-      </div>
-      <div class="step-diagram reveal">
-        <div class="diagram-panel">
-          <div class="diagram-header">
-            <div class="diagram-dot" style="background:#22c55e"></div>
-            <div class="diagram-label">Capture Session — Hash Computation</div>
-          </div>
-          <div class="diagram-body">
-            <div class="terminal">
-              <div class="t-comment">// Computing artifact hash</div>
-              <div><span class="t-prompt">$ </span><span class="t-cmd">sha256sum evidence.img</span></div>
-              <div style="margin-top:6px;"><span class="t-val-green">a3f8c1d2e4b5f9a0c7d3e2f1b8a4</span></div>
-              <div><span class="t-val-green">c6d9e0f2b3c5d7a8e1f4b2c9d0e3</span></div>
-              <div style="margin-top:10px;" class="t-comment">// Session metadata</div>
-              <div><span class="t-key">artifact_size:</span> <span class="t-val-dim">"128.4 GB"</span></div>
-              <div><span class="t-key">source_device:</span> <span class="t-val-dim">"Samsung 870 EVO"</span></div>
-              <div><span class="t-key">imaging_tool:</span> <span class="t-val-dim">"dd / forensic"</span></div>
-              <div><span class="t-key">write_blocked:</span> <span class="t-val-green">"HARDWARE"</span></div>
-              <div><span class="t-key">hash_algo:</span> <span class="t-val-dim">"SHA-256"</span></div>
-              <div style="margin-top:10px;"><span class="t-comment">// Ready for TrustSeal</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  <h2>4. The protocol</h2>
+  <p>The firmware is a finite-state machine. The signable state (<code>S_SIGN</code>) is reachable <strong>only</strong> along:</p>
+  <pre>S_IDLE
+  → (receive challenge, derive challenge_hash) → S_LOADED
+  → (display challenge on trusted path)        → S_DISPLAYED
+  → (register physical actuation)              → S_ACTUATED
+  → (SE signs challenge_hash)                  → S_SIGN  → emit artifact</pre>
+  <p>No edge into <code>S_SIGN</code> bypasses <code>S_DISPLAYED → S_ACTUATED</code>. The artifact carries an <strong>ECDSA P-256 signature over the SHA-256 challenge hash</strong>, the device public key, and actuation evidence. The verifier accepts iff (1) the P-256 signature verifies against the registered public key over <code>challenge_hash</code>; (2) the challenge was issued here, is unexpired and unconsumed; (3) (PowerVerify) the captured optical feature matches the enrolled baseline within tolerance. On acceptance the challenge is consumed and the artifact appended to the LocalChain, which can later be walked and re-verified (<code>POST /v1/chain/verify</code>).</p>
 
-  <!-- ── STEP 3: TrustSeal ── -->
-  <section class="step-section step-3">
-    <div class="step-inner">
-      <div class="step-content reveal">
-        <div class="step-tag">Step 03 · Physical Binding</div>
-        <h2 class="step-title">Apply TrustSeal™</h2>
-        <p class="step-body">
-          A TrustSeal™ is applied to the evidence device packaging. At the exact moment
-          of application, the seal's unique ID is scanned and a chain entry is written
-          that binds the seal ID, the artifact hash from Step 02, the operator device ID,
-          and the timestamp into a single immutable record. Physical custody and digital
-          custody merge here and cannot be separated afterward.
-        </p>
-        <div class="step-constraints">
-          <div class="step-constraint">
-            <div class="step-constraint-bullet">→</div>
-            Seal application and chain entry are atomic — one event
-          </div>
-          <div class="step-constraint">
-            <div class="step-constraint-bullet">→</div>
-            Tamper reveals permanent VOID pattern on surface and backing
-          </div>
-          <div class="step-constraint">
-            <div class="step-constraint-bullet">→</div>
-            Short code on seal face resolves at verifyknot.io
-          </div>
-        </div>
-        <a href="/products/trustseal" class="step-product-link">TrustSeal™ product page</a>
-      </div>
-      <div class="step-node">
-        <div class="step-node-circle">03</div>
-        <div class="step-num-label">Physical<br/>+ Digital</div>
-      </div>
-      <div class="step-diagram reveal">
-        <div class="diagram-panel">
-          <div class="diagram-header">
-            <div class="diagram-dot" style="background:#a855f7"></div>
-            <div class="diagram-label">TrustSeal™ — Binding Event</div>
-          </div>
-          <div class="diagram-body">
-            <div class="terminal">
-              <div class="t-comment">// Seal scanned — binding event begins</div>
-              <div><span class="t-key">seal_id:</span> <span class="t-val-purple">"TS-00291-B"</span></div>
-              <div><span class="t-key">short_code:</span> <span class="t-val-purple">"ZK-4X9R-KM2"</span></div>
-              <div><span class="t-key">artifact_hash:</span> <span class="t-val-dim">"a3f8c1d2..."</span></div>
-              <div><span class="t-key">event_type:</span> <span class="t-val-purple">"TRUSTSEAL_EVENT"</span></div>
-              <div><span class="t-key">ts:</span> <span class="t-val-dim">"2026-03-14T09:22:04Z"</span></div>
-              <div style="margin-top:10px;" class="t-comment">// Chain entry queued for signing</div>
-              <div><span class="t-key">status:</span> <span class="t-val-amber">"AWAITING_ZKKEY_SIGNATURE"</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  <h2>5. Security properties</h2>
+  <div class="prop"><b>P1 — Device binding.</b> A valid attestation demonstrates possession of the SE's P-256 key at signing time. <span class="assume">Assumes: the key is non-extractable/uncloned under the assumed budget, and provisioning bound it to the claimed identity.</span></div>
+  <div class="prop"><b>P2 — Freshness / anti-replay.</b> Each attestation binds a single-use challenge; a replay references a consumed or expired challenge and is rejected. <span class="assume">Assumes: the challenge is high-entropy and the verifier enforces single-use and a bounded window (§6.7).</span></div>
+  <div class="prop"><b>P3 — Temporal ordering ("post-nonce").</b> Because <code>S_SIGN</code> follows challenge display and actuation, a well-behaved device cannot sign a challenge before it existed. <span class="assume">Scope: enforced by the device; only as trustworthy as firmware/SE integrity. The verifier learns "a device whose firmware enforces this ordering signed a fresh challenge," not "a human acted after the challenge."</span></div>
+  <div class="prop"><b>P4 — Pre-computation resistance.</b> From P2 + P3: the signable state is gated behind an unpredictable challenge, so attestations cannot be made in advance.</div>
+  <div class="prop"><b>P5 — Physical-clone resistance (PowerVerify, optical PUF).</b> Identity is additionally rooted in a photographed physical feature compared against an enrolled baseline within a tolerance threshold. <span class="assume">Assumes: the feature is hard to reproduce, capture geometry is controlled, and the matcher's false-accept rate is low enough for the use case.</span> This is a physical-fingerprint-vs-baseline scheme, not a challenge-response PUF; it is subject to §6.5.</div>
 
-  <!-- ── STEP 4: ZKKey Sign ── -->
-  <section class="step-section step-4">
-    <div class="step-inner">
-      <div class="step-content reveal">
-        <div class="step-tag">Step 04 · Hardware Signing</div>
-        <h2 class="step-title">ZKKey™ Sign</h2>
-        <p class="step-body">
-          The operator presses the physical button on ZKKey™. This is the only action
-          that triggers a signature. No remote command, no scripted automation, no
-          administrator override can produce a valid signature. The ATECC608B secure
-          element signs the complete chain entry payload using ECDSA P-256.
-          The private key never leaves the hardware. After the nonce expires,
-          no further signatures are possible for this session.
-        </p>
-        <div class="step-constraints">
-          <div class="step-constraint">
-            <div class="step-constraint-bullet">→</div>
-            Physical button press is the only valid trigger
-          </div>
-          <div class="step-constraint">
-            <div class="step-constraint-bullet">→</div>
-            Private key is hardware-locked — non-exportable
-          </div>
-          <div class="step-constraint">
-            <div class="step-constraint-bullet">→</div>
-            Post-nonce signing structurally impossible
-          </div>
-        </div>
-        <a href="/products/zkkey" class="step-product-link">ZKKey™ product page</a>
-      </div>
-      <div class="step-node">
-        <div class="step-node-circle">04</div>
-        <div class="step-num-label">Hardware<br/>Attestation</div>
-      </div>
-      <div class="step-diagram reveal">
-        <div class="diagram-panel">
-          <div class="diagram-header">
-            <div class="diagram-dot" style="background:#3b82f6"></div>
-            <div class="diagram-label">ZKKey™ ATECC608B — Signature Event</div>
-          </div>
-          <div class="diagram-body">
-            <div class="status-row">
-              <div class="status-indicator" style="background:#22c55e; box-shadow:0 0 6px #22c55e; animation:pulse 2s infinite;"></div>
-              <div class="status-label">Nonce Status</div>
-              <div class="status-value" style="color:#22c55e">ACTIVE</div>
-            </div>
-            <div class="status-row">
-              <div class="status-indicator" style="background:#22c55e;"></div>
-              <div class="status-label">Physical Presence</div>
-              <div class="status-value" style="color:#22c55e">CONFIRMED</div>
-            </div>
-            <div class="status-row">
-              <div class="status-indicator" style="background:#3b82f6;"></div>
-              <div class="status-label">Key Storage</div>
-              <div class="status-value" style="color:#3b82f6">ATECC608B</div>
-            </div>
-            <div class="terminal" style="margin-top:14px;">
-              <div class="t-comment">// Signature produced</div>
-              <div><span class="t-key">algorithm:</span> <span class="t-val-blue">"ECDSA-P256"</span></div>
-              <div><span class="t-key">device_id:</span> <span class="t-val-dim">"ZKKEY-003-A7F2E1"</span></div>
-              <div><span class="t-key">signature:</span> <span class="t-val-blue">"MEQCIBx9..."</span></div>
-              <div><span class="t-key">key_exportable:</span> <span class="t-val-green">"NEVER"</span></div>
-              <div><span class="t-key">post_nonce_sign:</span> <span class="t-val-green">"IMPOSSIBLE"</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  <h2>6. What this does NOT protect against</h2>
+  <div class="notdefend"><b>6.1 — No proof of who actuated; no biometric liveness.</b> It attests that <em>a</em> physical actuation occurred after display; it does not identify the actuator or distinguish a human from a mechanical actuator. "Human presence" is a deployment assumption.</div>
+  <div class="notdefend"><b>6.2 — No defense against real-time relay (mafia-fraud / MITM).</b> Relaying a displayed challenge to a genuine remote device and the attestation back, inside the window, can be accepted. There is no distance bounding.</div>
+  <div class="notdefend"><b>6.3 — Display-path dependency (WYSIWYS).</b> The guarantee that the actuator responded to the challenge that was actually signed holds only if shown == signed. Strong with a device-owned display; weaker when a compromised host renders the challenge.</div>
+  <div class="notdefend"><b>6.4 — SE physical-security envelope.</b> Decapsulation, fault injection, and side-channel key extraction are out of scope.</div>
+  <div class="notdefend"><b>6.5 — Optical-PUF presentation / spoofing.</b> Because the PowerVerify feature is verified by photo against a baseline, an adversary may present a printout, screen, or replica, or exploit the matcher's false-accept tolerance. There is no inherent capture-liveness guarantee. Treat the baseline as sensitive: if it leaks, it defines the forgery target.</div>
+  <div class="notdefend"><b>6.6 — Honest provisioning assumed.</b> Compromise of enrollment (key or optical baseline) defeats the guarantees.</div>
+  <div class="notdefend"><b>6.7 — Verifier-side enforcement required.</b> P2 holds only if the verifier treats challenges as single-use and expires them.</div>
+  <div class="notdefend"><b>6.8 — Not a secure channel / not key agreement.</b> No payload confidentiality is provided.</div>
 
-  <!-- ── STEP 5: Chain Record ── -->
-  <section class="step-section step-5">
-    <div class="step-inner">
-      <div class="step-content reveal">
-        <div class="step-tag">Step 05 · Ledger</div>
-        <h2 class="step-title">Chain Record Written</h2>
-        <p class="step-body">
-          The signed entry is written to ZK-LocalChain™. Its hash is computed and
-          chained to the previous entry — making every prior record part of the
-          mathematical proof of this one. The chain operates offline-capable;
-          no network connection is required. When connectivity is available,
-          the entry is published to verifyknot.io for public resolution.
-          Any party can independently verify the entire chain from any exported entry.
-        </p>
-        <div class="step-constraints">
-          <div class="step-constraint">
-            <div class="step-constraint-bullet">→</div>
-            Entry is append-only — no delete, no edit possible
-          </div>
-          <div class="step-constraint">
-            <div class="step-constraint-bullet">→</div>
-            Hash-chained to every prior entry in the ledger
-          </div>
-          <div class="step-constraint">
-            <div class="step-constraint-bullet">→</div>
-            Independently verifiable — ZKNOT™ not required to verify
-          </div>
-        </div>
-        <a href="/products/zk-localchain" class="step-product-link">ZK-LocalChain™ product page</a>
-      </div>
-      <div class="step-node">
-        <div class="step-node-circle">05</div>
-        <div class="step-num-label">Immutable<br/>Record</div>
-      </div>
-      <div class="step-diagram reveal">
-        <div class="diagram-panel">
-          <div class="diagram-header">
-            <div class="diagram-dot" style="background:#22c55e"></div>
-            <div class="diagram-label">ZK-LocalChain™ — Entry Written</div>
-          </div>
-          <div class="diagram-body">
-            <div class="terminal">
-              <div class="t-comment">// Full attestation artifact</div>
-              <div><span class="t-key">short_code:</span> <span class="t-val-green">"ZK-4X9R-KM2"</span></div>
-              <div><span class="t-key">artifact_type:</span> <span class="t-val-dim">"COMBINED_SESSION"</span></div>
-              <div><span class="t-key">chain_position:</span> <span class="t-val-green">41887</span></div>
-              <div><span class="t-key">prev_hash:</span> <span class="t-val-dim">"c7d3e2f1..."</span></div>
-              <div><span class="t-key">artifact_hash:</span> <span class="t-val-dim">"a3f8c1d2..."</span></div>
-              <div><span class="t-key">entry_hash:</span> <span class="t-val-green">"e0f2b3c5..."</span></div>
-              <div><span class="t-key">signed_at:</span> <span class="t-val-dim">"2026-03-14T09:22:11Z"</span></div>
-              <div style="margin-top:8px;"><span class="t-key">verify:</span> <span class="t-val-green">"verifyknot.io/ZK-4X9R-KM2"</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  <h2>7. The ZKNOT LocalChain</h2>
+  <p>Accepted artifacts are appended to a local, hash-linked log: each record commits to its predecessor, so reordering, deletion, or silent modification of prior records is detectable by walking the chain. This provides <strong>tamper-evidence and append-only ordering</strong> — not confidentiality, and not a proof of any hidden statement. ("ZK" denotes ZKNOT; this is not a zero-knowledge proof system.)</p>
 
-  <!-- ── STEP 6: PDF Report ── -->
-  <section class="step-section step-6">
-    <div class="step-inner">
-      <div class="step-content reveal">
-        <div class="step-tag">Step 06 · Output</div>
-        <h2 class="step-title">Signed PDF Report</h2>
-        <p class="step-body">
-          ZK-LocalChain™ exports a signed PDF chain-of-custody report containing
-          the full attestation artifact, device signatures, chain position,
-          all short codes, and QR codes linking to verifyknot.io for each entry.
-          The PDF is itself signed by the ZKKey™ at export time, making the report
-          a first-class chain artifact. Any party — opposing counsel, court, auditor —
-          can verify every claim in the report independently.
-        </p>
-        <div class="step-constraints">
-          <div class="step-constraint">
-            <div class="step-constraint-bullet">→</div>
-            PDF signed by ZKKey™ at export — it is itself a chain artifact
-          </div>
-          <div class="step-constraint">
-            <div class="step-constraint-bullet">→</div>
-            QR codes on every entry link to verifyknot.io
-          </div>
-          <div class="step-constraint">
-            <div class="step-constraint-bullet">→</div>
-            No vendor testimony required — report is self-verifying
-          </div>
-        </div>
-        <a href="https://verifyknot.io" class="step-product-link">Verify a record at verifyknot.io</a>
-      </div>
-      <div class="step-node">
-        <div class="step-node-circle">06</div>
-        <div class="step-num-label">Verified<br/>Output</div>
-      </div>
-      <div class="step-diagram reveal">
-        <div class="diagram-panel">
-          <div class="diagram-header">
-            <div class="diagram-dot" style="background:#e8eaed"></div>
-            <div class="diagram-label">Chain-of-Custody Report — Export</div>
-          </div>
-          <div class="diagram-body">
-            <div class="status-row">
-              <div class="status-indicator" style="background:#22c55e;"></div>
-              <div class="status-label">PDF Signature</div>
-              <div class="status-value" style="color:#22c55e">VALID</div>
-            </div>
-            <div class="status-row">
-              <div class="status-indicator" style="background:#22c55e;"></div>
-              <div class="status-label">Chain Integrity</div>
-              <div class="status-value" style="color:#22c55e">INTACT</div>
-            </div>
-            <div class="status-row">
-              <div class="status-indicator" style="background:#22c55e;"></div>
-              <div class="status-label">Public Verification</div>
-              <div class="status-value" style="color:#22c55e">AVAILABLE</div>
-            </div>
-            <div class="status-row">
-              <div class="status-indicator" style="background:#22c55e;"></div>
-              <div class="status-label">Vendor Required to Verify</div>
-              <div class="status-value" style="color:#22c55e">NO</div>
-            </div>
-            <div class="terminal" style="margin-top:14px;">
-              <div class="t-comment">// Report contents</div>
-              <div><span class="t-key">entries:</span> <span class="t-val-dim">3 chain entries</span></div>
-              <div><span class="t-key">qr_codes:</span> <span class="t-val-dim">per entry</span></div>
-              <div><span class="t-key">report_hash:</span> <span class="t-val-green">"f4a2c8..."</span></div>
-              <div><span class="t-key">report_signed:</span> <span class="t-val-green">"ZKKEY-003-A7F2E1"</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  <h2>8. Assumptions (consolidated)</h2>
+  <ol>
+    <li>SE P-256 key non-extractable/uncloned under the assumed budget.</li>
+    <li>Challenges high-entropy, single-use, freshness-windowed by the verifier.</li>
+    <li>Firmware FSM correctly enforces ordering.</li>
+    <li>Display-path integrity to the degree the deployment requires (§6.3).</li>
+    <li>(PowerVerify) controlled capture geometry; low matcher false-accept rate; baseline kept secret.</li>
+    <li>Honest provisioning/enrollment.</li>
+  </ol>
 
-</div><!-- /steps-wrapper -->
+  <h2>9. Verification</h2>
+  <p>Verification splits into checks any relying party can perform <strong>offline</strong> and checks that require the issuer (or the published chain).</p>
+  <p><strong>Client-side, with only a SHA-256 implementation and an ECDSA P-256 verifier</strong>, a party can independently confirm:</p>
+  <ul>
+    <li>the artifact's signature verifies against the claimed device public key over the SHA-256 challenge hash (P1, device binding);</li>
+    <li>the client-authoritative short code (PAT-010 §3, <code>XXXX-XXXX-XXXX</code>) recomputes from the artifact, so the human-readable code is not server-assigned trust.</li>
+  </ul>
+  <p>No proprietary library is required, and a verifier need not trust ZKNOT's servers to confirm that a specific device key signed a specific challenge hash.</p>
+  <p><strong>Server-mediated (or via the published chain):</strong></p>
+  <ul>
+    <li>challenge freshness and single-use (P2) depend on the issuer's challenge ledger; an offline client cannot by itself know a challenge was unconsumed;</li>
+    <li>chain position and tamper-evidence are confirmed by walking the LocalChain (<code>POST /v1/chain/verify</code>), verifiable by any party holding the chain.</li>
+  </ul>
+  <p>Net: signature and short code are independently checkable offline; <strong>freshness is the single property that requires the issuer or an out-of-band freshness signal.</strong></p>
 
-<!-- SUMMARY CHAIN -->
-<section class="summary-section">
-  <div class="summary-inner">
-    <div class="summary-label reveal">Complete Protocol</div>
-    <h2 class="summary-title reveal">Six steps. Six enforced constraints.</h2>
-    <p class="summary-sub reveal">
-      Each step enforces a different guarantee. No step relies on trust in the previous one —
-      each is independently auditable by a different party using a different method.
-    </p>
-    <div class="summary-chain reveal">
-      <div class="summary-step">
-        <div class="summary-step-num">Step 01</div>
-        <div class="summary-step-name">PowerVerify™</div>
-        <div class="summary-step-product">Hardware device</div>
-        <div class="summary-step-enforced">Enforced by: Physics</div>
-      </div>
-      <div class="summary-step">
-        <div class="summary-step-num">Step 02</div>
-        <div class="summary-step-name">Capture</div>
-        <div class="summary-step-product">Any imaging tool</div>
-        <div class="summary-step-enforced">Enforced by: Hardware</div>
-      </div>
-      <div class="summary-step">
-        <div class="summary-step-num">Step 03</div>
-        <div class="summary-step-name">TrustSeal™</div>
-        <div class="summary-step-product">Physical + chain</div>
-        <div class="summary-step-enforced">Enforced by: Material + Math</div>
-      </div>
-      <div class="summary-step">
-        <div class="summary-step-num">Step 04</div>
-        <div class="summary-step-name">ZKKey™ Sign</div>
-        <div class="summary-step-product">Hardware attestation</div>
-        <div class="summary-step-enforced">Enforced by: Cryptography</div>
-      </div>
-      <div class="summary-step">
-        <div class="summary-step-num">Step 05</div>
-        <div class="summary-step-name">Chain Record</div>
-        <div class="summary-step-product">ZK-LocalChain™</div>
-        <div class="summary-step-enforced">Enforced by: Math</div>
-      </div>
-      <div class="summary-step">
-        <div class="summary-step-num">Step 06</div>
-        <div class="summary-step-name">PDF Report</div>
-        <div class="summary-step-product">Signed export</div>
-        <div class="summary-step-enforced">Verified by: Anyone</div>
-      </div>
-    </div>
-  </div>
-</section>
+  <h2>10. Patent and disclosure</h2>
+  <p>The architecture is disclosed across filed applications: PAT-001 (U.S. provisional #63/960,933) covering the FSM-gated, actuation-after-displayed-hash construction; PAT-004 (LocalChain); PAT-005 (attestation ingest); PAT-010 (short-code verification). The microcontroller is a preferred embodiment; the secure element is claimed generically.</p>
 
-<!-- GUARANTEES -->
-<section class="guarantees-section">
-  <div class="section-inner" style="max-width:1100px;margin:0 auto;">
-    <div style="font-family:var(--mono);font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--green);display:flex;align-items:center;gap:8px;margin-bottom:16px;" class="reveal">
-      <span style="width:20px;height:1px;background:var(--green);display:block;"></span>
-      Protocol Guarantees
-    </div>
-    <h2 style="font-family:var(--display);font-size:clamp(28px,3.5vw,46px);font-weight:700;letter-spacing:-0.02em;margin-bottom:16px;" class="reveal">What the protocol guarantees — and how.</h2>
-    <p style="font-size:16px;color:var(--text-muted);max-width:560px;line-height:1.7;margin-bottom:48px;" class="reveal">
-      Not claims. Not features. Structural facts — each provable by a different method.
-    </p>
-    <div class="guarantees-grid reveal">
-      <div class="guarantee-card">
-        <div class="guarantee-num">01</div>
-        <div class="guarantee-title">The source device was not modified</div>
-        <div class="guarantee-body">Provable by PowerVerify™ continuity test — a multimeter confirms the write path was severed before the workstation was connected. No software claim required.</div>
-      </div>
-      <div class="guarantee-card">
-        <div class="guarantee-num">02</div>
-        <div class="guarantee-title">The captured artifact is unchanged</div>
-        <div class="guarantee-body">The SHA-256 hash in the chain entry can be recomputed against the artifact at any time. If the hash matches, the artifact is byte-identical to what was captured.</div>
-      </div>
-      <div class="guarantee-card">
-        <div class="guarantee-num">03</div>
-        <div class="guarantee-title">The physical item was sealed at this moment</div>
-        <div class="guarantee-body">The TrustSeal™ chain entry binds the seal ID, artifact hash, operator, and timestamp. Seal removal reveals permanent void evidence. The chain entry remains either way.</div>
-      </div>
-      <div class="guarantee-card">
-        <div class="guarantee-num">04</div>
-        <div class="guarantee-title">A human was physically present for each signature</div>
-        <div class="guarantee-body">ZKKey™ requires a physical button press for every signature. No remote command, script, or administrator credential can substitute. The hardware enforces this.</div>
-      </div>
-      <div class="guarantee-card">
-        <div class="guarantee-num">05</div>
-        <div class="guarantee-title">The chain has not been modified since recording</div>
-        <div class="guarantee-body">Any retroactive modification to any chain entry breaks every subsequent hash. The math makes silent tampering computationally impossible — detectable by any party with the chain.</div>
-      </div>
-      <div class="guarantee-card">
-        <div class="guarantee-num">06</div>
-        <div class="guarantee-title">Any party can verify — without ZKNOT™</div>
-        <div class="guarantee-body">Short codes on TrustSeal™ labels and PDF reports resolve at verifyknot.io. No account. No vendor call. No trust in ZKNOT™ required to confirm every guarantee above.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CTA -->
-<section class="cta-section">
-  <div class="cta-inner reveal">
-    <div style="font-family:var(--mono);font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--green);display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:24px;">
-      <span style="width:20px;height:1px;background:var(--green);display:block;"></span>
-      Deploy EvidenceProtocol™
-    </div>
-    <h2>Deploy the full protocol in your operation.</h2>
-    <p>
-      EvidenceProtocol™ is available as a complete kit or by product. Contact us
-      to discuss your specific chain-of-custody requirements, volume, and integration needs.
-    </p>
-    <div class="cta-actions">
-      <a href="mailto:ops@zknot.io?subject=EvidenceProtocol%20Inquiry" class="btn-primary">Contact ops@zknot.io</a>
-      <a href="https://verifyknot.io" class="btn-secondary">Verify a Record →</a>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
+  <h2>11. Open questions</h2>
+  <ul>
+    <li>Whether to add a relay / distance-bounding layer for deployments that need §6.2.</li>
+    <li>Optical-PUF capture-liveness / anti-spoof posture (§6.5).</li>
+  </ul>
+</main>
+<!-- ===== end ZKNOT /protocol body ===== -->
 <footer>
   <div class="footer-inner">
     <div>
