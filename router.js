@@ -30,6 +30,13 @@ const ROUTES = {
   // Root
   "/":                             "/index.html",
 
+  // Categories — the three-band structure that replaces the four product
+  // pages. /attestation is deliberately absent: the page does not exist yet,
+  // and a route pointing at a missing asset would silently fall through and
+  // 404 rather than fail where someone would notice.
+  "/verifiables":                  "/verifiables.html",
+  "/rails":                        "/rails.html",
+
   // Products — try both with and without leading slash variations
   "/products/zkkey":               "/zkkey.html",
   "/products/powerverify":         "/powerverify.html",
