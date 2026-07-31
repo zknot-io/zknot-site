@@ -6,9 +6,16 @@
   "observability": {
     "enabled": true
   },
+  // run_worker_first — without it, Workers Assets serves any path matching a
+  // file directly and NEVER invokes router.js, so the WEB-01 security headers
+  // in that file applied to almost nothing. Verified live 2026-07-31:
+  // /verticals/election-integrity (route name differs from asset name, so the
+  // Worker had to run) carried full HSTS + CSP, while /verifiables, /about,
+  // /docs and every other auto-matched path carried none.
   "assets": {
     "directory": "./public",
-    "binding": "ASSETS"
+    "binding": "ASSETS",
+    "run_worker_first": true
   },
   "compatibility_flags": [
     "nodejs_compat"
