@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ZKNOT Attestation Devices — The device signs it, not us | ZKNOT™</title>
+  <meta name="description" content="Hardware that signs a record of a physical act — a human pressing, at a moment, over a specific thing. Four rungs, differing by threat model. None ships today, and we say which and why."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/css/zknot-tokens.css"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 64px; background: rgba(10,11,13,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-mark { width: 32px; height: 32px; }
+    .nav-logo-text { font-family: var(--display); font-size: 18px; font-weight: 800; letter-spacing: 0.05em; color: var(--text); }
+    .nav-logo-text sup { font-size: 10px; font-weight: 400; color: var(--text-muted); vertical-align: super; }
+    .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+    .nav-links a { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.here { color: var(--text); }
+
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 40px; }
+
+    .hero { padding: 148px 0 72px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 26px; }
+    .eyebrow::before { content: ''; width: 22px; height: 1px; background: var(--accent); }
+    h1 { font-family: var(--display); font-size: clamp(44px, 6.5vw, 84px); font-weight: 800; line-height: 1.02; letter-spacing: -0.02em; margin-bottom: 26px; }
+    .lede { font-size: clamp(17px, 2vw, 21px); font-weight: 300; color: var(--text-muted); max-width: 690px; line-height: 1.65; }
+    .lede strong { color: var(--text); font-weight: 400; }
+
+    section { padding: 68px 0; border-top: 1px solid var(--border); }
+    .section-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 22px; }
+    h2 { font-family: var(--display); font-size: clamp(28px, 3.4vw, 40px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 20px; }
+    h3 { font-family: var(--display); font-size: 21px; font-weight: 700; margin-bottom: 10px; }
+    p { color: var(--text-muted); line-height: 1.75; margin-bottom: 18px; max-width: 720px; }
+    p strong { color: var(--text); font-weight: 500; }
+    .mono-em { font-family: var(--mono); font-size: 0.92em; color: var(--text); }
+
+    .test-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 8px; }
+    .test-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 3px; padding: 26px; }
+    .test-num { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; color: var(--accent); margin-bottom: 14px; }
+    .test-card p { font-size: 15px; margin-bottom: 0; }
+
+    /* status banner — the loud, honest one */
+    .status-banner { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--amber); border-radius: 3px; padding: 40px; }
+    .status-banner h2 { margin-bottom: 18px; }
+    .status-banner p:last-child { margin-bottom: 0; }
+
+    /* ladder */
+    .ladder { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 3px; padding: 40px; }
+    .rung { padding: 22px 0; border-bottom: 1px solid var(--border); }
+    .rung:last-of-type { border-bottom: none; padding-bottom: 4px; }
+    .rung-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 8px; }
+    .rung-n { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; color: var(--text-dim); }
+    .rung-t { font-family: var(--display); font-size: 18px; font-weight: 700; color: var(--text); }
+    .rung p { font-size: 15px; margin-bottom: 0; }
+    .badge-now { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #000; background: var(--amber); padding: 3px 9px; border-radius: 2px; }
+    .badge-target { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); border: 1px solid var(--border-active); padding: 3px 9px; border-radius: 2px; }
+
+    /* products */
+    .prods { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 8px; }
+    .prod { background: var(--bg-card); border: 1px solid var(--border); border-radius: 3px; padding: 30px; display: flex; flex-direction: column; }
+    .prod-top { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 4px; }
+    .prod-price { font-family: var(--mono); font-size: 15px; color: var(--accent); white-space: nowrap; }
+    .prod-sub { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 18px; }
+    .prod p { font-size: 14.5px; }
+    .spec { list-style: none; margin: 4px 0 20px; }
+    .spec li { font-size: 13.5px; color: var(--text-muted); padding: 7px 0; border-bottom: 1px solid var(--border); display: flex; gap: 10px; }
+    .spec li::before { content: '—'; color: var(--text-dim); }
+    .why { font-size: 13.5px; color: var(--amber); border-left: 2px solid rgba(245,158,11,0.4); padding: 2px 0 2px 14px; margin-bottom: 20px; }
+    .prod-foot { margin-top: auto; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .btn-ghost { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-muted); border: 1px solid var(--border); padding: 12px 22px; border-radius: 2px; text-decoration: none; transition: all 0.2s; }
+    .btn-ghost:hover { color: var(--text); border-color: var(--border-active); }
+    .btn { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.07em; text-transform: uppercase; color: #000; background: var(--accent); border: none; padding: 12px 22px; border-radius: 2px; text-decoration: none; transition: opacity 0.2s; }
+    .btn:hover { opacity: 0.85; }
+
+    .boundary { border: 1px solid var(--border); border-radius: 3px; padding: 32px; background: var(--bg-1); }
+    .boundary h3 { color: var(--text); }
+    .boundary p:last-child { margin-bottom: 0; }
+
+    footer { border-top: 1px solid var(--border); padding: 44px 0 60px; }
+    .foot { display: flex; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
+    .foot-brand { font-family: var(--display); font-size: 17px; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 10px; }
+    .foot-meta { font-size: 12.5px; color: var(--text-muted); line-height: 1.8; }
+    .foot-links { display: flex; flex-direction: column; gap: 9px; }
+    .foot-links a { font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; color: var(--text-muted); text-decoration: none; }
+    .foot-links a:hover { color: var(--text); }
+
+    @media (max-width: 880px) {
+      .wrap { padding: 0 20px; }
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .test-grid, .prods { grid-template-columns: 1fr; }
+      .hero { padding: 120px 0 56px; }
+      .ladder, .status-banner { padding: 26px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <svg class="nav-logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="2" fill="#111318"/>
+      <path d="M8 8L16 16L24 8" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M8 24L16 16L24 24" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/>
+      <circle cx="16" cy="16" r="2.5" fill="#22c55e"/>
+    </svg>
+    <span class="nav-logo-text">ZKNOT<sup>™</sup></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/verifiables">Verifiables</a></li>
+    <li><a href="/attestation" class="here">Attestation</a></li>
+    <li><a href="/rails">Rails</a></li>
+    <li><a href="/docs">Docs</a></li>
+    <li><a href="/about">About</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <div class="wrap hero">
+    <div class="eyebrow">ZKNOT Attestation Devices</div>
+    <h1>The device<br/>signs it. Not us.</h1>
+    <p class="lede">Hardware that turns a physical act — <strong>a specific human pressing, at a moment, over a specific thing</strong> — into a record a stranger can check. Four rungs, and they differ by <strong>threat model</strong>, not by being "more secure."</p>
+  </div>
+
+  <!-- STATUS FIRST — the honest one -->
+  <section><div class="wrap">
+    <div class="status-banner">
+      <div class="section-label" style="color:var(--amber);">Where this line stands</div>
+      <h2>None of these ship today.</h2>
+      <p>We would rather you learn that here than after a checkout. Every device below exists as hardware — boards are built, silicon is proven — and <strong>not one of them can yet be provisioned onto the verification rail</strong>, which is what makes an attestation device worth owning.</p>
+      <p>Each product says exactly what is blocking it. Some are hardware, most are not. When one clears, it gets a price and a buy button on this page and not before.</p>
+      <p style="color:var(--text);"><strong>If you want the thing that works today, it's the <a href="/verifiables" style="color:var(--accent);text-decoration:none;">Verifiables line</a> — no keys, no provisioning, nothing to wait for.</strong></p>
+    </div>
+  </div></section>
+
+  <!-- THE TEST -->
+  <section><div class="wrap">
+    <div class="section-label">What belongs in this line</div>
+    <h2>Three conditions.</h2>
+    <div class="test-grid">
+      <div class="test-card">
+        <div class="test-num">01</div>
+        <p><strong>It holds a key.</strong> A secret in hardware that the article itself can sign with.</p>
+      </div>
+      <div class="test-card">
+        <div class="test-num">02</div>
+        <p><strong>It signs something specific.</strong> A defined payload — an identity, a presence event, a measurement — not a general assertion.</p>
+      </div>
+      <div class="test-card">
+        <div class="test-num">03</div>
+        <p><strong>The claim survives us.</strong> A third party can re-verify the signature later without ZKNOT's participation or continued existence.</p>
+      </div>
+    </div>
+    <p style="margin-top:30px;">A passive article can't join this line no matter how strong its physical claim is. <strong>No key, no signature.</strong> That's why PowerVerify and TamperVerify are Verifiables — a separation of construction, not a ranking.</p>
+  </div></section>
+
+  <!-- THE LADDER -->
+  <section><div class="wrap">
+    <div class="ladder">
+      <div class="section-label" style="color:var(--accent);">The honesty ladder</div>
+      <h2>What actually backs the claim</h2>
+      <p>Three levels of backing. The difference isn't how good the cryptography is — it's <strong>who vouches for the key that did the signing.</strong></p>
+
+      <div class="rung">
+        <div class="rung-head"><span class="rung-n">LEVEL 1</span><span class="rung-t">The submitter's own word</span><span class="badge-now">Every record today</span></div>
+        <p>A signature exists and verifies against the key carried in the record. Nothing establishes <em>whose</em> key it is. The owner is whoever the record claims.</p>
+      </div>
+
+      <div class="rung">
+        <div class="rung-head"><span class="rung-n">LEVEL 2</span><span class="rung-t">Our registry vouches</span></div>
+        <p>ZKNOT's own key signed the registration. Better than nothing and still our word — a registry key is not a device key, and we say which one signed.</p>
+      </div>
+
+      <div class="rung">
+        <div class="rung-head"><span class="rung-n">LEVEL 3</span><span class="rung-t">A key held in hardware, that we vouch for</span><span class="badge-target">Target</span></div>
+        <p>The signature came from a key generated inside a secure element that has never left it, and that key is on file with us. This is what the devices below are built for.</p>
+      </div>
+
+      <div style="margin-top:28px;padding-top:24px;border-top:1px solid var(--border-active);">
+        <p style="color:var(--text);margin-bottom:0;"><strong>Every ZKNOT record in existence today sits at level 1.</strong> Not one has reached level 3. The hardware is capable of it; the provisioning that would make it true has not shipped. Publishing that is the point — the bottom rung existing on purpose is what would make the top rung believable.</p>
+      </div>
+    </div>
+  </div></section>
+
+  <!-- PRODUCTS -->
+  <section id="devices"><div class="wrap">
+    <div class="section-label">The four rungs</div>
+    <h2>Different threats, not different grades</h2>
+    <p>Selling these as good / better / best would misprice both ends. Each defeats something the one below it doesn't.</p>
+
+    <div class="prods">
+
+      <div class="prod">
+        <div class="prod-top"><h3>SelfKnot</h3><div class="prod-price">$59</div></div>
+        <div class="prod-sub">Open on-ramp · defeats casual forgery</div>
+        <p>The open tier. A seeed Xiao board plus a secure element holding a key generated on-chip that cannot be extracted in software.</p>
+        <p><strong>The firmware is open and user-replaceable by design</strong> — and that's the honest claim: trust comes from the ledger-enrolled key, <em>not</em> from firmware you could replace yourself.</p>
+        <ul class="spec">
+          <li>Xiao (seeed) + ATECC608B secure element</li>
+          <li>P-256 keypair generated on-chip, non-extractable</li>
+          <li>Potted · $59</li>
+          <li>No confirm button — it makes no human-presence claim</li>
+        </ul>
+        <div class="why">Blocked: chip-limited production run, and no built unit yet has a record on the rail.</div>
+        <div class="prod-foot"><a class="btn-ghost" href="#notify">Notify me</a></div>
+      </div>
+
+      <div class="prod">
+        <div class="prod-top"><h3>Vitni</h3><div class="prod-price">$79</div></div>
+        <div class="prod-sub">Bread-and-butter · defeats later tampering</div>
+        <p>Norse for <em>witness</em>. The workhorse rung: firmware locked in silicon rather than open, so a record can't be repudiated by pointing at replaceable software.</p>
+        <ul class="spec">
+          <li>STM32U585 + ATECC608B</li>
+          <li>Firmware locked — not user-replaceable</li>
+          <li>Built for a hardware-rooted device identity on the rail</li>
+        </ul>
+        <div class="why">Blocked: the device-identity subsystem it needs does not exist yet. Boards are built; nothing can be issued an identity until that ships.</div>
+        <div class="prod-foot"><a class="btn-ghost" href="#notify">Notify me</a></div>
+      </div>
+
+      <div class="prod">
+        <div class="prod-top"><h3>Ostensor</h3><div class="prod-price">$129</div></div>
+        <div class="prod-sub">Flagship · defeats deception at signing time</div>
+        <p>Latin, <em>one who shows</em>. The only device in the line that addresses the hardest problem: <strong>what you were shown is what actually got signed.</strong></p>
+        <p>A secure domain owns both the display and the key, so a compromised application can't show you one thing and sign another. This mechanism is proven in silicon on the bench — and it is the <strong>only</strong> device here that carries it.</p>
+        <ul class="spec">
+          <li>STM32U585 + Infineon OPTIGA Trust M</li>
+          <li>Show-then-confirm: the display and the key share one secure domain</li>
+          <li>One physical press permits at most one signature</li>
+        </ul>
+        <div class="why">Blocked: the security hardening that makes the above enforceable is not yet switched on in shipped units. Proven on the bench, not in a product.</div>
+        <div class="prod-foot"><a class="btn-ghost" href="#notify">Notify me</a></div>
+      </div>
+
+      <div class="prod">
+        <div class="prod-top"><h3>Monstrance</h3><div class="prod-price">By contract</div></div>
+        <div class="prod-sub">Hardened tier · defeats key extraction</div>
+        <p>A monstrance and an ostensorium are the same object — the vessel that holds something up so a room can see it.</p>
+        <p>The hardened tier, intended for rotating keys and tamper-responsive erasure so that physically attacking a device destroys what it was protecting. <strong>Request-only, and there is no hardware yet</strong> — not a catalogue item and not pretending to be one.</p>
+        <div class="why">No article exists. No hardware has been selected. This describes intent, not capability.</div>
+        <div class="prod-foot"><a class="btn-ghost" href="#notify">Enquire</a></div>
+      </div>
+
+    </div>
+  </div></section>
+
+  <!-- BOUNDARY -->
+  <section id="notify"><div class="wrap">
+    <div class="boundary">
+      <div class="section-label">What these do not do</div>
+      <h3>Stated before you wait for one.</h3>
+      <p><strong>A signature proves less than people assume.</strong> It shows a specific key signed specific bytes. On its own it does not show who held the key, that a person was present, that anyone approved anything, or that the contents are true. Each rung above adds one of those, and we say which.</p>
+      <p><strong>Only Ostensor addresses show-then-confirm.</strong> SelfKnot has no confirm button. Vitni's current revision supports no human-presence claim. If someone tells you a device proves a human approved something, ask which part of the hardware enforces that — and we'll answer the same question about ours.</p>
+      <p><strong>Every record today sits at the bottom of the ladder.</strong> Not one ZKNOT record has reached level 3. The devices are built for it; the provisioning is not shipped.</p>
+      <p><strong>The time on a record is ours.</strong> No ZKNOT record's timestamp is confirmed by an outside authority. That's a property of the <a href="/rails" style="color:var(--accent);text-decoration:none;">rails</a>, and it applies here too.</p>
+      <p><strong>Tamper-evident, not tamper-proof.</strong> Nothing here prevents a determined attacker with physical possession — it makes the attempt detectable.</p>
+      <p style="color:var(--text);"><strong>Want to be told when one of these actually ships?</strong> Write to us and say which. We'll tell you what cleared and what's still open, in the same words we use here.</p>
+    </div>
+  </div></section>
+
+  <!-- CROSS-LINE -->
+  <section><div class="wrap">
+    <div class="section-label">Where this sits</div>
+    <h2>Three ways to know</h2>
+    <p><strong>Verifiables</strong> — you check it yourself, with your eyes. No keys, nothing to trust, and it ships today.<br/>
+    <strong>Attestation Devices</strong> — a device testifies to an act. You trust silicon and math, not us.<br/>
+    <strong>Rails</strong> — a stranger re-checks it later, without being there and without trusting anyone.</p>
+    <p>Capability rises as you go down that list. <strong>So does the amount you have to take on faith</strong> — which is why the cheapest thing we make is the one you have to trust us least about.</p>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:26px;">
+      <a class="btn" href="/verifiables">Verifiables — ships today</a>
+      <a class="btn-ghost" href="/rails">Verification Rails</a>
+    </div>
+  </div></section>
+
+</main>
+
+<footer><div class="wrap foot">
+  <div>
+    <div class="foot-brand">ZKNOT™</div>
+    <div class="foot-meta">
+      ZKNOT, Inc. — Utah-based SDVOSB<br/>
+      UEI: C4SKW13JPEL5 · EIN: 36-5165991<br/>
+      William Shane Wilkinson, Founder &amp; CEO
+    </div>
+  </div>
+  <div class="foot-links">
+    <a href="/verifiables">Verifiables</a>
+    <a href="/attestation">Attestation Devices</a>
+    <a href="/rails">Verification Rails</a>
+    <a href="https://verifyknot.io">verifyknot.io</a>
+    <a href="/docs">Docs</a>
+    <a href="/about">About</a>
+  </div>
+</div></footer>
+
+</body>
+</html>
