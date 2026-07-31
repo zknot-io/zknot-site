@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ZKNOT Verification Rails — Check it without us | ZKNOT™</title>
+  <meta name="description" content="Free public verification, document stamping, and a hash-linked ledger. Your browser computes the verdict, not our server — and we publish which rungs of the ladder we have not built."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/css/zknot-tokens.css"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 64px; background: rgba(10,11,13,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-mark { width: 32px; height: 32px; }
+    .nav-logo-text { font-family: var(--display); font-size: 18px; font-weight: 800; letter-spacing: 0.05em; color: var(--text); }
+    .nav-logo-text sup { font-size: 10px; font-weight: 400; color: var(--text-muted); vertical-align: super; }
+    .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+    .nav-links a { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.here { color: var(--text); }
+
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 40px; }
+
+    .hero { padding: 148px 0 72px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 26px; }
+    .eyebrow::before { content: ''; width: 22px; height: 1px; background: var(--accent); }
+    h1 { font-family: var(--display); font-size: clamp(44px, 6.5vw, 84px); font-weight: 800; line-height: 1.02; letter-spacing: -0.02em; margin-bottom: 26px; }
+    .lede { font-size: clamp(17px, 2vw, 21px); font-weight: 300; color: var(--text-muted); max-width: 680px; line-height: 1.65; }
+    .lede strong { color: var(--text); font-weight: 400; }
+
+    section { padding: 68px 0; border-top: 1px solid var(--border); }
+    .section-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 22px; }
+    h2 { font-family: var(--display); font-size: clamp(28px, 3.4vw, 40px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 20px; }
+    h3 { font-family: var(--display); font-size: 21px; font-weight: 700; margin-bottom: 10px; }
+    p { color: var(--text-muted); line-height: 1.75; margin-bottom: 18px; max-width: 720px; }
+    p strong { color: var(--text); font-weight: 500; }
+    .mono-em { font-family: var(--mono); font-size: 0.92em; color: var(--text); }
+
+    .test-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 8px; }
+    .test-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 3px; padding: 26px; }
+    .test-num { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; color: var(--accent); margin-bottom: 14px; }
+    .test-card p { font-size: 15px; margin-bottom: 0; }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); text-align: left; padding: 0 16px 12px 0; border-bottom: 1px solid var(--border); font-weight: 400; }
+    td { padding: 16px 16px 16px 0; border-bottom: 1px solid var(--border); font-size: 14.5px; color: var(--text-muted); vertical-align: top; line-height: 1.65; }
+    td.qn { font-family: var(--mono); font-size: 12px; color: var(--accent); width: 34px; }
+    td.q { color: var(--text); font-weight: 500; width: 30%; }
+
+    /* the ladder — the loud block */
+    .ladder { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 3px; padding: 40px; }
+    .ladder h2 { margin-bottom: 18px; }
+    .rung { padding: 22px 0; border-bottom: 1px solid var(--border); }
+    .rung:last-of-type { border-bottom: none; padding-bottom: 4px; }
+    .rung-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 8px; }
+    .rung-n { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; color: var(--text-dim); }
+    .rung-t { font-family: var(--display); font-size: 18px; font-weight: 700; color: var(--text); }
+    .rung p { font-size: 15px; margin-bottom: 0; }
+    .badge-unbuilt { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--amber); border: 1px solid rgba(245,158,11,0.35); padding: 3px 9px; border-radius: 2px; }
+    .badge-here { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #000; background: var(--accent); padding: 3px 9px; border-radius: 2px; }
+    .rung.dim .rung-t { color: var(--text-muted); }
+    .youarehere { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--border-active); }
+    .youarehere p { color: var(--text); font-size: 16px; margin-bottom: 0; }
+
+    .rails-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 8px; }
+    .rail { background: var(--bg-card); border: 1px solid var(--border); border-radius: 3px; padding: 30px; display: flex; flex-direction: column; }
+    .rail-status { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 14px; }
+    .live { color: var(--accent); }
+    .partial { color: var(--amber); }
+    .rail p { font-size: 14.5px; }
+    .rail-foot { margin-top: auto; padding-top: 18px; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.07em; text-transform: uppercase; color: #000; background: var(--accent); border: none; padding: 12px 22px; border-radius: 2px; text-decoration: none; transition: opacity 0.2s; }
+    .btn:hover { opacity: 0.85; }
+    .btn-ghost { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-muted); border: 1px solid var(--border); padding: 12px 22px; border-radius: 2px; text-decoration: none; transition: all 0.2s; }
+    .btn-ghost:hover { color: var(--text); border-color: var(--border-active); }
+
+    .boundary { border: 1px solid var(--border); border-radius: 3px; padding: 32px; background: var(--bg-1); }
+    .boundary h3 { color: var(--text); }
+    .boundary p:last-child { margin-bottom: 0; }
+
+    footer { border-top: 1px solid var(--border); padding: 44px 0 60px; }
+    .foot { display: flex; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
+    .foot-brand { font-family: var(--display); font-size: 17px; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 10px; }
+    .foot-meta { font-size: 12.5px; color: var(--text-muted); line-height: 1.8; }
+    .foot-links { display: flex; flex-direction: column; gap: 9px; }
+    .foot-links a { font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; color: var(--text-muted); text-decoration: none; }
+    .foot-links a:hover { color: var(--text); }
+
+    @media (max-width: 880px) {
+      .wrap { padding: 0 20px; }
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .test-grid, .rails-grid { grid-template-columns: 1fr; }
+      .hero { padding: 120px 0 56px; }
+      .ladder { padding: 26px; }
+      table, thead, tbody, th, td, tr { display: block; }
+      thead { display: none; }
+      td { border: none; padding: 3px 0; width: auto !important; }
+      tr { display: block; padding: 16px 0; border-bottom: 1px solid var(--border); }
+      td.qn { color: var(--accent); }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <svg class="nav-logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="2" fill="#111318"/>
+      <path d="M8 8L16 16L24 8" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M8 24L16 16L24 24" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/>
+      <circle cx="16" cy="16" r="2.5" fill="#22c55e"/>
+    </svg>
+    <span class="nav-logo-text">ZKNOT<sup>™</sup></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/verifiables">Verifiables</a></li>
+    <li><a href="/attestation">Attestation</a></li>
+    <li><a href="/rails" class="here">Rails</a></li>
+    <li><a href="/docs">Docs</a></li>
+    <li><a href="/about">About</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <div class="wrap hero">
+    <div class="eyebrow">ZKNOT Verification Rails</div>
+    <h1>Check it<br/>without us.</h1>
+    <p class="lede">Where a stranger — present nowhere, trusting no one — turns a code into an answer. <strong>The verdict is computed in your browser, not on our server.</strong> And we publish which rungs of the ladder we haven't built.</p>
+  </div>
+
+  <!-- WHAT BELONGS -->
+  <section><div class="wrap">
+    <div class="section-label">What belongs here</div>
+    <h2>Three conditions.</h2>
+    <div class="test-grid">
+      <div class="test-card">
+        <div class="test-num">01</div>
+        <p><strong>It preserves a claim.</strong> Something signed, hashed, or registered is kept in a form that can be examined again later.</p>
+      </div>
+      <div class="test-card">
+        <div class="test-num">02</div>
+        <p><strong>Someone else can examine it.</strong> Not just us, and not just the person who created it.</p>
+      </div>
+      <div class="test-card">
+        <div class="test-num">03</div>
+        <p><strong>Two people checking it independently get the same answer.</strong></p>
+      </div>
+    </div>
+    <p style="margin-top:30px;">The rails are <strong>infrastructure, not a product line</strong>. Verification is free and has no login. The chain is a property of records, not something you buy. One rail component is a paid product — HashStamp — and it stamps documents, not hardware.</p>
+  </div></section>
+
+  <!-- THE LADDER — loud block -->
+  <section><div class="wrap">
+    <div class="ladder">
+      <div class="section-label" style="color:var(--accent);">The independence ladder</div>
+      <h2>How much do you still need us?</h2>
+      <p>Every verification claim sits somewhere on this ladder. Most companies never tell you where. Here is ours, <strong>including the rungs we haven't built.</strong></p>
+
+      <div class="rung dim">
+        <div class="rung-head"><span class="rung-n">RUNG 1</span><span class="rung-t">You take our word for it</span></div>
+        <p>The record says we registered something. If we're dishonest or gone, the claim is worth nothing. This is where a seal registration sits.</p>
+      </div>
+
+      <div class="rung dim">
+        <div class="rung-head"><span class="rung-n">RUNG 2</span><span class="rung-t">You need us online</span></div>
+        <p>The record is real and checkable, but you have to ask our API for it. If we're offline, you can't look it up.</p>
+      </div>
+
+      <div class="rung">
+        <div class="rung-head"><span class="rung-n">RUNG 3</span><span class="rung-t">You need our math, not our word</span><span class="badge-here">You are here</span></div>
+        <p>This is where verification actually happens. Your browser re-runs the signature check itself. We are not consulted for the verdict — and the page will tell you the signature failed <em>even when our own server thinks the record is fine.</em></p>
+      </div>
+
+      <div class="rung dim">
+        <div class="rung-head"><span class="rung-n">RUNG 4</span><span class="rung-t">You need nothing from us</span><span class="badge-unbuilt">We have not built this</span></div>
+        <p>Checking a record offline, from a file you hold, with no network and no ZKNOT. This is the rung that would make a record outlive the company. <strong>It does not exist yet.</strong> There is no export, no bundle, no offline verifier.</p>
+      </div>
+
+      <div class="rung dim">
+        <div class="rung-head"><span class="rung-n">RUNG 5</span><span class="rung-t">Someone outside vouches for the time</span><span class="badge-unbuilt">We have not built this</span></div>
+        <p>An independent timestamp authority confirming <em>when</em>, so the time is not our word. <strong>We have not built this either</strong>, on any product.</p>
+      </div>
+
+      <div class="youarehere">
+        <p><strong>We are on rung 3. Publishing that is the point.</strong> Any vendor can say "verified." Very few will tell you which rung their answer sits on, or which of their claims stop working the day they go out of business.</p>
+      </div>
+    </div>
+  </div></section>
+
+  <!-- SIX QUESTIONS -->
+  <section><div class="wrap">
+    <div class="section-label">What a stranger can establish</div>
+    <h2>Six questions</h2>
+    <p>A verification rail is only as good as its answer to each one — and only as honest as its willingness to say which ones it does not answer.</p>
+    <table>
+      <thead><tr><th></th><th>Question</th><th>What we can show you</th></tr></thead>
+      <tbody>
+        <tr><td class="qn">1</td><td class="q">Did the signature verify?</td><td>Yes — and your browser does the checking. We re-verify server-side on every request too, but the verdict you see is computed on your machine.</td></tr>
+        <tr><td class="qn">2</td><td class="q">Is the signing key one ZKNOT vouches for?</td><td>Yes or no, stated plainly. Records signed by keys we don't vouch for are accepted into the chain and shown as unvouched — we don't hide them and we don't pretend they're evidence.</td></tr>
+        <tr><td class="qn">3</td><td class="q">Has the record been altered?</td><td>The record is hash-linked to the ones before it. Change a signed field and the linkage breaks for everyone checking, permanently.</td></tr>
+        <tr><td class="qn">4</td><td class="q">Who is asserting this — a device or a registry?</td><td>Stated on every record, in words, with what it does <em>not</em> prove sitting next to what it does.</td></tr>
+        <tr><td class="qn">5</td><td class="q">When did it happen, and on whose word?</td><td><strong style="color:var(--text);">On ours.</strong> The time on every ZKNOT record is supplied by the service that wrote it. It is not confirmed by any outside authority.</td></tr>
+        <tr><td class="qn">6</td><td class="q">What exactly did the signature cover?</td><td>Stated per record. On older records the honest answer is <em>"the fingerprint, and nothing else"</em> — and that is what the record says.</td></tr>
+      </tbody>
+    </table>
+  </div></section>
+
+  <!-- THE RAILS -->
+  <section><div class="wrap">
+    <div class="section-label">The rails</div>
+    <h2>Three components</h2>
+    <div class="rails-grid">
+
+      <div class="rail">
+        <div class="rail-status live">● Live</div>
+        <h3>verifyknot.io</h3>
+        <p style="font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;color:var(--text-dim);">THE PUBLIC RAIL</p>
+        <p>Free. No account, no login, and no analytics on the verification page.</p>
+        <p>Every verification page is the same file for every record — the page is identical whether the record is genuine or broken. Whatever it tells you, <strong>it worked it out in your browser from the record itself.</strong></p>
+        <div class="rail-foot"><a class="btn" href="https://verifyknot.io">Verify a record</a></div>
+      </div>
+
+      <div class="rail">
+        <div class="rail-status live">● Live</div>
+        <h3>HashStamp</h3>
+        <p style="font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;color:var(--text-dim);">THE DOCUMENT RAIL</p>
+        <p>Commit a document's fingerprint to the chain and get a link anyone can check.</p>
+        <p>Your file is hashed <strong>in your browser and never leaves your device</strong> — only the fingerprint is sent, plus an optional public label. Signed by a hosted service key, at a time we state. One payment, no subscription.</p>
+        <div class="rail-foot"><a class="btn" href="https://hashstamp.io">hashstamp.io</a></div>
+      </div>
+
+      <div class="rail">
+        <div class="rail-status partial">● Partial</div>
+        <h3>The chain itself</h3>
+        <p style="font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;color:var(--text-dim);">THE LEDGER</p>
+        <p>A hash-linked, append-only ledger. <strong>Not a blockchain</strong> — there is no network, no consensus, no token, and no mining.</p>
+        <p>It is a chain of hashes in a database, and the only thing it is good for is making alteration detectable. <strong>That is also the only thing we claim it does.</strong></p>
+        <div class="rail-foot"><span style="font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--text-muted);">Offline verification not yet built — rung 4</span></div>
+      </div>
+
+    </div>
+  </div></section>
+
+  <!-- WHAT WRITES -->
+  <section><div class="wrap">
+    <div class="section-label">What writes to the rails</div>
+    <h2>Who is the signer</h2>
+    <table>
+      <thead><tr><th>Line</th><th>How it uses the rail</th></tr></thead>
+      <tbody>
+        <tr><td class="q">Attestation devices</td><td>Sign their own birth and session records. <strong>The device is the signer.</strong></td></tr>
+        <tr><td class="q">HashStamp</td><td>Signs document fingerprints with a hosted service key. <strong>The service is the signer.</strong></td></tr>
+        <tr><td class="q">TamperVerify</td><td>Registers a seal event under our registry key. <strong>The registry is the signer.</strong></td></tr>
+        <tr><td class="q">Verifiables</td><td>Appear on the rail as the <em>subject</em> of a record — never as its signer. A passive article has no secure element, so it cannot sign anything, and we don't pretend otherwise.</td></tr>
+      </tbody>
+    </table>
+  </div></section>
+
+  <!-- BOUNDARY -->
+  <section><div class="wrap">
+    <div class="boundary">
+      <div class="section-label">What we don't claim</div>
+      <h3>The list nobody else publishes.</h3>
+      <p><strong>We don't anchor time to anyone outside ZKNOT.</strong> Every timestamp on every ZKNOT record — including paid HashStamp records — is supplied by our service. If you need a time an adversary can't argue with, we are not that today, and we would rather say so than let you find out in a dispute.</p>
+      <p><strong>You can't verify offline yet.</strong> Checking a record requires our API to answer. A record you can check with no network and no ZKNOT is the thing we most want to ship and have not shipped.</p>
+      <p><strong>We don't publish our registry key, so "is this key ours?" is our word.</strong> Your browser genuinely re-checks the signature — that part you can watch happen. Whether the key belongs to a device we vouch for is reported by us, and there is currently nowhere independent for you to check it. Until we publish that key, treat key identity as our assertion.</p>
+      <p><strong>Tamper-evident, not tamper-proof.</strong> Altering a signed field is detectable by anyone checking. It is not prevented.</p>
+      <p><strong>Not a blockchain.</strong> No network, no consensus, no token.</p>
+      <p><strong>A signature proves less than people assume.</strong> It shows a specific key signed specific bytes. It does not show who held the key, that a person was present, that anyone approved anything, or that the contents are true.</p>
+    </div>
+  </div></section>
+
+  <!-- STANDS -->
+  <section><div class="wrap">
+    <div class="section-label">Where this stands</div>
+    <h2>Live, and honest about the rest.</h2>
+    <p>Verification is <strong>live and free</strong> at verifyknot.io. HashStamp is <strong>live and takes payment</strong>. Offline verification and independent time anchoring are the next two things we intend to build, and <strong>neither exists today.</strong></p>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:26px;">
+      <a class="btn" href="https://verifyknot.io">Verify a record</a>
+      <a class="btn-ghost" href="/verifiables">Verifiables</a>
+      <a class="btn-ghost" href="/attestation">Attestation Devices</a>
+    </div>
+  </div></section>
+
+</main>
+
+<footer><div class="wrap foot">
+  <div>
+    <div class="foot-brand">ZKNOT™</div>
+    <div class="foot-meta">
+      ZKNOT, Inc. — Utah-based SDVOSB<br/>
+      UEI: C4SKW13JPEL5 · EIN: 36-5165991<br/>
+      William Shane Wilkinson, Founder &amp; CEO
+    </div>
+  </div>
+  <div class="foot-links">
+    <a href="/verifiables">Verifiables</a>
+    <a href="/attestation">Attestation Devices</a>
+    <a href="/rails">Verification Rails</a>
+    <a href="https://verifyknot.io">verifyknot.io</a>
+    <a href="/docs">Docs</a>
+    <a href="/about">About</a>
+  </div>
+</div></footer>
+
+</body>
+</html>
