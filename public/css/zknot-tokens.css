@@ -1,0 +1,140 @@
+/* ============================================================================
+   ZKNOT design tokens — the single source of truth for palette and type.
+   Extracted 2026-07-31 from eight divergent :root blocks inlined across
+   13 pages. Change colour here, not in a page.
+
+   HOW PAGES OPT IN
+     <link rel="stylesheet" href="/css/zknot-tokens.css">   in <head>, before
+     the page's own <style>. The page must NOT declare its own :root.
+
+     <html data-accent="amber">        audience accent override
+     <html data-theme="instrument">    the verify-surface palette
+
+   WHAT WAS DRIFT vs WHAT WAS INTENT
+     Drift (unified here): --accent-dim at 0.10 on two pages and 0.12 on four;
+     font stacks differing only by a space; the same colour named --accent on
+     some pages and --green on others; --sans vs --body.
+
+     INTENT (preserved): each vertical carries its own accent — journalism
+     amber, pharmaceutical blue — and the verify surface runs a brighter,
+     higher-contrast instrument palette. Those are design decisions and are
+     kept as explicit overrides rather than flattened.
+
+   NOTE FOR THE REDESIGN
+     This file makes a restyle a one-file change. It does not endorse the
+     current palette. See MARKETING/PREP-ZKNOT-SITE-REDESIGN-001 §4 — the
+     dark ground argues against a product whose entire claim is that you can
+     hold it up to the light and see through it.
+   ========================================================================= */
+
+:root {
+  /* --- neutrals -------------------------------------------------------- */
+  --bg:            #0a0b0d;
+  --bg-1:          #0f1114;
+  --bg-2:          #141720;
+  --bg-card:       #111318;
+  --border:        rgba(255,255,255,0.07);
+  --border-active: rgba(255,255,255,0.18);
+
+  /* --- text ------------------------------------------------------------ */
+  --text:       #e8eaed;
+  --text-muted: #6b7280;
+  --text-dim:   #9ca3af;
+  --white:      #ffffff;
+
+  /* --- accent (default: green) ----------------------------------------- */
+  --accent:      #22c55e;
+  --accent-dim:  rgba(34,197,94,0.12);
+  --accent-glow: rgba(34,197,94,0.25);
+
+  /* --- semantic -------------------------------------------------------- */
+  --amber:     #f59e0b;
+  --amber-dim: rgba(245,158,11,0.12);
+  --blue:      #3b82f6;
+  --blue-dim:  rgba(59,130,246,0.12);
+  --red:       #ef4444;
+  --purple:    #a855f7;
+
+  /* --- type ------------------------------------------------------------ */
+  --mono:    'DM Mono', monospace;
+  --sans:    'DM Sans', sans-serif;
+  --display: 'Syne', sans-serif;
+
+  /* --- compatibility aliases ------------------------------------------- *
+   * Pages were written against two names for the same thing. Aliased
+   * rather than rewritten, so no page's rules had to be edited.           */
+  --green:      var(--accent);
+  --green-dim:  var(--accent-dim);
+  --green-glow: var(--accent-glow);
+  --body:       var(--sans);
+
+  /* --- LATENT BUG, preserved deliberately ------------------------------ *
+   * --text-secondary is referenced by powerverify, trustseal, zkkey and
+   * zk-localchain (doctrine text, spec-table values, distinction copy,
+   * vertical lists) and was NEVER DEFINED in any :root. Those declarations
+   * have therefore been invalid at computed-value time, so `color` fell
+   * back to inheritance and rendered at full --text brightness.
+   *
+   * The author plainly intended a dimmer third tier between --text and
+   * --text-muted. Aliasing to --text here reproduces what those pages
+   * ACTUALLY look like today rather than silently changing four live pages
+   * during a mechanical extraction.
+   *
+   * The redesign should decide the real value and stop aliasing.          */
+  --text-secondary: var(--text);
+
+  /* --- docs / protocol syntax scale ------------------------------------ */
+  --s1: var(--amber);
+  --s2: var(--accent);
+  --s3: var(--purple);
+  --s4: var(--blue);
+  --s5: var(--accent);
+  --s6: var(--text);
+}
+
+/* ---------------------------------------------------------------------------
+   AUDIENCE ACCENTS — deliberate. Each vertical page carries its own accent.
+   -------------------------------------------------------------------------*/
+
+[data-accent="amber"] {
+  --accent:      #f59e0b;
+  --accent-dim:  rgba(245,158,11,0.10);
+  --accent-glow: rgba(245,158,11,0.25);
+}
+
+[data-accent="blue"] {
+  --accent:      #3b82f6;
+  --accent-dim:  rgba(59,130,246,0.10);
+  --accent-glow: rgba(59,130,246,0.25);
+}
+
+/* ---------------------------------------------------------------------------
+   INSTRUMENT THEME — the verify surface and the election vertical.
+   Darker ground, brighter signal, solid (non-alpha) borders. Kept distinct
+   because the verify page is the rail itself and reads as an instrument
+   readout rather than a marketing page.
+   -------------------------------------------------------------------------*/
+
+[data-theme="instrument"] {
+  --bg:            #080a0c;
+  --surface:       #0d1117;
+  --bg-card:       #0d1117;
+  --border:        #1a2030;
+  --border-active: #263040;
+  --border-bright: #263040;
+
+  --text:       #e8edf5;
+  --text-muted: #5a6880;
+  --text-dim:   #3a4860;
+
+  --accent:      #00e676;
+  --accent-dim:  #00e67622;
+  --accent-glow: #00e67640;
+
+  --amber:     #ffab00;
+  --amber-dim: #ffab0022;
+  --blue:      #448aff;
+  --blue-dim:  #448aff22;
+  --red:       #ff5252;
+  --red-dim:   #ff525222;
+}
