@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ZKNOT Verifiables — Proof by Inspection | ZKNOT™</title>
+  <meta name="description" content="Passive articles whose guarantee is a physical fact you can check yourself — no power, no firmware, no keys, and nothing to trust. PowerVerify and TamperVerify."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/css/zknot-tokens.css"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 64px; background: rgba(10,11,13,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-mark { width: 32px; height: 32px; }
+    .nav-logo-text { font-family: var(--display); font-size: 18px; font-weight: 800; letter-spacing: 0.05em; color: var(--text); }
+    .nav-logo-text sup { font-size: 10px; font-weight: 400; color: var(--text-muted); vertical-align: super; }
+    .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+    .nav-links a { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.here { color: var(--text); }
+
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 40px; }
+
+    /* hero */
+    .hero { padding: 148px 0 72px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 26px; }
+    .eyebrow::before { content: ''; width: 22px; height: 1px; background: var(--accent); }
+    h1 { font-family: var(--display); font-size: clamp(44px, 6.5vw, 84px); font-weight: 800; line-height: 1.02; letter-spacing: -0.02em; margin-bottom: 26px; }
+    .lede { font-size: clamp(17px, 2vw, 21px); font-weight: 300; color: var(--text-muted); max-width: 660px; line-height: 1.65; }
+    .lede strong { color: var(--text); font-weight: 400; }
+
+    section { padding: 68px 0; border-top: 1px solid var(--border); }
+    .section-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 22px; }
+    h2 { font-family: var(--display); font-size: clamp(28px, 3.4vw, 40px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 20px; }
+    h3 { font-family: var(--display); font-size: 21px; font-weight: 700; margin-bottom: 10px; }
+    p { color: var(--text-muted); line-height: 1.75; margin-bottom: 18px; max-width: 720px; }
+    p strong { color: var(--text); font-weight: 500; }
+    .mono-em { font-family: var(--mono); font-size: 0.92em; color: var(--text); }
+
+    /* the test */
+    .test-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 8px; }
+    .test-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 3px; padding: 26px; }
+    .test-num { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; color: var(--accent); margin-bottom: 14px; }
+    .test-card p { font-size: 15px; margin-bottom: 0; }
+
+    /* surfaces */
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); text-align: left; padding: 0 16px 12px 0; border-bottom: 1px solid var(--border); font-weight: 400; }
+    td { padding: 15px 16px 15px 0; border-bottom: 1px solid var(--border); font-size: 14.5px; color: var(--text-muted); vertical-align: top; line-height: 1.6; }
+    td.surface { font-family: var(--sans); color: var(--text); font-weight: 500; white-space: nowrap; }
+    td.q { color: var(--text-dim); }
+    .have { color: var(--accent); }
+    .gap { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; color: var(--amber); }
+    .none { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; color: var(--text-dim); }
+
+    /* the loud one */
+    .noladder { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 3px; padding: 40px; }
+    .noladder h2 { margin-bottom: 18px; }
+    .noladder p:last-child { margin-bottom: 0; }
+
+    /* products */
+    .prods { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 8px; }
+    .prod { background: var(--bg-card); border: 1px solid var(--border); border-radius: 3px; padding: 30px; display: flex; flex-direction: column; }
+    .prod-top { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 6px; }
+    .prod-price { font-family: var(--mono); font-size: 15px; color: var(--accent); white-space: nowrap; }
+    .prod-sub { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 18px; }
+    .prod p { font-size: 14.5px; }
+    .spec { list-style: none; margin: 4px 0 22px; }
+    .spec li { font-size: 13.5px; color: var(--text-muted); padding: 7px 0; border-bottom: 1px solid var(--border); display: flex; gap: 10px; }
+    .spec li::before { content: '—'; color: var(--text-dim); }
+    .prod-foot { margin-top: auto; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.07em; text-transform: uppercase; color: #000; background: var(--accent); border: none; padding: 12px 22px; border-radius: 2px; text-decoration: none; transition: opacity 0.2s; }
+    .btn:hover { opacity: 0.85; }
+    .btn-ghost { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-muted); border: 1px solid var(--border); padding: 12px 22px; border-radius: 2px; text-decoration: none; transition: all 0.2s; }
+    .btn-ghost:hover { color: var(--text); border-color: var(--border-active); }
+    .soon { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--amber); border: 1px solid rgba(245,158,11,0.3); padding: 11px 20px; border-radius: 2px; }
+
+    /* honest boundary */
+    .boundary { border: 1px solid var(--border); border-radius: 3px; padding: 32px; background: var(--bg-1); }
+    .boundary h3 { color: var(--text); }
+    .boundary p:last-child { margin-bottom: 0; }
+
+    .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; }
+
+    footer { border-top: 1px solid var(--border); padding: 44px 0 60px; }
+    .foot { display: flex; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
+    .foot-brand { font-family: var(--display); font-size: 17px; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 10px; }
+    .foot-meta { font-size: 12.5px; color: var(--text-muted); line-height: 1.8; }
+    .foot-links { display: flex; flex-direction: column; gap: 9px; }
+    .foot-links a { font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; color: var(--text-muted); text-decoration: none; }
+    .foot-links a:hover { color: var(--text); }
+
+    @media (max-width: 880px) {
+      .wrap { padding: 0 20px; }
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .test-grid, .prods, .cols { grid-template-columns: 1fr; }
+      .hero { padding: 120px 0 56px; }
+      table, thead, tbody, th, td, tr { display: block; }
+      thead { display: none; }
+      td { border: none; padding: 3px 0; }
+      tr { display: block; padding: 16px 0; border-bottom: 1px solid var(--border); }
+      td.surface { margin-bottom: 4px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <svg class="nav-logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="2" fill="#111318"/>
+      <path d="M8 8L16 16L24 8" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M8 24L16 16L24 24" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/>
+      <circle cx="16" cy="16" r="2.5" fill="#22c55e"/>
+    </svg>
+    <span class="nav-logo-text">ZKNOT<sup>™</sup></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/verifiables" class="here">Verifiables</a></li>
+    <li><a href="/attestation">Attestation</a></li>
+    <li><a href="/rails">Rails</a></li>
+    <li><a href="/docs">Docs</a></li>
+    <li><a href="/about">About</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <div class="wrap hero">
+    <div class="eyebrow">ZKNOT Verifiables</div>
+    <h1>Proof by<br/>inspection.</h1>
+    <p class="lede">Passive articles whose guarantee is a <strong>physical fact you can check yourself</strong>. No power. No firmware. No keys. Nothing to update, and nothing to take our word for.</p>
+  </div>
+
+  <!-- THE TEST -->
+  <section><div class="wrap">
+    <div class="section-label">What belongs in this line</div>
+    <h2>Three conditions. All three, or it isn't a Verifiable.</h2>
+    <div class="test-grid">
+      <div class="test-card">
+        <div class="test-num">01</div>
+        <p><strong>You must trust it.</strong> Using it means granting a privilege — power, data, containment, custody.</p>
+      </div>
+      <div class="test-card">
+        <div class="test-num">02</div>
+        <p><strong>The abuse is invisible.</strong> If the object betrayed that privilege, normal use would never show it.</p>
+      </div>
+      <div class="test-card">
+        <div class="test-num">03</div>
+        <p><strong>A physical fact settles it.</strong> A property that either exists or doesn't, checkable by a non-expert with a simple instrument.</p>
+      </div>
+    </div>
+    <p style="margin-top:30px;">Condition three is the filter, and it excludes most of the security market. <span class="mono-em">"Trust our firmware"</span> is not checkable. <span class="mono-em">"There is no conductor here"</span> is.</p>
+    <p>A Verifiable makes a claim <strong>about itself</strong>. Products that make claims about the world — <em>"there is nothing hidden in this room"</em> — are unprovable negatives, and they don't belong here regardless of how large that market is.</p>
+  </div></section>
+
+  <!-- THE LOUD ONE -->
+  <section><div class="wrap">
+    <div class="noladder">
+      <div class="section-label" style="color:var(--accent);">The assurance ladder</div>
+      <h2>There is no ladder here.</h2>
+      <p><strong>You don't need one.</strong> Everywhere else in this company there's a ladder — how strong is the backing, how much do you still have to trust us. This line has no rungs, because there is nothing to grade.</p>
+      <p>A Verifiable holds no key and signs nothing. It has no identity of its own, at any tier. What it carries is a record of how it was made — not a claim about what it has done since. That isn't a limitation we're working around; it's the entire honesty of the line, and it's what lets <em>proof by inspection</em> be literally true.</p>
+      <p style="color:var(--text);"><strong>Hold it up to the light. That's the whole mechanism.</strong></p>
+    </div>
+  </div></section>
+
+  <!-- SURFACES -->
+  <section><div class="wrap">
+    <div class="section-label">The map</div>
+    <h2>Seven trust surfaces</h2>
+    <p>Every place you hand an object a privilege it could quietly abuse. We cover six. We're honest about the seventh, and about the surfaces where we sell nothing yet.</p>
+    <table>
+      <thead><tr><th>Surface</th><th>The question</th><th>What we sell here</th></tr></thead>
+      <tbody>
+        <tr><td class="surface">Conduction</td><td class="q">Will it carry data it shouldn't?</td><td class="have">PowerVerify</td></tr>
+        <tr><td class="surface">Energy</td><td class="q">Does it deliver only power, at the right level?</td><td class="have">PowerVerify</td></tr>
+        <tr><td class="surface">Custody</td><td class="q">Has it been opened since?</td><td class="have">TamperVerify</td></tr>
+        <tr><td class="surface">Directionality</td><td class="q">Can data flow back the other way?</td><td class="none">nothing yet — in development</td></tr>
+        <tr><td class="surface">Containment</td><td class="q">Does it keep RF in, or out?</td><td class="none">nothing yet — in development</td></tr>
+        <tr><td class="surface">Occlusion</td><td class="q">Is the sensor actually blocked?</td><td class="none">nothing yet — in development</td></tr>
+        <tr><td class="surface">Destruction</td><td class="q">Is the data actually gone?</td><td class="gap">nothing — open gap</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:26px;">We'd rather show you the empty rows than pretend the line is finished. If you need a surface we don't cover, say so — that's how the next one gets built.</p>
+  </div></section>
+
+  <!-- PRODUCTS -->
+  <section id="products"><div class="wrap">
+    <div class="section-label">Available now</div>
+    <h2>What ships today</h2>
+
+    <div class="prods">
+
+      <div class="prod">
+        <div class="prod-top"><h3>PowerVerify</h3><div class="prod-price">$39</div></div>
+        <div class="prod-sub">Conduction · Energy</div>
+        <p>A power-only USB-C cable whose data lines are <strong>physically absent</strong> — not switched off, not filtered. They were never laid.</p>
+        <p>Cast in a single pour of clear resin so you can read every component on the board. There are four: two surge protectors, a filter capacitor, a ferrite. No chips, so no firmware, so nothing to update or compromise.</p>
+        <ul class="spec">
+          <li>5–20V DC, 60W max — USB Power Delivery passes straight through</li>
+          <li>D+ and D− physically absent from the connector and the board</li>
+          <li>No microcontroller, no secure element, no key — it signs nothing</li>
+          <li>Single-pour resin, no seams or screws; serialized at manufacture</li>
+          <li>Patent pending — U.S. application 63/961,118</li>
+        </ul>
+        <div class="prod-foot">
+          <a class="btn" href="https://shop.zknot.io/products/powerverify">Buy — $39</a>
+          <a class="btn-ghost" href="#test-it">How to check it</a>
+        </div>
+      </div>
+
+      <div class="prod">
+        <div class="prod-top"><h3>TamperVerify</h3><div class="prod-price">$20 / $30</div></div>
+        <div class="prod-sub">Custody · packs of 10 or 20</div>
+        <p>A serialized tamper-evident seal. Its guarantee is the oldest one there is: <strong>you cannot open it and put it back.</strong></p>
+        <p>Each seal carries its own serial and a code that resolves on our public rail, so a seal applied at seizure can be looked up by someone who wasn't in the room.</p>
+        <ul class="spec">
+          <li>Destructive-open construction — removal is visible and permanent</li>
+          <li>Individually serialized; each seal registrable on verifyknot.io</li>
+          <li>Printed to order, so serial ranges can be matched to a case or batch</li>
+          <li>Passive — no electronics, no battery, nothing to fail</li>
+        </ul>
+        <div class="prod-foot">
+          <a class="btn" href="https://shop.zknot.io/products/tamperverify">Buy — from $20</a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="prods" style="margin-top:24px;">
+      <div class="prod">
+        <div class="prod-top"><h3>Continuity tester</h3><div class="prod-price">~$19</div></div>
+        <div class="prod-sub">In development</div>
+        <p>The doctrine as an object. A pocket tester that checks whether a cable — <strong>ours or anyone else's</strong> — actually has a data path.</p>
+        <p>We think you should be able to test our claims with a tool that doesn't come from us. This is the closest we can get: a tool that tests everything, including us.</p>
+        <div class="prod-foot"><span class="soon">In development</span></div>
+      </div>
+
+      <div class="prod">
+        <div class="prod-top"><h3>Beyond the line</h3></div>
+        <div class="prod-sub">Where Verifiables end</div>
+        <p>When you need a record that a <em>specific human</em> approved a <em>specific thing</em> at a <em>specific moment</em>, inspection isn't enough — you need a device that signs.</p>
+        <p>And when a stranger has to check that record years later, you need a rail that outlives the transaction.</p>
+        <div class="prod-foot">
+          <a class="btn-ghost" href="/attestation">Attestation Devices</a>
+          <a class="btn-ghost" href="/rails">Verification Rails</a>
+        </div>
+      </div>
+    </div>
+  </div></section>
+
+  <!-- HOW TO CHECK -->
+  <section id="test-it"><div class="wrap">
+    <div class="section-label">Verify it yourself</div>
+    <h2>Don't trust it. Check it.</h2>
+    <div class="cols">
+      <div>
+        <h3>See it</h3>
+        <p>Look through the resin. Count the parts. The source connector is a six-pin power-only part — the data pins aren't unconnected, they're <strong>not present in the connector body</strong>. On the board they're marked NC.</p>
+        <h3>Test it</h3>
+        <p>Plug a computer into the input and your phone into the output. Your phone charges. It never appears on that computer — no notification, nothing in Device Manager. It can't enumerate, because enumeration needs a data path.</p>
+        <p><strong>Thirty seconds, and it requires believing nothing we've said.</strong></p>
+      </div>
+      <div>
+        <h3>Look it up</h3>
+        <p>Every unit carries a serial and a short code sealed inside the resin. Enter it at <a href="https://verifyknot.io" style="color:var(--accent);text-decoration:none;">verifyknot.io</a> and the verdict is computed <strong>in your browser</strong>, from the record itself. Our server isn't asked for its opinion.</p>
+        <h3>Every claim is on the object</h3>
+        <p>We can revise this page. We can't revise cast resin. So the claims live on the board too, in silkscreen:</p>
+        <p class="mono-em" style="color:var(--text-dim);line-height:2;">DATA LINES PHYSICALLY ABSENT — NO USB ENUMERATION<br/>SAFE POWER ONLY · DATA ABSENT<br/>Your charger can't spy through this.<br/>When physics is policy, trust is optional.</p>
+      </div>
+    </div>
+  </div></section>
+
+  <!-- HONEST BOUNDARY -->
+  <section><div class="wrap">
+    <div class="boundary">
+      <div class="section-label">What these do not do</div>
+      <h3>Straight talk, before you buy rather than after.</h3>
+      <p><strong>A Verifiable signs nothing.</strong> It has no key and no microcontroller. It cannot record, measure, or attest to anything that happens while you use it. If you need that, you need an attestation device, and we'll tell you so.</p>
+      <p><strong>Its record is our signature, not an independent one.</strong> The manufacturing record on the rail is ZKNOT's signed statement that we built this specific unit. It proves the record hasn't changed since we made it. It does not prove we're honest — nothing signed by us ever could. What it does is make our claim specific, dated, and checkable, so a lie would be a fixed target instead of a vague impression.</p>
+      <p><strong>PowerVerify protects one path.</strong> It stops data over that cable. It says nothing about any other way into your device.</p>
+      <p><strong>A seal shows tampering. It doesn't prevent it.</strong> Tamper-evident is the ceiling, and we won't say tamper-proof.</p>
+      <p>Designed and hand-assembled in Utah · veteran-owned (SDVOSB)</p>
+    </div>
+  </div></section>
+
+</main>
+
+<footer><div class="wrap foot">
+  <div>
+    <div class="foot-brand">ZKNOT™</div>
+    <div class="foot-meta">
+      ZKNOT, Inc. — Utah-based SDVOSB<br/>
+      UEI: C4SKW13JPEL5 · EIN: 36-5165991<br/>
+      William Shane Wilkinson, Founder &amp; CEO
+    </div>
+  </div>
+  <div class="foot-links">
+    <a href="/verifiables">Verifiables</a>
+    <a href="/attestation">Attestation Devices</a>
+    <a href="/rails">Verification Rails</a>
+    <a href="https://verifyknot.io">verifyknot.io</a>
+    <a href="/docs">Docs</a>
+    <a href="/about">About</a>
+  </div>
+</div></footer>
+
+</body>
+</html>
