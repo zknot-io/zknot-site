@@ -321,7 +321,7 @@
     <div class="product-type">POWER HARDWARE</div>
     <h1 class="product-headline">The data conductors<br>are absent. Not blocked.</h1>
     <p class="product-summary">PowerVerify is an inline USB device in which the D+ and D- data signaling conductors are physically absent — not disconnected, not filtered, not blocked. Data transfer between the upstream power source and the downstream device is physically impossible by construction. The absence is verifiable by any party with a standard electrical continuity tester.</p>
-    <span class="product-badge">Patent: PAT-002</span>
+    <span class="product-badge">Patent pending — 63/961,118</span>
     <span class="product-badge">ZKNOT™ EvidenceProtocol</span>
   </div>
 
@@ -329,7 +329,7 @@
     <div class="product-left">
       <div class="product-doctrine">
         <div class="product-doctrine-label">Doctrine</div>
-        <p class="product-doctrine-text">Physics enforces. A $15 multimeter applied to the D+ pins of the device returns no continuity — because there is no conductor. No software configuration, firmware update, or physical intervention can enable data transfer through a conductor that does not exist.</p>
+        <p class="product-doctrine-text">Physics enforces. The upstream connector is a 6-pin power-only part — there is no D+ or D- pin to probe, and no conductor behind one. A $15 multimeter confirms no continuity on the data pins; the clear potting lets you see the same fact without any instrument at all. No software configuration, firmware update, or physical intervention can enable data transfer through a conductor that does not exist.</p>
       </div>
 
       <div class="section-label">Technical Specifications</div>
@@ -337,35 +337,43 @@
         <tbody>
       <tr>
         <td class="spec-label">Upstream</td>
-        <td class="spec-value">USB-C receptacle — VBUS and GND only</td>
+        <td class="spec-value">USB-C receptacle — 6-pin power-only part; no D+, D- pins present in the connector</td>
       </tr>
       <tr>
         <td class="spec-label">Downstream</td>
-        <td class="spec-value">USB-A, USB-C, or Micro-B — VBUS and GND only</td>
+        <td class="spec-value">USB-C plug on a ~50 mm pigtail</td>
+      </tr>
+      <tr>
+        <td class="spec-label">Conducted path</td>
+        <td class="spec-value">VBUS, GND, and CC (power negotiation) only</td>
       </tr>
       <tr>
         <td class="spec-label">Data conductors</td>
-        <td class="spec-value">D+, D- — physically absent from PCB</td>
+        <td class="spec-value">D+, D- — physically absent from the connector and the PCB</td>
+      </tr>
+      <tr>
+        <td class="spec-label">Power</td>
+        <td class="spec-value">5–20V DC, 60W max — USB Power Delivery passes straight through; the cable itself does not negotiate</td>
+      </tr>
+      <tr>
+        <td class="spec-label">Components</td>
+        <td class="spec-value">Protection and filtering only — TVS diodes (input and output surge), VBUS filter capacitor, ferrite. No integrated circuits of any kind</td>
+      </tr>
+      <tr>
+        <td class="spec-label">Firmware</td>
+        <td class="spec-value">None. No microcontroller, no secure element, no key — the unit signs nothing and records nothing</td>
       </tr>
       <tr>
         <td class="spec-label">Verification</td>
-        <td class="spec-value">Electrical continuity test — no expert required</td>
+        <td class="spec-value">Electrical continuity test, or direct visual inspection through the potting — no expert required</td>
       </tr>
       <tr>
-        <td class="spec-label">Passive variant</td>
-        <td class="spec-value">Zero firmware — no attack surface, no failure modes</td>
+        <td class="spec-label">Enclosure</td>
+        <td class="spec-value">Single pour of clear resin — no seams, no screws; reaching the board destroys the unit</td>
       </tr>
       <tr>
-        <td class="spec-label">Active variant</td>
-        <td class="spec-value">ATECC608B — generates signed power session record</td>
-      </tr>
-      <tr>
-        <td class="spec-label">Session record</td>
-        <td class="spec-value">Artifact with device ID, session ID, timestamp, ECDSA signature</td>
-      </tr>
-      <tr>
-        <td class="spec-label">Chain integration</td>
-        <td class="spec-value">Power session record binds to ZKKey sign via shared session_id</td>
+        <td class="spec-label">Identity</td>
+        <td class="spec-value">Serial and verification code on a label sealed inside the pot; manufacturing record at verifyknot.io</td>
       </tr>
         </tbody>
       </table>
@@ -376,7 +384,7 @@
       <p class="distinction-text">All existing USB write-blockers work by intercepting commands in the data stream — data conductors are present, commands are blocked. PowerVerify has no data conductors. This is a physically different architecture. The claim is conductor absence, not blocking or filtering.</p>
 
       <div class="section-label">Vertical Applications</div>
-      <ul class="verticals-list"><li>Election equipment power attestation</li><li>Forensic device charging</li><li>Pharmaceutical cold chain power integrity</li><li>Evidence collection device preparation</li>
+      <ul class="verticals-list"><li>Election equipment charging</li><li>Forensic device charging</li><li>Pharmaceutical cold-chain device charging</li><li>Evidence collection device preparation</li>
       </ul>
 
       <div style="height:48px;"></div>
@@ -385,7 +393,7 @@
         <p>Physical data-path elimination, ready to ship. $39 — direct from ZKNOT, Inc.</p>
         <a href="https://shop.zknot.io/products/powerverify-airgap" class="btn-primary">Buy PowerVerify — $39 →</a>
         <a href="https://verifyknot.io" class="btn-secondary-sm">See a live record →</a>
-        <p class="patent-note">PAT-002 — Patent pending. Ships from Salt Lake City.</p>
+        <p class="patent-note">Patent pending — U.S. Application No. 63/961,118. Designed and hand-assembled in Utah; ships from Salt Lake City.</p>
       </div>
     </div>
   </div>
