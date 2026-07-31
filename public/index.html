@@ -371,15 +371,15 @@
 <section class="layers-section" id="protocol">
   <div class="section-inner">
     <div class="section-label reveal">The ZKNOT™ Doctrine</div>
-    <h2 class="section-title reveal">Three layers. Zero trust required.</h2>
-    <p class="section-sub reveal">Competitors say "trust our features." ZKNOT™ says "verify our constraints." Every layer is independently auditable.</p>
+    <h2 class="section-title reveal">Three layers. Less trust at every one.</h2>
+    <p class="section-sub reveal">Competitors say "trust our features." ZKNOT™ says "verify our constraints" — and publishes where each constraint stops holding.</p>
     <div class="layers-grid reveal">
       <div class="layer-card">
         <div class="layer-num">Layer 01</div>
         <svg class="layer-icon" viewBox="0 0 44 44" fill="none"><rect x="8" y="12" width="28" height="22" rx="2" stroke="#f59e0b" stroke-width="1.5"/><path d="M15 12V10a7 7 0 0114 0v2" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round"/><circle cx="22" cy="23" r="3" fill="#f59e0b" opacity="0.4"/><path d="M22 26v4" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round"/></svg>
         <div class="layer-title">Physics Enforces</div>
         <div class="layer-sub">Hardware makes certain states impossible.</div>
-        <div class="layer-body">ZKKey™ and PowerVerify™ are built so that data exfiltration and post-nonce signing are not merely policy-prohibited — they are physically impossible by design. The hardware constraint is the guarantee.</div>
+        <div class="layer-body">PowerVerify has no data conductors — not disabled, absent. No firmware update can enable a path that was never built, and you can confirm that with a multimeter and your own eyes. The hardware constraint is the guarantee, and it is the only layer that requires nothing of us.</div>
         <div class="layer-constraint">// Constraint is structural, not behavioral</div>
       </div>
       <div class="layer-card">
@@ -387,15 +387,15 @@
         <svg class="layer-icon" viewBox="0 0 44 44" fill="none"><path d="M10 14l12-6 12 6v10c0 7-12 14-12 14S10 31 10 24V14z" stroke="#3b82f6" stroke-width="1.5" stroke-linejoin="round"/><path d="M16 22l4 4 8-8" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <div class="layer-title">Math Proves</div>
         <div class="layer-sub">Tamper-evident cryptographic records.</div>
-        <div class="layer-body">Every artifact is signed by a hardware-attested key and written to an append-only hash-chained ledger. The mathematics of SHA-256 and ECC make retroactive modification computationally infeasible.</div>
+        <div class="layer-body">Artifacts are signed and written to an append-only hash-linked ledger, so altering a signed field breaks the linkage for everyone checking. Signing from a key held in hardware that we vouch for is what the attestation devices are built for — and no record has reached that yet. We say which rung each one sits on.</div>
         <div class="layer-constraint">// Proof is mathematical, not institutional</div>
       </div>
       <div class="layer-card">
         <div class="layer-num">Layer 03</div>
         <svg class="layer-icon" viewBox="0 0 44 44" fill="none"><circle cx="22" cy="22" r="12" stroke="#22c55e" stroke-width="1.5"/><circle cx="22" cy="22" r="5" fill="#22c55e" opacity="0.3"/><circle cx="22" cy="22" r="2" fill="#22c55e"/><path d="M22 10V8M22 36v-2M10 22H8M36 22h-2" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/></svg>
         <div class="layer-title">You Verify</div>
-        <div class="layer-sub">Anyone can independently confirm.</div>
-        <div class="layer-body">No account required. No call to ZKNOT™ needed. Any party with the short code can resolve the full chain entry at verifyknot.io — hash, device ID, timestamp, and chain position — in seconds.</div>
+        <div class="layer-sub">Your browser does the checking.</div>
+        <div class="layer-body">No account, no login. Anyone with the short code resolves the record at verifyknot.io, and the verdict is computed in your browser from the record itself rather than handed down by our server. Our API still has to answer — checking a record offline, with no network and no ZKNOT, is the rung we most want to ship and have not.</div>
         <div class="layer-constraint">// Verification is public, not permissioned</div>
       </div>
     </div>
@@ -405,58 +405,50 @@
 <!-- ─── PRODUCTS ─── -->
 <section class="products-section" id="products">
   <div class="section-inner">
-    <div class="section-label reveal">Product Line</div>
-    <h2 class="section-title reveal">Hardware and software built for evidence.</h2>
-    <p class="section-sub reveal">Each product enforces a specific constraint in the custody chain. Together they eliminate every meaningful point of failure or tampering.</p>
+    <div class="section-label reveal">The three bands</div>
+    <h2 class="section-title reveal">Three ways to know.</h2>
+    <p class="section-sub reveal">They differ by <em>how you check</em> — your eyes, a device's signature, or a stranger's re-check. Capability rises across them, and so does the amount you have to take on faith. The cheapest thing we make is the one you have to trust us least about.</p>
     <div class="products-grid reveal">
-      <a href="/products/zkkey" class="product-card">
+
+      <a href="/verifiables" class="product-card">
         <div class="product-arrow">↗</div>
-        <div class="product-tag">Signing Hardware</div>
-        <div class="product-name">ZKKey<sup>™</sup></div>
-        <div class="product-desc">Human-gated cryptographic signing device. The post-nonce enforcement mechanism ensures no document can be signed after session invalidation — by anyone.</div>
+        <div class="product-tag">Check it yourself</div>
+        <div class="product-name">Verifiables</div>
+        <div class="product-desc">Passive articles whose guarantee is a physical fact you can see. No power, no firmware, no keys — and no ladder, because you don't need one. Hold it up to the light.</div>
         <div class="product-specs">
-          <div class="product-spec">ATECC608B hardware key storage</div>
-          <div class="product-spec">Physical presence required for each signature</div>
-          <div class="product-spec">Post-nonce enforcement — no software override</div>
-          <div class="product-spec">USB or I²C interface</div>
+          <div class="product-spec">PowerVerify — data lines physically absent, $39</div>
+          <div class="product-spec">TamperVerify — serialized seals, from $20</div>
+          <div class="product-spec">Verifiable with a multimeter and your eyes</div>
+          <div class="product-spec">Ships today</div>
         </div>
       </a>
-      <a href="/products/powerverify" class="product-card">
+
+      <a href="/attestation" class="product-card">
         <div class="product-arrow">↗</div>
-        <div class="product-tag">Data Path Control</div>
-        <div class="product-name">PowerVerify<sup>™</sup></div>
-        <div class="product-desc">Physical data-path elimination. Continuity-testable. Operates with zero firmware — no attack surface, no failure modes from software compromise.</div>
+        <div class="product-tag">A device testifies</div>
+        <div class="product-name">Attestation Devices</div>
+        <div class="product-desc">Hardware that turns a physical act — a human pressing, at a moment, over a specific thing — into a record a stranger can check. Four rungs, differing by threat model rather than by grade.</div>
         <div class="product-specs">
-          <div class="product-spec">Hardware-level write protection</div>
-          <div class="product-spec">Passive — no firmware to exploit</div>
-          <div class="product-spec">Continuity-testable in court</div>
-          <div class="product-spec">MIL-grade connectors available</div>
+          <div class="product-spec">SelfKnot · Vitni · Ostensor · Monstrance</div>
+          <div class="product-spec">Keys generated on-chip, never extractable</div>
+          <div class="product-spec">Ostensor: what you were shown is what got signed</div>
+          <div class="product-spec">None ships today — each says what blocks it</div>
         </div>
       </a>
-      <a href="/products/zk-localchain" class="product-card">
+
+      <a href="/rails" class="product-card">
         <div class="product-arrow">↗</div>
-        <div class="product-tag">Offline Ledger</div>
-        <div class="product-name">ZK-LocalChain<sup>™</sup></div>
-        <div class="product-desc">Offline-capable, append-only hash-chained ledger. No central authority. No internet dependency. Independently verifiable from any exported record.</div>
+        <div class="product-tag">A stranger re-checks</div>
+        <div class="product-name">Verification Rails</div>
+        <div class="product-desc">Where someone present nowhere, trusting no one, turns a code into an answer. The verdict is computed in your browser, not on our server — and we publish which rungs of the ladder we have not built.</div>
         <div class="product-specs">
-          <div class="product-spec">Append-only — no deletion, no edit</div>
-          <div class="product-spec">Offline-capable operation</div>
-          <div class="product-spec">Independent verification without ZKNOT™</div>
-          <div class="product-spec">Export to signed PDF report</div>
+          <div class="product-spec">verifyknot.io — free, no account, no login</div>
+          <div class="product-spec">HashStamp — document fingerprints</div>
+          <div class="product-spec">Hash-linked ledger. Not a blockchain</div>
+          <div class="product-spec">Offline verification: not built, and we say so</div>
         </div>
       </a>
-      <a href="/products/trustseal" class="product-card">
-        <div class="product-arrow">↗</div>
-        <div class="product-tag">Physical Binding</div>
-        <div class="product-name">TrustSeal<sup>™</sup></div>
-        <div class="product-desc">Tamper-evident physical seal cryptographically bound to the chain entry at the exact moment of application. Physical and digital custody merge at one event.</div>
-        <div class="product-specs">
-          <div class="product-spec">Cryptographic binding at seal event</div>
-          <div class="product-spec">Tamper-evident — void pattern on removal</div>
-          <div class="product-spec">Short code printed on seal</div>
-          <div class="product-spec">Chain entry created on application</div>
-        </div>
-      </a>
+
     </div>
   </div>
 </section>
@@ -544,10 +536,9 @@
       </div>
     </div>
     <div class="footer-right">
-      <a href="/products/zkkey">ZKKey™</a>
-      <a href="/products/powerverify">PowerVerify™</a>
-      <a href="/products/zk-localchain">ZK-LocalChain™</a>
-      <a href="/products/trustseal">TrustSeal™</a>
+      <a href="/verifiables">Verifiables</a>
+      <a href="/attestation">Attestation Devices</a>
+      <a href="/rails">Verification Rails</a>
       <a href="https://verifyknot.io">verifyknot.io</a>
       <a href="/docs">Docs</a>
       <a href="/about">About</a>
