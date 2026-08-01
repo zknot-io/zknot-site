@@ -507,6 +507,7 @@
 
   <h2 id="schema-device-sig">Verification</h2>
   <p>Verification splits into checks any relying party can perform <strong>offline</strong> and checks that require the issuer (or the published chain).</p>
+  <p><strong>One caveat that belongs here rather than in a footnote:</strong> the cryptography below is genuinely checkable offline, but <em>obtaining</em> a record is not. There is no export or bundle endpoint today, so a relying party still needs our API to get the record in the first place. Signature math offline, record retrieval online. We are explicit about this on the <a href="/rails">rails page</a> as well.</p>
   <h3>Offline (SHA-256 + ECDSA P-256 only)</h3>
   <ol>
     <li>Parse the artifact: <code>public_key</code>, <code>challenge_hash</code>, <code>signature</code>, and (if present) the client-authoritative short code.</li>
@@ -518,7 +519,7 @@
   <ul>
     <li><strong>Freshness / single-use</strong> (Protocol P2) depends on the issuer's challenge ledger — an offline client cannot, by itself, know a challenge was unconsumed. This is the one property of the signature path that requires the issuer or an out-of-band freshness signal.</li>
     <li><strong>Chain position and tamper-evidence</strong> are confirmed by walking the LocalChain (<code>POST /v1/chain/verify</code>), which returns the first failing position. Any party holding the chain can run this.</li>
-    <li><strong>Optical-PUF match</strong> (PowerVerify) is inherently server-side: the baseline is secret and the matcher runs server-side, so <code>puf/verify</code> cannot be reproduced offline.</li>
+    <li><strong>Optical-PUF match</strong> (PowerVerify) is server-side by construction: the baseline is held privately and the matcher runs server-side, so <code>puf/verify</code> cannot be reproduced offline. <strong>Read this as an endpoint description, not a capability claim</strong> — whether two captures of one article can be reliably matched, and reliably told apart from a different article, is a measurement we have not completed. No ZKNOT product page makes an optical-fingerprint claim, and this page does not either.</li>
   </ul>
 
   <h2 id="api">API reference</h2>
@@ -541,9 +542,9 @@
     <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
     <tbody>
       <tr><td><code>artifact_id</code></td><td>string (UUID)</td><td>Client-generated artifact identifier. <span class="req">required</span></td></tr>
-      <tr><td><code>artifact_type</code></td><td>enum</td><td>One of <code>ZKEY_SIGN</code>, <code>POWER_SESSION</code>, <code>TRUST_SEAL</code>, <code>COMBINED_SESSION</code>, <code>POWERVERIFY_UNIT</code>. <span class="req">required</span></td></tr>
-      <tr><td><code>device_id</code></td><td>string</td><td>Hardware serial of the device's secure element (Microchip ATECC608B). <span class="req">required</span></td></tr>
-      <tr><td><code>session_id</code></td><td>string · nullable</td><td>Shared UUID binding a <code>POWER_SESSION</code> and a <code>ZKEY_SIGN</code> into a combined session.</td></tr>
+      <tr><td><code>artifact_type</code></td><td>enum</td><td>One of <code>ZKEY_SIGN</code>, <code>POWER_SESSION</code>, <code>TRUST_SEAL</code>, <code>COMBINED_SESSION</code>, <code>POWERVERIFY_UNIT</code>. <span class="req">required</span><br/><em>These are accepted wire values, some of them frozen for historical records. <code>POWER_SESSION</code> and <code>COMBINED_SESSION</code> are accepted but unimplemented — no ZKNOT product produces them today, and their presence here is not a capability claim.</em></td></tr>
+      <tr><td><code>device_id</code></td><td>string</td><td>Identifier of the signing device. For device-signed records this derives from the article's secure element (ATECC608B, or OPTIGA Trust M on Ostensor). Records written by a registry or service key carry that key's identifier instead, not a per-article serial. <span class="req">required</span></td></tr>
+      <tr><td><code>session_id</code></td><td>string · nullable</td><td>Shared UUID intended to bind a <code>POWER_SESSION</code> and a signing record into a combined session. <strong>Accepted and stored; not yet acted on.</strong> No code path builds or verifies a combined session today.</td></tr>
       <tr><td><code>challenge_hash</code></td><td>string</td><td>SHA-256 of the input data the user approved. <span class="req">required</span></td></tr>
       <tr><td><code>signature</code></td><td>string</td><td>ECDSA P-256 signature from the secure element (hex or base64). <span class="req">required</span></td></tr>
       <tr><td><code>public_key</code></td><td>string</td><td>Device public key, for independent verification. <span class="req">required</span></td></tr>
