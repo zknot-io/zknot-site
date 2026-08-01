@@ -929,7 +929,7 @@
       <div class="how-cell">
         <div class="how-num" style="color:var(--blue)">02 — MATH</div>
         <div class="how-title">Cryptographically signed</div>
-        <div class="how-desc">ZKKey™ produces a post-nonce signature after human review. Forging this signature without the hardware-held signing key is computationally infeasible.</div>
+        <div class="how-desc">Ostensor™ produces a post-nonce signature after human review. Forging this signature without the hardware-held signing key is computationally infeasible.</div>
       </div>
       <div class="how-cell">
         <div class="how-num" style="color:var(--green)">03 — YOU</div>
@@ -949,11 +949,11 @@
       </li>
       <li class="proves-item">
         <span class="proves-check">✓</span>
-        <span class="proves-text"><strong>The timestamp is device-attested</strong> — recorded at ZKKey™ signing time, not entered manually or after the fact.</span>
+        <span class="proves-text"><strong>The timestamp is device-attested</strong> — recorded at Ostensor™ signing time, not entered manually or after the fact.</span>
       </li>
       <li class="proves-item">
         <span class="proves-check">✓</span>
-        <span class="proves-text"><strong>The signing device is identified</strong> — the device ID is hardware-bound to a specific ZKKey™ unit, traceable to its registration record.</span>
+        <span class="proves-text"><strong>The signing device is identified</strong> — the device ID is hardware-bound to a specific Ostensor™ unit, traceable to its registration record.</span>
       </li>
       <li class="proves-item">
         <span class="proves-check">✓</span>
@@ -1037,7 +1037,7 @@ const DEMO_RECORDS = {
     chain_prev: '9d2c1a...f38b',
     sha256: 'a3f8c2d94b71e605fa238c19d074b3e2c9f156a847d0e3812b69cf4a7d08f91e',
     seal_id: 'TS-4X9R-0082',
-    seal_type: 'TrustSeal™ Type-II',
+    seal_type: 'TamperVerify™ Type-II',
     verified: true,
     enforcement_layers: ['PHYSICS', 'MATH'],
     chain_id: 'ZKLC-MAIN-003',
@@ -1055,7 +1055,7 @@ const DEMO_RECORDS = {
     chain_prev: 'c10fe8...77da',
     sha256: '2f8b1e4c9a072d53f6498b27e315c84a67d902b1e8f4c0539a12d6b708e3c5f2',
     seal_id: 'TS-7B2T-0104',
-    seal_type: 'TrustSeal™ Type-I',
+    seal_type: 'TamperVerify™ Type-I',
     verified: true,
     enforcement_layers: ['PHYSICS', 'MATH'],
     chain_id: 'ZKLC-MAIN-003',
@@ -1192,7 +1192,7 @@ function renderVerified(r) {
       </div>
       <div class="record-row">
         <div class="record-key">Signing Device</div>
-        <div class="record-value">${r.device_id} <span class="badge badge-blue">ZKKey™</span></div>
+        <div class="record-value">${r.device_id} <span class="badge badge-blue">Ostensor™</span></div>
       </div>
       <div class="record-row">
         <div class="record-key">Operator ID</div>
@@ -1207,7 +1207,7 @@ function renderVerified(r) {
         <div class="record-value">${r.chain_position.toLocaleString()} <span class="badge badge-green">${r.chain_id}</span></div>
       </div>
       <div class="record-row">
-        <div class="record-key">TrustSeal™</div>
+        <div class="record-key">TamperVerify™</div>
         <div class="record-value">${r.seal_id} — ${r.seal_type}</div>
       </div>
       <div class="record-row">
@@ -1260,7 +1260,7 @@ function renderVerified(r) {
       <div class="layer-cell">
         <div class="layer-num">Layer 02</div>
         <div class="layer-name" style="color:var(--blue)">Math Proves</div>
-        <div class="layer-status ok">ZKKey™ post-nonce signature</div>
+        <div class="layer-status ok">Ostensor™ post-nonce signature</div>
       </div>
       <div class="layer-cell">
         <div class="layer-num">Layer 03</div>

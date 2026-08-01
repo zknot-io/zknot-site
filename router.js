@@ -36,12 +36,6 @@ const ROUTES = {
   "/attestation":                  "/attestation.html",
   "/rails":                        "/rails.html",
 
-  // Products — try both with and without leading slash variations
-  "/products/zkkey":               "/zkkey.html",
-  "/products/powerverify":         "/powerverify.html",
-  "/products/zk-localchain":       "/zk-localchain.html",
-  "/products/trustseal":           "/trustseal.html",
-
   // Protocol
   "/protocol":                     "/protocol.html",
   "/evidence-protocol":            "/protocol.html",
@@ -59,6 +53,21 @@ const ROUTES = {
   "/faq":     "/faq.html",
 };
 
+// Permanent redirects. The four product pages were retired 2026-07-31 and their
+// content is now covered by the three category pages.
+//
+// These are 301s and not deletions for one reason that outranks tidiness:
+// /products/powerverify is the target of the live Shopify listing AND it sits
+// beside the QR code on potted PowerVerify units. A URL cast into resin cannot
+// be recalled, so it must resolve forever. The other three cost nothing to keep
+// and are retained for the same class of reason — inbound links we do not control.
+const REDIRECTS = {
+  "/products/powerverify":   "/verifiables",
+  "/products/trustseal":     "/verifiables",
+  "/products/zkkey":         "/attestation",
+  "/products/zk-localchain": "/rails",
+};
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -67,6 +76,15 @@ export default {
     // Strip trailing slash (except root)
     if (pathname !== "/" && pathname.endsWith("/")) {
       pathname = pathname.slice(0, -1);
+    }
+
+    // Permanent redirects run before the route map, so a retired path can never
+    // be shadowed by a stale ROUTES entry.
+    const redirect = REDIRECTS[pathname];
+    if (redirect) {
+      return withSecurityHeaders(
+        Response.redirect(new URL(redirect, url.origin).toString(), 301)
+      );
     }
 
     // Check route map

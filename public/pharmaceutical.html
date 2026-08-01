@@ -265,7 +265,7 @@
           <div class="app-card-num">04</div>
           <div class="app-card-title">Anti-Counterfeiting at Receipt</div>
         </div>
-        <div class="app-card-body">TrustSeal™ on primary packaging creates a cryptographic binding between the physical item and the chain entry at point of manufacture. Any party downstream can verify the seal has not been removed and the chain entry matches — without calling the manufacturer.</div>
+        <div class="app-card-body">TamperVerify™ on primary packaging creates a cryptographic binding between the physical item and the chain entry at point of manufacture. Any party downstream can verify the seal has not been removed and the chain entry matches — without calling the manufacturer.</div>
         <div class="app-card-regs">
           <div class="reg-badge">DSCSA 2023</div>
           <div class="reg-badge">Serialization</div>
@@ -280,15 +280,15 @@
   <div class="section-inner">
     <div class="section-label reveal">Handoff Events</div>
     <h2 class="section-title reveal">What gets attested at each handoff.</h2>
-    <p class="section-sub reveal">Each custody transfer is one ZKKey™ button press. The chain entry contains everything a regulator or auditor needs.</p>
+    <p class="section-sub reveal">Each custody transfer is one Ostensor™ button press. The chain entry contains everything a regulator or auditor needs.</p>
     <div class="handoff-grid reveal">
       <div class="handoff-card">
         <div class="handoff-title">Handler Identity</div>
-        <div class="handoff-body">The ZKKey™ device ID is cryptographically bound to every entry. Each device is registered to a specific operator or facility. No anonymous transfers.</div>
+        <div class="handoff-body">The Ostensor™ device ID is cryptographically bound to every entry. Each device is registered to a specific operator or facility. No anonymous transfers.</div>
       </div>
       <div class="handoff-card">
         <div class="handoff-title">Timestamp</div>
-        <div class="handoff-body">Set by the ZKKey™ hardware clock at the moment of button press. Cannot be backdated. Chain position provides additional temporal ordering proof.</div>
+        <div class="handoff-body">Set by the Ostensor™ hardware clock at the moment of button press. Cannot be backdated. Chain position provides additional temporal ordering proof.</div>
       </div>
       <div class="handoff-card">
         <div class="handoff-title">Item Hash</div>
@@ -296,11 +296,11 @@
       </div>
       <div class="handoff-card">
         <div class="handoff-title">Seal Binding</div>
-        <div class="handoff-body">TrustSeal™ ID is included in the chain entry at application. Seal removal is physically evident. Chain entry persists regardless of seal state.</div>
+        <div class="handoff-body">TamperVerify™ ID is included in the chain entry at application. Seal removal is physically evident. Chain entry persists regardless of seal state.</div>
       </div>
       <div class="handoff-card">
         <div class="handoff-title">Short Code</div>
-        <div class="handoff-body">Every handoff event gets a short code printed on the TrustSeal™ or included in accompanying documentation. Any regulator can verify independently at verifyknot.io.</div>
+        <div class="handoff-body">Every handoff event gets a short code printed on the TamperVerify™ or included in accompanying documentation. Any regulator can verify independently at verifyknot.io.</div>
       </div>
       <div class="handoff-card">
         <div class="handoff-title">Chain Continuity</div>
@@ -319,29 +319,29 @@
       <div class="workflow-step">
         <div class="workflow-num">01</div>
         <div class="workflow-content">
-          <div class="workflow-title">Register ZKKey™ devices per facility and operator role</div>
-          <div class="workflow-body">Each ZKKey™ is registered with a device ID tied to the facility and operator role. The public key is registered at api.zknot.io. Auditors can resolve any device ID to its registration record at any time.</div>
+          <div class="workflow-title">Register Ostensor™ devices per facility and operator role</div>
+          <div class="workflow-body">Each Ostensor™ is registered with a device ID tied to the facility and operator role. The public key is registered at api.zknot.io. Auditors can resolve any device ID to its registration record at any time.</div>
         </div>
       </div>
       <div class="workflow-step">
         <div class="workflow-num">02</div>
         <div class="workflow-content">
-          <div class="workflow-title">Apply TrustSeal™ at manufacture or receipt</div>
-          <div class="workflow-body">Scan the seal barcode, press the ZKKey™ button. Chain entry is written binding the seal ID, batch documentation hash, and timestamp. Takes under 10 seconds per item or lot.</div>
+          <div class="workflow-title">Apply TamperVerify™ at manufacture or receipt</div>
+          <div class="workflow-body">Scan the seal barcode, press the Ostensor™ button. Chain entry is written binding the seal ID, batch documentation hash, and timestamp. Takes under 10 seconds per item or lot.</div>
         </div>
       </div>
       <div class="workflow-step">
         <div class="workflow-num">03</div>
         <div class="workflow-content">
           <div class="workflow-title">Attest each custody transfer with a button press</div>
-          <div class="workflow-body">At every handoff — manufacturer to distributor, distributor to pharmacy, pharmacy to patient — the receiving handler presses the ZKKey™ button. One press. One chain entry. One timestamp. No paper form.</div>
+          <div class="workflow-body">At every handoff — manufacturer to distributor, distributor to pharmacy, pharmacy to patient — the receiving handler presses the Ostensor™ button. One press. One chain entry. One timestamp. No paper form.</div>
         </div>
       </div>
       <div class="workflow-step">
         <div class="workflow-num">04</div>
         <div class="workflow-content">
           <div class="workflow-title">Export PDF chain-of-custody report for audit</div>
-          <div class="workflow-body">ZK-LocalChain™ exports a signed PDF containing every handoff event in sequence, with QR codes linking to verifyknot.io for each entry. The report is itself a chain artifact — signed and independently verifiable.</div>
+          <div class="workflow-body">the ZKNOT chain exports a signed PDF containing every handoff event in sequence, with QR codes linking to verifyknot.io for each entry. The report is itself a chain artifact — signed and independently verifiable.</div>
         </div>
       </div>
     </div>
@@ -353,9 +353,9 @@
     <div class="section-label reveal">Products Used</div>
     <h2 class="section-title reveal">The full pharmaceutical custody kit.</h2>
     <div class="products-strip reveal">
-      <a href="/products/zkkey" class="product-chip"><div class="product-chip-arrow">↗</div><div class="product-chip-tag">Signing Hardware</div><div class="product-chip-name">ZKKey™</div></a>
-      <a href="/products/zk-localchain" class="product-chip"><div class="product-chip-arrow">↗</div><div class="product-chip-tag">Offline Ledger</div><div class="product-chip-name">ZK-LocalChain™</div></a>
-      <a href="/products/trustseal" class="product-chip"><div class="product-chip-arrow">↗</div><div class="product-chip-tag">Physical Binding</div><div class="product-chip-name">TrustSeal™</div></a>
+      <a href="/products/zkkey" class="product-chip"><div class="product-chip-arrow">↗</div><div class="product-chip-tag">Signing Hardware</div><div class="product-chip-name">Ostensor™</div></a>
+      <a href="/products/zk-localchain" class="product-chip"><div class="product-chip-arrow">↗</div><div class="product-chip-tag">Offline Ledger</div><div class="product-chip-name">the ZKNOT chain</div></a>
+      <a href="/products/trustseal" class="product-chip"><div class="product-chip-arrow">↗</div><div class="product-chip-tag">Physical Binding</div><div class="product-chip-name">TamperVerify™</div></a>
       <a href="https://verifyknot.io" class="product-chip"><div class="product-chip-arrow">↗</div><div class="product-chip-tag">Public Verification</div><div class="product-chip-name">verifyknot.io</div></a>
     </div>
   </div>

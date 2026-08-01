@@ -468,8 +468,8 @@
         <tr><td>Chain of custody</td><td class="no">Database record, mutable with access</td><td class="yes">Append-only, hash-chained, independently verifiable</td></tr>
         <tr><td>Independent verification</td><td class="no">Requires vendor access or portal account</td><td class="yes">verifyknot.io — no account, no vendor</td></tr>
         <tr><td>Signing authority</td><td class="no">Software key, administrator override possible</td><td class="yes">Hardware-attested, physical presence required</td></tr>
-        <tr><td>Offline operation</td><td class="no">Cloud-dependent or local sync required</td><td class="yes">Full offline-capable — no network assumption</td></tr>
-        <tr><td>Audit in court</td><td class="no">Vendor must testify to system integrity</td><td class="yes">Math and physics are the testimony</td></tr>
+        <tr><td>Offline operation</td><td class="no">Cloud-dependent or local sync required</td><td class="yes">Devices sign offline. Verification still needs our API — offline checking is unbuilt, and we say so</td></tr>
+        <tr><td>Audit in court</td><td class="no">Vendor must testify to system integrity</td><td class="yes">The signature and chain are re-checkable by anyone; the timestamp is still ours</td></tr>
       </tbody>
     </table>
   </div>

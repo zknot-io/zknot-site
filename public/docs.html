@@ -290,7 +290,7 @@
     .step-2 .step-product-link:hover { background: rgba(34,197,94,0.12); }
     .step-2 .step-constraint-bullet { color: var(--s2); }
 
-    /* Step 3 - Purple - TrustSeal */
+    /* Step 3 - Purple - TamperVerify */
     .step-3 .step-tag { color: var(--s3); }
     .step-3 .step-tag::before { background: var(--s3); }
     .step-3 .step-node-circle { background: rgba(168,85,247,0.12); color: var(--s3); border: 1px solid rgba(168,85,247,0.3); }
@@ -299,7 +299,7 @@
     .step-3 .step-product-link:hover { background: rgba(168,85,247,0.12); }
     .step-3 .step-constraint-bullet { color: var(--s3); }
 
-    /* Step 4 - Blue - ZKKey */
+    /* Step 4 - Blue - Ostensor */
     .step-4 .step-tag { color: var(--s4); }
     .step-4 .step-tag::before { background: var(--s4); }
     .step-4 .step-node-circle { background: rgba(59,130,246,0.12); color: var(--s4); border: 1px solid rgba(59,130,246,0.3); }
@@ -503,7 +503,7 @@
       <tr><td>Verify (optical)</td><td><code>POST /v1/units/{short_code}/puf/verify</code></td><td>Match a freshly captured photo against the unit's enrolled baseline.</td></tr>
     </tbody>
   </table>
-  <p>ZKKey units use the same attest/verify path without the optical steps (see <a href="#hardware">Hardware</a>).</p>
+  <p>Ostensor units use the same attest/verify path without the optical steps (see <a href="#hardware">Hardware</a>).</p>
 
   <h2 id="schema-device-sig">Verification</h2>
   <p>Verification splits into checks any relying party can perform <strong>offline</strong> and checks that require the issuer (or the published chain).</p>
@@ -573,11 +573,11 @@
   <table>
     <thead><tr><th>Line</th><th>Identity root</th><th>Optical PUF</th></tr></thead>
     <tbody>
-      <tr><td id="zkkey">ZKKey</td><td>Secure element (ECDSA P-256 key)</td><td>No</td></tr>
+      <tr><td id="zkkey">Ostensor</td><td>Secure element (ECDSA P-256 key)</td><td>No</td></tr>
       <tr><td id="powerverify">PowerVerify</td><td>Secure element + photographed physical feature</td><td>Yes — enrolled once, matched at verification</td></tr>
     </tbody>
   </table>
-  <p>The optical PUF is exclusive to PowerVerify; ZKKey roots identity in the secure element alone.</p>
+  <p>The optical PUF is exclusive to PowerVerify; Ostensor roots identity in the secure element alone.</p>
 
   <h2 id="security">Security model</h2>
   <p class="ptr">The full adversary model, the security properties with their assumptions, and an explicit account of what the protocol does <em>not</em> protect against (relay/MITM, optical-PUF spoofing, display-path integrity, and more) live in <a href="/protocol">Protocol §6</a>, with assumptions consolidated in §8. Read those before relying on any guarantee.</p>

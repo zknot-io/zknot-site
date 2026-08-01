@@ -189,7 +189,7 @@
       <a href="/protocol" class="btn-secondary">See EvidenceProtocol™ →</a>
     </div>
     <div class="hero-status">
-      <div class="status-item"><div class="status-dot"></div>Field-deployable — offline-capable</div>
+      <div class="status-item"><div class="status-dot"></div>Field-deployable — signs offline</div>
       <div class="status-item"><div class="status-dot"></div>No vendor testimony required</div>
       <div class="status-item"><div class="status-dot"></div>SDVOSB — DoD / DOJ eligible</div>
     </div>
@@ -215,9 +215,9 @@
       <div class="challenge-col solution">
         <div class="challenge-header">With ZKNOT™ — Structural Answers</div>
         <div class="challenge-item">PowerVerify™ severs write path at PCB level — continuity-testable with a multimeter in court</div>
-        <div class="challenge-item">ZKKey™ hardware produces the signature — chain of trust terminates at a tamper-resistant secure element</div>
-        <div class="challenge-item">ZK-LocalChain™ is append-only — no delete or edit operation exists at any layer</div>
-        <div class="challenge-item">TrustSeal™ binds physical bag seal to chain entry at moment of application — cryptographically</div>
+        <div class="challenge-item">Ostensor™ hardware produces the signature — chain of trust terminates at a tamper-resistant secure element</div>
+        <div class="challenge-item">the ZKNOT chain is append-only — no delete or edit operation exists at any layer</div>
+        <div class="challenge-item">TamperVerify™ binds physical bag seal to chain entry at moment of application — cryptographically</div>
         <div class="challenge-item">Any party verifies at verifyknot.io — no vendor involvement, no conflict argument</div>
         <div class="challenge-item">Full offline operation — no network assumption, chain syncs on reconnection</div>
       </div>
@@ -234,19 +234,19 @@
       <div class="case-card">
         <svg class="case-icon" viewBox="0 0 36 36" fill="none"><rect x="6" y="8" width="24" height="20" rx="2" stroke="#6b7280" stroke-width="1.5"/><path d="M12 16h12M12 20h8" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round"/></svg>
         <div class="case-title">Digital Forensic Examination</div>
-        <div class="case-body">Imaging suspect drives, mobile devices, and storage media. PowerVerify™ eliminates any possibility of write contamination. ZKKey™ attests each acquisition event at the hardware level.</div>
-        <div class="case-constraint">Write contamination: structurally impossible</div>
+        <div class="case-body">Imaging suspect drives, mobile devices, and storage media. PowerVerify™ carries no data conductors at all, in either direction — so it is not a write blocker and cannot image a drive. Ostensor™ attests each acquisition event at the hardware level.</div>
+        <div class="case-constraint">No data path in either direction — not a write blocker</div>
       </div>
       <div class="case-card">
         <svg class="case-icon" viewBox="0 0 36 36" fill="none"><path d="M8 28V12l10-6 10 6v16" stroke="#6b7280" stroke-width="1.5" stroke-linejoin="round"/><rect x="14" y="20" width="8" height="8" stroke="#6b7280" stroke-width="1.5"/></svg>
         <div class="case-title">Field Evidence Collection</div>
-        <div class="case-body">Collecting digital evidence at a scene — phones, laptops, external drives. ZKKey™ attests collection events offline. TrustSeal™ applied at scene creates immediate cryptographic binding. Chain syncs on return.</div>
+        <div class="case-body">Collecting digital evidence at a scene — phones, laptops, external drives. Ostensor™ attests collection events offline. TamperVerify™ applied at scene creates immediate cryptographic binding. Chain syncs on return.</div>
         <div class="case-constraint">No network required at point of collection</div>
       </div>
       <div class="case-card">
         <svg class="case-icon" viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="12" stroke="#6b7280" stroke-width="1.5"/><path d="M18 12v6l4 2" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round"/></svg>
         <div class="case-title">Evidence Transfer & Storage</div>
-        <div class="case-body">Each transfer — scene to lab, lab to storage, storage to court — is a ZKKey™ attestation event. The chain entry records the handler, timestamp, and artifact hash. No gap in custody possible.</div>
+        <div class="case-body">Each transfer — scene to lab, lab to storage, storage to court — is a Ostensor™ attestation event. The chain entry records the handler, timestamp, and artifact hash. No gap in custody possible.</div>
         <div class="case-constraint">Every handoff: cryptographically attested</div>
       </div>
       <div class="case-card">
@@ -265,7 +265,7 @@
         <svg class="case-icon" viewBox="0 0 36 36" fill="none"><path d="M6 30V18l12-8 12 8v12" stroke="#6b7280" stroke-width="1.5" stroke-linejoin="round"/><circle cx="18" cy="14" r="4" stroke="#6b7280" stroke-width="1.5"/><path d="M14 30v-6h8v6" stroke="#6b7280" stroke-width="1.5" stroke-linejoin="round"/></svg>
         <div class="case-title">Forward-Deployed Operations</div>
         <div class="case-body">DoD and law enforcement operations in intermittently-connected environments. Full chain operation with zero network dependency. All evidence attested locally, sync on reconnection.</div>
-        <div class="case-constraint">Offline-capable — no cloud dependency</div>
+        <div class="case-constraint">Devices sign offline — verification needs our API</div>
       </div>
     </div>
   </div>
@@ -322,29 +322,29 @@
       <div class="workflow-step">
         <div class="workflow-num">03</div>
         <div class="workflow-content">
-          <div class="workflow-title">Press ZKKey™ to attest the acquisition event</div>
-          <div class="workflow-body">One button press. ZKKey™ signs a chain entry containing the artifact hash, device ID, and timestamp. Entry is written to ZK-LocalChain™. Takes three seconds.</div>
+          <div class="workflow-title">Press Ostensor™ to attest the acquisition event</div>
+          <div class="workflow-body">One button press. Ostensor™ signs a chain entry containing the artifact hash, device ID, and timestamp. Entry is written to the ZKNOT chain. Takes three seconds.</div>
         </div>
       </div>
       <div class="workflow-step">
         <div class="workflow-num">04</div>
         <div class="workflow-content">
-          <div class="workflow-title">Apply TrustSeal™ to physical evidence packaging</div>
-          <div class="workflow-body">Scan the seal barcode, press ZKKey™ again. Physical packaging and digital chain entry are bound at this moment. Short code printed on seal resolves to full chain entry at verifyknot.io.</div>
+          <div class="workflow-title">Apply TamperVerify™ to physical evidence packaging</div>
+          <div class="workflow-body">Scan the seal barcode, press Ostensor™ again. Physical packaging and digital chain entry are bound at this moment. Short code printed on seal resolves to full chain entry at verifyknot.io.</div>
         </div>
       </div>
       <div class="workflow-step">
         <div class="workflow-num">05</div>
         <div class="workflow-content">
           <div class="workflow-title">Attest each transfer event through the chain</div>
-          <div class="workflow-body">Scene → lab, lab → storage, storage → court — each is one ZKKey™ press. The chain is unbroken, append-only, and independently auditable at any step by any party.</div>
+          <div class="workflow-body">Scene → lab, lab → storage, storage → court — each is one Ostensor™ press. The chain is unbroken, append-only, and independently auditable at any step by any party.</div>
         </div>
       </div>
       <div class="workflow-step">
         <div class="workflow-num">06</div>
         <div class="workflow-content">
           <div class="workflow-title">Export signed PDF for court or discovery production</div>
-          <div class="workflow-body">ZK-LocalChain™ exports a signed PDF chain-of-custody report. Every entry has a QR code linking to verifyknot.io. Produce it in discovery. Opposing counsel verifies it themselves.</div>
+          <div class="workflow-body">the ZKNOT chain exports a signed PDF chain-of-custody report. Every entry has a QR code linking to verifyknot.io. Produce it in discovery. Opposing counsel verifies it themselves.</div>
         </div>
       </div>
     </div>
@@ -357,9 +357,9 @@
     <h2 class="section-title reveal">The complete law enforcement kit.</h2>
     <div class="products-strip reveal">
       <a href="/products/powerverify" class="product-chip"><div class="product-chip-arrow">↗</div><div class="product-chip-tag">Data Path Control</div><div class="product-chip-name">PowerVerify™</div></a>
-      <a href="/products/zkkey" class="product-chip"><div class="product-chip-arrow">↗</div><div class="product-chip-tag">Signing Hardware</div><div class="product-chip-name">ZKKey™</div></a>
-      <a href="/products/trustseal" class="product-chip"><div class="product-chip-arrow">↗</div><div class="product-chip-tag">Physical Binding</div><div class="product-chip-name">TrustSeal™</div></a>
-      <a href="/products/zk-localchain" class="product-chip"><div class="product-chip-arrow">↗</div><div class="product-chip-tag">Offline Ledger</div><div class="product-chip-name">ZK-LocalChain™</div></a>
+      <a href="/products/zkkey" class="product-chip"><div class="product-chip-arrow">↗</div><div class="product-chip-tag">Signing Hardware</div><div class="product-chip-name">Ostensor™</div></a>
+      <a href="/products/trustseal" class="product-chip"><div class="product-chip-arrow">↗</div><div class="product-chip-tag">Physical Binding</div><div class="product-chip-name">TamperVerify™</div></a>
+      <a href="/products/zk-localchain" class="product-chip"><div class="product-chip-arrow">↗</div><div class="product-chip-tag">Offline Ledger</div><div class="product-chip-name">the ZKNOT chain</div></a>
     </div>
   </div>
 </section>
