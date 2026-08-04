@@ -50,7 +50,14 @@ const ROUTES = {
   "/about":   "/about.html",
   "/docs":    "/docs.html",
   "/verify":  "/verify.html",
-  "/faq":     "/faq.html",
+  // "/faq" removed 2026-08-04: it was mapped to /faq.html, which has never
+  // existed, so the Worker fell through and served a ZERO-BYTE 404 — not even the
+  // branded page. Nothing linked to it, so this was a latent trap rather than live
+  // breakage: the first nav or footer link added would have shipped a blank 404.
+  // check-publish-guard.sh --served has been reporting `MISS /faq http 404` the
+  // whole time; the detection was never the gap, running it was.
+  // NEVER ROUTE AHEAD OF THE ASSET. If an FAQ is wanted, add faq.html and this
+  // line in the same change.
 };
 
 // Permanent redirects. The four product pages were retired 2026-07-31 and their
