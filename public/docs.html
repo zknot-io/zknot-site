@@ -548,7 +548,7 @@
       <tr><td><code>challenge_hash</code></td><td>string</td><td>SHA-256 of the input data the user approved. <span class="req">required</span></td></tr>
       <tr><td><code>signature</code></td><td>string</td><td>ECDSA P-256 signature from the secure element (hex or base64). <span class="req">required</span></td></tr>
       <tr><td><code>public_key</code></td><td>string</td><td>Device public key, for independent verification. <span class="req">required</span></td></tr>
-      <tr><td><code>signed_at</code></td><td>string (RFC 3339)</td><td>Device-reported signing timestamp. <span class="req">required</span></td></tr>
+      <tr><td><code>signed_at</code></td><td>string (RFC 3339)</td><td>Caller-supplied signing timestamp, stored as record metadata. <b>Not part of the signed challenge</b> — the device does not attest it. <span class="req">required</span></td></tr>
       <tr><td><code>metadata</code></td><td>object · nullable</td><td>Optional free-form context (e.g. case ID, operator, location, notes). Defaults to empty.</td></tr>
     </tbody>
   </table>
