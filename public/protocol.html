@@ -465,7 +465,7 @@
 
 <main class="zk-protocol">
   <h1>Protocol</h1>
-  <p style="opacity:.75">The technical specification underlying EvidenceProtocol™.</p>
+  <p style="opacity:.75">The technical specification underlying EvidenceProtocol.</p>
   <p class="banner">Disclosed across filed applications: PAT-001 (U.S. provisional #63/960,933), PAT-004 (LocalChain), PAT-005 (attestation ingest), PAT-010 (short-code verification). This page states claims with their assumptions and an explicit account of what the protocol does <em>not</em> protect against.</p>
 
   <h2>1. Overview</h2>
@@ -548,6 +548,47 @@
     <li>chain position and tamper-evidence are confirmed by walking the LocalChain (<code>POST /v1/chain/verify</code>), verifiable by any party holding the chain.</li>
   </ul>
   <p>Net: signature and short code are independently checkable offline; <strong>freshness is the single property that requires the issuer or an out-of-band freshness signal.</strong></p>
+
+  <h2>9.1 Trust anchors — the registry signing keys</h2>
+  <p>§9 says a relying party can check a signature against the signing key. For
+  a record signed by ZKNOT's registry rather than by a device, that key is the
+  one below. It is published here because <strong>an anchor a skeptic cannot
+  follow is worse than a weak one honestly stated.</strong> These are public
+  keys: publishing them is what makes independent verification possible, and
+  they confer no ability to sign.</p>
+
+  <p>Both are ECDSA P-256, given as uncompressed <code>X&nbsp;||&nbsp;Y</code>
+  hex with the SEC1 <code>04</code> prefix omitted.</p>
+
+  <h3>Current signer</h3>
+  <p><code style="word-break:break-all">b423b883c01941f5f869af30847f35b1079b744274615ade593a1c1c037f177bad7d479ae8ca24223c1c58a31ac4522166ca70439c518c9795d887c9482db198</code></p>
+  <p>Signs registry-asserted records today. Unbounded.</p>
+
+  <h3>Retired signer — still valid, but bounded</h3>
+  <p><code style="word-break:break-all">ea5c3036983ff57034c7caccc37754995e1185e764e6e22a226b99d7065f11dfd08ff0019a8d1fedee9e498e9888f107d2eefb424a0af2d4bd6c401344735a7d</code></p>
+  <p>This key was retired on 2026-08-01 after its private half was exposed in a
+  session transcript. It was replaced the same day. Because the records it had
+  already signed are genuine, it was <strong>not simply revoked</strong> —
+  revoking it would have broken verification for real records. It is instead
+  <strong>bounded</strong>: the rail accepts it only for chain
+  <code>default</code> at position <strong>51 or below</strong>, the last entry
+  it legitimately signed. A record signed with that key at any later position,
+  or on any other chain, is refused.</p>
+  <p>The practical consequence for a reader: the ten records it signed continue
+  to verify, and no new record can be minted with it. We are telling you this
+  because a verification rail that hides a key exposure is not a verification
+  rail.</p>
+
+  <h3>Following the anchor</h3>
+  <ol>
+    <li>Fetch the record: <code>GET https://api.zknot.io/v1/verify/&lt;code&gt;</code>.</li>
+    <li>Check its signature against the public key the record carries, using any
+        ECDSA P-256 verifier.</li>
+    <li>Confirm that key is one of the two above — that is the step this section
+        exists to make possible. <code>key_anchored</code> in the response is
+        ZKNOT asserting it; the hex above is what lets you check the assertion
+        rather than take it.</li>
+  </ol>
 
   <h2>10. Patent and disclosure</h2>
   <p>The architecture is disclosed across filed applications: PAT-001 (U.S. provisional #63/960,933) covering the FSM-gated, actuation-after-displayed-hash construction; PAT-004 (LocalChain); PAT-005 (attestation ingest); PAT-010 (short-code verification). The microcontroller is a preferred embodiment; the secure element is claimed generically.</p>
