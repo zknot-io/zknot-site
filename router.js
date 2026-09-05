@@ -50,6 +50,15 @@ const ROUTES = {
   "/about":   "/about.html",
   "/docs":    "/docs.html",
   "/verify":  "/verify.html",
+
+  // Legal pages — added 2026-08-05 with their assets in the same change, per the
+  // standing rule below. check-legal-pages.sh was failing on all four (missing
+  // asset AND missing route) while shop.zknot.io was taking money with no refund,
+  // terms, or shipping policy published anywhere.
+  "/terms":    "/terms.html",
+  "/privacy":  "/privacy.html",
+  "/shipping": "/shipping.html",
+  "/returns":  "/returns.html",
   // "/faq" removed 2026-08-04: it was mapped to /faq.html, which has never
   // existed, so the Worker fell through and served a ZERO-BYTE 404 — not even the
   // branded page. Nothing linked to it, so this was a latent trap rather than live
@@ -70,7 +79,13 @@ const ROUTES = {
 // and are retained for the same class of reason — inbound links we do not control.
 const REDIRECTS = {
   "/products/powerverify":   "/verifiables",
+  // Both spellings resolve. /products/trustseal is the RETIRED name (T-7, 2026-08-05) and is
+  // kept for the reason stated above — inbound links we do not control. /products/tamperverify
+  // is the current name and is what authored markup now points at, so new links stop minting
+  // the dead one. Neither may be removed: the old one because it is out there, the new one
+  // because it is now in our own pages.
   "/products/trustseal":     "/verifiables",
+  "/products/tamperverify":  "/verifiables",
   "/products/zkkey":         "/attestation",
   "/products/zk-localchain": "/rails",
 };
