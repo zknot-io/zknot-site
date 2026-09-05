@@ -464,7 +464,15 @@
         <tr><th>Capability</th><th>Software-Based Systems</th><th>ZKNOT™</th></tr>
       </thead>
       <tbody>
-        <tr><td>Tamper detection</td><td class="no">Detects after the fact, logged</td><td class="yes">Structurally prevented by hardware</td></tr>
+        <!-- "Structurally prevented by hardware" was live here until 2026-09-05 and was
+             false. Four other pages already state the ceiling correctly — attestation.html:263,
+             rails.html:273, verifiables.html:286 and terms.html:88 all say "tamper-evident, not
+             tamper-proof" — so the homepage was contradicting the site's own Terms of Service.
+             It also conceded DETECTION to the comparison column while claiming PREVENTION, which
+             inverts the real story: detection is what ZKNOT does, and the differentiator is that
+             the evidence is physical and on the article rather than a mutable log entry.
+             MARKETING/HANDOFF.md §1 exposure 5. Do not restore it. -->
+        <tr><td>Tamper detection</td><td class="no">Detects after the fact, logged</td><td class="yes">Physically evident on the article, not a log entry</td></tr>
         <tr><td>Chain of custody</td><td class="no">Database record, mutable with access</td><td class="yes">Append-only, hash-chained, independently verifiable</td></tr>
         <tr><td>Independent verification</td><td class="no">Requires vendor access or portal account</td><td class="yes">verifyknot.io — no account, no vendor</td></tr>
         <tr><td>Signing authority</td><td class="no">Software key, administrator override possible</td><td class="yes">Hardware-attested, physical presence required</td></tr>
