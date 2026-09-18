@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Return &amp; Refund Policy — ZKNOT™</title>
-<meta name="description" content="ZKNOT's 30-day return policy, what cannot be returned and why, and how faulty items are handled.">
+<title>Contact — ZKNOT™</title>
+<meta name="description" content="How to reach ZKNOT: one address, one person answers, within one business day. Quotes, order questions, notify-me, contracting, press.">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,11 +32,15 @@
   strong{color:var(--text);font-weight:500}
   a{color:var(--accent);text-decoration:none}
   a:hover{text-decoration:underline}
-  ul,ol{margin:0 0 16px 20px;color:var(--text-muted)}
+  ul{margin:0 0 16px 20px;color:var(--text-muted)}
   li{margin-bottom:9px}
   .note{border-left:2px solid var(--accent);background:var(--accent-dim);padding:16px 20px;margin:22px 0}
   .note p:last-child{margin-bottom:0}
   .lede{font-size:17px;font-weight:300;color:var(--text-muted);margin-bottom:36px;line-height:1.75}
+  table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14px}
+  th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--border)}
+  th{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);font-weight:400}
+  td{color:var(--text-muted)}
   footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:44px 40px;background:var(--bg-1)}
   .footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap}
   .footer-brand{font-family:var(--display);font-weight:700;font-size:15px;color:var(--text);margin-bottom:8px}
@@ -45,6 +49,15 @@
   .footer-right a{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);text-decoration:none}
   .footer-right a:hover{color:var(--text)}
   @media(max-width:720px){nav{padding:0 20px}.nav-links{gap:14px}.nav-links li:nth-child(-n+3){display:none}main{padding:120px 22px 70px}}
+
+  .addr{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:18px 0 30px}
+  .addr code{font-family:var(--mono);font-size:clamp(18px,3vw,26px);color:var(--white);background:var(--bg-2);border:1px solid var(--border);padding:12px 18px;border-radius:2px;user-select:all}
+  .copy{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#000;background:var(--accent);border:none;padding:13px 18px;border-radius:2px;cursor:pointer}
+  .copy:hover{background:#16a34a}
+  .reasons{list-style:none;margin:0 0 10px 0}
+  .reasons li{margin:0 0 10px 0;padding:14px 18px;border:1px solid var(--border);border-radius:2px;background:var(--bg-1)}
+  .reasons li a{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;display:inline-block;margin-top:6px}
+  .reasons li span{display:block;color:var(--text-muted)}
 </style>
 </head>
 <body>
@@ -69,52 +82,42 @@
 </nav>
 
 <main>
-  <div class="breadcrumb"><a href="/">ZKNOT</a> <span>/</span> Return &amp; Refund Policy</div>
-  <h1>Return &amp; Refund Policy</h1>
-  <div class="updated">Last updated 2026-08-05</div>
+  <div class="breadcrumb"><a href="/">ZKNOT</a> <span>/</span> Contact</div>
+  <h1>Talk to a human.</h1>
+  <div class="updated">One address · one person answers · within one business day</div>
 
-  <p class="lede">Thirty days, no interrogation. There are a few things we genuinely cannot take back, and we would rather name them plainly here than surprise you at the point of asking.</p>
+  <p class="lede">Every route to us lands in the same inbox, read by the person who builds the hardware. There is no form on this page on purpose: a form needs a server that stores what you type, and an email does not. Write to us directly.</p>
 
-  <h2>1. The basic policy</h2>
-  <p>You may return most hardware within <strong>30 days of delivery</strong> for a full refund of the item price, provided it comes back <strong>in resaleable condition</strong> — undamaged, complete, and with its packaging. You pay return postage; we refund the item.</p>
-  <div class="note">
-    <p><strong>We do not ask whether you used it.</strong> A sealed passive article shows no wear, so "unused" is not a condition we could check even if we wanted to — and a test we cannot apply is not a test, it is an argument waiting to happen. If it comes back in resaleable condition, that is enough.</p>
+  <div class="addr">
+    <code id="addr">ops@zknot.io</code>
+    <button class="copy" id="copyBtn" type="button">Copy address</button>
+    <a href="mailto:ops@zknot.io">Open in your mail app →</a>
   </div>
-  <p><strong>If the item is faulty, wrong, or damaged in transit, we pay everything</strong> — return postage included — and you choose a replacement or a full refund including original shipping.</p>
 
-  <h2>2. What cannot be returned, and why</h2>
-  <p>Each of these has a real reason, not a policy reflex.</p>
-  <ul>
-    <li><strong>Applied tamper-evident seals.</strong> A seal that has been applied is consumed — removing it destroys it, which is precisely its function. Unopened, unused packs can be returned normally.</li>
-    <li><strong>Custom, co-branded, and made-to-order runs.</strong> If your company name is cast under the resin, or serials were printed to match your case or batch, the article cannot be resold to anyone else. These are non-returnable unless faulty.</li>
-    <li><strong>Articles deliberately opened, cut, or removed from a mounting.</strong> For a tamper-evident product that is the article doing its job, not failing. See our <a href="/terms">Terms</a>, section 6.</li>
+  <h2>Pick the one that fits, and the subject line is written for you</h2>
+  <ul class="reasons">
+    <li><strong>Buy in quantity, pilot, or quote</strong><span>Corporate or event runs, a pilot deployment, or anything the store cannot price.</span><a href="mailto:ops@zknot.io?subject=Quote%20request">Request a quote →</a></li>
+    <li><strong>Tell me when one ships</strong><span>SelfKnot, Vitni, Ostensor, TamperVerify or Monstrance. Say which. We will tell you what cleared and what is still open, in the same words we use on the site.</span><a href="mailto:ops@zknot.io?subject=Notify%20me%20when%20it%20ships%3A%20">Notify me →</a></li>
+    <li><strong>An order I placed</strong><span>Include the order number from your Stripe or Shopify receipt.</span><a href="mailto:ops@zknot.io?subject=Order%20question%3A%20">About my order →</a></li>
+    <li><strong>Government and contracting</strong><span>SDVOSB · SAM.gov registered · UEI C4SKW13JPEL5. Teaming, vehicles, capability statements.</span><a href="mailto:ops@zknot.io?subject=Contracting%20enquiry">Contracting →</a></li>
+    <li><strong>Security or a claim you think is wrong</strong><span>If something on this site or on an article overstates what it can do, we want to know first and fix it publicly.</span><a href="mailto:ops@zknot.io?subject=Claim%20or%20security%20report">Report it →</a></li>
+    <li><strong>Press</strong><span>Interviews, product images, background on the company.</span><a href="mailto:ops@zknot.io?subject=Press%20enquiry">Press →</a></li>
   </ul>
-  <div class="note">
-    <p><strong>Provisioned devices are a special case, and we are not selling them direct yet.</strong> A device that carries a cryptographic identity cannot be resold once it has been in someone else's custody — erasing it to make it safe to resell permanently destroys the article. When we do sell them, they will carry their own RMA procedure saying exactly that. We would rather build that honestly than fold it into a paragraph here.</p>
-  </div>
 
-  <h2>3. How to start a return</h2>
-  <ol>
-    <li>Email <a href="mailto:ops@zknot.io">ops@zknot.io</a> with your order number and what you would like to do.</li>
-    <li>We reply with a return address and, where relevant, a prepaid label.</li>
-    <li>Send it back. Keep your tracking — until it reaches us, that is your proof of postage.</li>
-  </ol>
-  <p>You do not need to give a reason. If something about the product did not match what our pages led you to expect, we would like to hear it — that is a defect on our side and we fix those.</p>
+  <h2>Post</h2>
+  <p>ZKNOT, INC. · PO Box 993 · Salt Lake City, UT 84110 · USA</p>
 
-  <h2>4. Refunds</h2>
-  <p>We issue refunds to the original payment method <strong>within 14 days of receiving the return</strong>, usually much sooner. Your bank may take a few more days to show it. We will email you when the refund is sent.</p>
-  <p>If we cancel an order ourselves — because an item is out of stock, mispriced, or we cannot fulfil it — <strong>you are refunded in full, including shipping</strong>, without needing to ask.</p>
-
-  <h2>5. HashStamp and digital purchases</h2>
-  <p>HashStamp is a separate service with its own terms and refund policy. See <a href="https://hashstamp.io/refund">hashstamp.io/refund</a>.</p>
-
-  <h2>6. Your statutory rights</h2>
-  <p><strong>Nothing here limits any consumer right that cannot be waived under applicable law.</strong> If your local law gives you a longer return window or stronger remedy than this page, that law wins.</p>
-
-  <h2>7. Questions</h2>
-  <p><strong><a href="mailto:ops@zknot.io">ops@zknot.io</a></strong> · ZKNOT, INC., PO Box 993, Salt Lake City, UT 84110, USA.</p>
+  <h2>What we will not do with your message</h2>
+  <p>We read it and reply. We do not add you to a list, and there is no list to add you to. Details in our <a href="/privacy">Privacy Policy</a>.</p>
 </main>
-
+<script>
+  document.getElementById('copyBtn').addEventListener('click', async function () {
+    var b = this;
+    try { await navigator.clipboard.writeText('ops@zknot.io'); b.textContent = 'Copied'; }
+    catch (e) { var r = document.createRange(); r.selectNodeContents(document.getElementById('addr')); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = 'Selected — press Ctrl+C'; }
+    setTimeout(function () { b.textContent = 'Copy address'; }, 2500);
+  });
+</script>
 <footer>
   <div class="footer-inner">
     <div>

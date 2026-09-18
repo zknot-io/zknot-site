@@ -56,10 +56,16 @@ echo "== 3. Contact information survives with JavaScript OFF"
 for f in public/*.html; do
   raw=$(grep -c 'mailto:' "$f" || true)
   obf=$(grep -c 'cdn-cgi/l/email-protection' "$f" || true)
+  # 2026-09-18: nav "Contact" buttons became links to /contact — a static page
+  # that prints the address as text, so it is contact information with JS off.
+  # Counted only if contact.html itself carries a raw mailto: (checked in turn).
+  page=$(grep -c 'href="/contact"' "$f" || true)
   if [ "$obf" -gt 0 ]; then
     fail "$(basename "$f") has $obf JS-dependent contact link(s) and $raw raw mailto:"
   elif [ "$raw" -gt 0 ]; then
     pass "$(basename "$f") carries $raw raw mailto:"
+  elif [ "$page" -gt 0 ] && grep -q 'mailto:ops@zknot.io' public/contact.html; then
+    pass "$(basename "$f") links /contact ($page), which carries the raw address"
   else
     fail "$(basename "$f") has NO contact link of any kind"
   fi

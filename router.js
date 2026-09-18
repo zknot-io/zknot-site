@@ -50,6 +50,14 @@ const ROUTES = {
   "/about":   "/about.html",
   "/docs":    "/docs.html",
   "/verify":  "/verify.html",
+  // Contact — added 2026-09-18 with its asset in the same change. Every nav
+  // "Contact" was a bare mailto:, which does nothing on a machine with no mail
+  // client configured (operator reproduced it 2026-09-18). The page shows the
+  // address as copyable text and pre-fills subjects; the mailto: is a link on
+  // the page, not the destination of the button.
+  "/contact": "/contact.html",
+  // Stripe Payment Links redirect here after a completed checkout.
+  "/thanks":  "/thanks.html",
 
   // Legal pages — added 2026-08-05 with their assets in the same change, per the
   // standing rule below. check-legal-pages.sh was failing on all four (missing
@@ -88,6 +96,10 @@ const REDIRECTS = {
   "/products/tamperverify":  "/verifiables",
   "/products/zkkey":         "/attestation",
   "/products/zk-localchain": "/rails",
+  // Storefront entry points. The buy buttons live on the category pages; these
+  // exist so "zknot.io/shop" typed from a label or said aloud lands somewhere.
+  "/shop":                   "/verifiables#products",
+  "/buy":                    "/verifiables#products",
 };
 
 export default {
