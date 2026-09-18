@@ -73,6 +73,13 @@
     .spec li { font-size: 13.5px; color: var(--text-muted); padding: 7px 0; border-bottom: 1px solid var(--border); display: flex; gap: 10px; }
     .spec li::before { content: '—'; color: var(--text-dim); }
     .prod-foot { margin-top: auto; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .prod-img { display: block; margin: -30px -30px 22px; border-bottom: 1px solid var(--border); background: #e9e7e2; }
+    .prod-img img { display: block; width: 100%; height: 240px; object-fit: contain; }
+    .prod-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
+    .prod-gallery img { display: block; width: 100%; height: 90px; object-fit: cover; border: 1px solid var(--border); border-radius: 2px; }
+    .buy-note { font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; color: var(--text-muted); margin-top: 14px; }
+    .buy-note a { color: var(--text-dim); text-decoration: underline; text-underline-offset: 2px; }
+    .photo-note { font-family: var(--mono); font-size: 11px; color: var(--text-muted); margin-top: 18px; }
     .btn { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.07em; text-transform: uppercase; color: #000; background: var(--accent); border: none; padding: 12px 22px; border-radius: 2px; text-decoration: none; transition: opacity 0.2s; }
     .btn:hover { opacity: 0.85; }
     .btn-ghost { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-muted); border: 1px solid var(--border); padding: 12px 22px; border-radius: 2px; text-decoration: none; transition: all 0.2s; }
@@ -126,6 +133,7 @@
     <li><a href="/rails">Rails</a></li>
     <li><a href="/docs">Docs</a></li>
     <li><a href="/about">About</a></li>
+    <li><a href="/contact">Contact</a></li>
   </ul>
 </nav>
 
@@ -193,15 +201,21 @@
   <!-- PRODUCTS -->
   <section id="products"><div class="wrap">
     <div class="section-label">The Verifiables line</div>
-    <h2>Two articles. One of them ships today.</h2>
+    <h2>Three articles. Two of them ship today.</h2>
+    <p>PowerVerify comes in two forms that make the identical claim; the only difference is connector geometry. Buy either here with a card, or on our Shopify store. The seals are not yet available.</p>
 
     <div class="prods">
 
-      <div class="prod">
-        <div class="prod-top"><h3>PowerVerify</h3><div class="prod-price">$39</div></div>
-        <div class="prod-sub">Conduction · Energy</div>
-        <p>A power-only USB-C cable whose data lines are <strong>physically absent</strong> — not switched off, not filtered. They were never laid.</p>
-        <p>Cast in a single pour of clear resin so you can read every component on the board. There are four: two surge protectors, a filter capacitor, a ferrite. No chips, so no firmware, so nothing to update or compromise.</p>
+      <div class="prod" id="powerverify-cable">
+        <picture class="prod-img">
+          <source srcset="/img/products/powerverify-cable/hero.avif" type="image/avif">
+          <source srcset="/img/products/powerverify-cable/hero.webp" type="image/webp">
+          <img src="/img/products/powerverify-cable/hero.jpg" width="1200" height="374" alt="PowerVerify Cable: a clear resin block with the green board readable inside it, and a short captive USB-C pigtail lead leaving one end" loading="lazy">
+        </picture>
+        <div class="prod-top"><h3>PowerVerify Cable</h3><div class="prod-price">$39</div></div>
+        <div class="prod-sub">Conduction · Energy · captive pigtail</div>
+        <p>A power-only USB-C link whose data lines are <strong>physically absent</strong> — not switched off, not filtered. They were never laid.</p>
+        <p>Cast in a single pour of clear resin so you can read every component on the board. There are four: two surge protectors, a filter capacitor, a ferrite. No chips, so no firmware, so nothing to update or compromise. The pigtail form reaches a port that an inline block cannot.</p>
         <ul class="spec">
           <li>5–20V DC, 60W max — USB Power Delivery passes straight through</li>
           <li>D+ and D− physically absent from the connector and the board</li>
@@ -210,9 +224,34 @@
           <li>Patent pending — U.S. application 63/961,118</li>
         </ul>
         <div class="prod-foot">
-          <a class="btn" href="https://shop.zknot.io/products/powerverify">Buy — $39</a>
-          <a class="btn-ghost" href="#test-it">How to check it</a>
+          <a class="btn" href="https://buy.stripe.com/aFa5kC56i4WQcfR7sCa7C00" rel="noopener">Buy — $39</a>
+          <a class="btn-ghost" href="https://shop.zknot.io/products/powerverify" rel="noopener">Buy on Shopify ↗</a>
         </div>
+        <p class="buy-note">Card checkout by Stripe · US shipping $5 flat · <a href="/shipping">shipping</a> · <a href="/returns">returns</a> · <a href="#test-it">how to check it</a></p>
+      </div>
+
+      <div class="prod" id="powerverify-coupler">
+        <picture class="prod-img">
+          <source srcset="/img/products/powerverify-coupler/hero.avif" type="image/avif">
+          <source srcset="/img/products/powerverify-coupler/hero.webp" type="image/webp">
+          <img src="/img/products/powerverify-coupler/hero.jpg" width="870" height="1200" alt="PowerVerify Coupler: a small clear resin block with a USB-C receptacle at each end and the green board readable inside, silkscreened PowerVerify — DATA ABSENT" loading="lazy">
+        </picture>
+        <div class="prod-top"><h3>PowerVerify Coupler</h3><div class="prod-price">$29</div></div>
+        <div class="prod-sub">Conduction · Energy · USB-C female ↔ female, inline</div>
+        <p>The same board and the same claim as the Cable, in a straight inline block: your own cable goes in one end, the device's cable in the other, and <strong>no data conductor exists between them</strong>.</p>
+        <p>A coupler, not an adapter — it changes nothing about the connector, only what can pass through it. Use it when you already trust your cable and not the port it is about to meet.</p>
+        <ul class="spec">
+          <li>5–20V DC, 60W max — USB Power Delivery passes straight through</li>
+          <li>D+ and D− physically absent from both receptacles and the board</li>
+          <li>No microcontroller, no secure element, no key — it signs nothing</li>
+          <li>Single-pour resin; serialized at manufacture with a code that resolves at verifyknot.io</li>
+          <li>Patent pending — U.S. application 63/961,118</li>
+        </ul>
+        <div class="prod-foot">
+          <a class="btn" href="https://buy.stripe.com/3cI9AS1U6dtm1Bd8wGa7C01" rel="noopener">Buy — $29</a>
+          <a class="btn-ghost" href="https://shop.zknot.io/products/powerverify-coupler" rel="noopener">Buy on Shopify ↗</a>
+        </div>
+        <p class="buy-note">Card checkout by Stripe · US shipping $5 flat · <a href="/shipping">shipping</a> · <a href="/returns">returns</a> · <a href="#test-it">how to check it</a></p>
       </div>
 
       <div class="prod">
@@ -227,7 +266,7 @@
           <li>Packs of 10, 20 or 50 — $20 / $30 / $60</li>
           <li>Passive — no electronics, no battery, nothing to fail</li>
         </ul>
-        <div class="prod-foot"><span class="soon">Not yet available</span></div>
+        <div class="prod-foot"><span class="soon">Not yet available</span><a class="btn-ghost" href="mailto:ops@zknot.io?subject=Notify%20me%20when%20it%20ships%3A%20TamperVerify">Notify me</a></div>
       </div>
 
     </div>
@@ -269,6 +308,12 @@
       <div>
         <h3>Look it up</h3>
         <p>Every unit carries a serial and a short code sealed inside the resin. Enter it at <a href="https://verifyknot.io" style="color:var(--accent);text-decoration:none;">verifyknot.io</a> and the verdict is computed <strong>in your browser</strong>, from the record itself. Our server isn't asked for its opinion.</p>
+        <div class="prod-gallery">
+          <img src="/img/products/powerverify-cable/board.jpg" width="1098" height="1200" alt="Close-up through the resin of the PowerVerify board: the silkscreen reads SAFE POWER ONLY, DATA ABSENT, and the four components are visible" loading="lazy">
+          <img src="/img/products/powerverify-cable/label.jpg" width="1200" height="904" alt="Underside of a PowerVerify Cable showing the sealed-in label with its serial and QR code" loading="lazy">
+          <img src="/img/products/powerverify-coupler/label.jpg" width="1200" height="912" alt="Underside of a PowerVerify Coupler showing its label: POWERVERIFY, a ZKP- code, POWER ONLY — DATA LINES PHYSICALLY ABSENT" loading="lazy">
+        </div>
+        <p class="photo-note">Bench photographs of production articles, 2026-09-18. Studio images follow; these are the real objects.</p>
         <h3>Every claim is on the object</h3>
         <p>We can revise this page. We can't revise cast resin. So the claims live on the board too, in silkscreen:</p>
         <p class="mono-em" style="color:var(--text-dim);line-height:2;">DATA LINES PHYSICALLY ABSENT — NO USB ENUMERATION<br/>SAFE POWER ONLY · DATA ABSENT<br/>Your charger can't spy through this.<br/>When physics is policy, trust is optional.</p>
@@ -308,10 +353,13 @@
     <a href="https://verifyknot.io">verifyknot.io</a>
     <a href="/docs">Docs</a>
     <a href="/about">About</a>
-    <!-- This page carries the only live Buy button on the site, so it is "the surface
-         that takes money" in DECISION-SHIPPING-SCOPE-001 SS-1 — shipping and returns
-         are linked here as well as terms/privacy. check-legal-pages.sh §3 was FAILING
-         on this page alone ("NO contact link of any kind") while the buy button was live. -->
+    <a href="/contact">Contact</a>
+    <!-- This page takes money (so does /attestation since 2026-09-18), so it is "the
+         surface that takes money" in DECISION-SHIPPING-SCOPE-001 SS-1 — shipping and
+         returns are linked here as well as terms/privacy. check-legal-pages.sh §3 was
+         FAILING on this page alone ("NO contact link of any kind") while the buy button
+         was live. Prices here are checked against Stripe and Shopify by
+         check-price-sources.sh — never edit a figure without running it. -->
     <a href="/terms">Terms</a>
     <a href="/privacy">Privacy</a>
     <a href="/shipping">Shipping</a>

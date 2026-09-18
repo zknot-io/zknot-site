@@ -73,6 +73,11 @@
     .spec li::before { content: '—'; color: var(--text-dim); }
     .why { font-size: 13.5px; color: var(--amber); border-left: 2px solid rgba(245,158,11,0.4); padding: 2px 0 2px 14px; margin-bottom: 20px; }
     .prod-foot { margin-top: auto; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .prod-img { display: block; margin: -30px -30px 22px; border-bottom: 1px solid var(--border); background: #e9e7e2; }
+    .prod-img img { display: block; width: 100%; height: 240px; object-fit: contain; }
+    .buy-note { font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; color: var(--text-muted); margin-top: 14px; }
+    .buy-note a { color: var(--text-dim); text-decoration: underline; text-underline-offset: 2px; }
+    .photo-note { font-family: var(--mono); font-size: 11px; color: var(--text-muted); margin-top: 18px; }
     .btn-ghost { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-muted); border: 1px solid var(--border); padding: 12px 22px; border-radius: 2px; text-decoration: none; transition: all 0.2s; }
     .btn-ghost:hover { color: var(--text); border-color: var(--border-active); }
     .btn { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.07em; text-transform: uppercase; color: #000; background: var(--accent); border: none; padding: 12px 22px; border-radius: 2px; text-decoration: none; transition: opacity 0.2s; }
@@ -118,6 +123,7 @@
     <li><a href="/rails">Rails</a></li>
     <li><a href="/docs">Docs</a></li>
     <li><a href="/about">About</a></li>
+    <li><a href="/contact">Contact</a></li>
   </ul>
 </nav>
 
@@ -126,16 +132,16 @@
   <div class="wrap hero">
     <div class="eyebrow">ZKNOT Attestation Devices</div>
     <h1>The device<br/>signs it. Not us.</h1>
-    <p class="lede">Hardware that turns a physical act — <strong>a specific human pressing, at a moment, over a specific thing</strong> — into a record a stranger can check. Four rungs, and they differ by <strong>threat model</strong>, not by being "more secure."</p>
+    <p class="lede">Hardware that turns a physical act — <strong>a specific human pressing, at a moment, over a specific thing</strong> — into a record a stranger can check. Five rungs, and they differ by <strong>threat model</strong>, not by being "more secure."</p>
   </div>
 
   <!-- STATUS FIRST — the honest one -->
   <section><div class="wrap">
     <div class="status-banner">
       <div class="section-label" style="color:var(--amber);">Where this line stands</div>
-      <h2>None of these ship today.</h2>
-      <p>We would rather you learn that here than after a checkout. Every device below exists as hardware — boards are built, silicon is proven — and <strong>not one of them can yet be provisioned onto the verification rail</strong>, which is what makes an attestation device worth owning.</p>
-      <p>Each product says exactly what is blocking it. Some are hardware, most are not. When one clears, it gets a price and a buy button on this page and not before.</p>
+      <h2>One of these ships today. Four do not.</h2>
+      <p>We would rather you learn that here than after a checkout. Every device below exists as hardware — boards are built, silicon is proven. <strong>Vitni Plus is the one fleet with a signed sale authorisation</strong>, and it is a pilot run of three hand-built articles, each gated individually before it ships. It has a price and a buy button below.</p>
+      <p>The other four say exactly what is blocking them. Some of it is hardware, most of it is not. When one clears, it gets a price and a buy button on this page and not before.</p>
       <p style="color:var(--text);"><strong>If you want the thing that works today, it's the <a href="/verifiables" style="color:var(--accent);text-decoration:none;">Verifiables line</a> — no keys, no provisioning, nothing to wait for.</strong></p>
     </div>
   </div></section>
@@ -197,7 +203,12 @@
 
     <div class="prods">
 
-      <div class="prod">
+      <div class="prod" id="selfknot">
+        <picture class="prod-img">
+          <source srcset="/img/products/selfknot/hero.avif" type="image/avif">
+          <source srcset="/img/products/selfknot/hero.webp" type="image/webp">
+          <img src="/img/products/selfknot/hero.jpg" width="1200" height="726" alt="SelfKnot: a small potted board in clear resin with a Xiao module, a secure element, a single push button and three indicator LEDs labelled Ready, Press to sign, Signed and Error" loading="lazy">
+        </picture>
         <div class="prod-top"><h3>SelfKnot</h3><div class="prod-price">$59</div></div>
         <div class="prod-sub">Open on-ramp · defeats casual forgery</div>
         <p>The open tier. A seeed Xiao board plus a secure element holding a key generated on-chip that cannot be extracted in software.</p>
@@ -209,10 +220,15 @@
           <li>No confirm button — it makes no human-presence claim</li>
         </ul>
         <div class="why">Blocked: chip-limited production run, and no built unit yet has a record on the rail.</div>
-        <div class="prod-foot"><a class="btn-ghost" href="#notify">Notify me</a></div>
+        <div class="prod-foot"><a class="btn-ghost" href="mailto:ops@zknot.io?subject=Notify%20me%20when%20it%20ships%3A%20SelfKnot">Notify me</a></div>
       </div>
 
-      <div class="prod">
+      <div class="prod" id="vitni">
+        <picture class="prod-img">
+          <source srcset="/img/products/vitni/hero.avif" type="image/avif">
+          <source srcset="/img/products/vitni/hero.webp" type="image/webp">
+          <img src="/img/products/vitni/hero.jpg" width="715" height="1200" alt="Vitni: a potted board in clear resin headed ZKNOT VITNI with a column of indicator LEDs — Ready, Armed, Signed, Error, Tamper — a push button, and the MCU visible below" loading="lazy">
+        </picture>
         <div class="prod-top"><h3>Vitni</h3><div class="prod-price">$79</div></div>
         <div class="prod-sub">Bread-and-butter · defeats later tampering</div>
         <p>Norse for <em>witness</em>. The workhorse rung: firmware locked in silicon rather than open, so a record can't be repudiated by pointing at replaceable software.</p>
@@ -222,10 +238,15 @@
           <li>Built for a hardware-rooted device identity on the rail</li>
         </ul>
         <div class="why">Not authorised for sale. Rev 1 boards are built and the rail can issue them an identity — but Rev 1 silk asserts a press gate its copper does not implement, so no Rev 1 article is cleared to sell. Repaired forward in Rev 2.</div>
-        <div class="prod-foot"><a class="btn-ghost" href="#notify">Notify me</a></div>
+        <div class="prod-foot"><a class="btn-ghost" href="mailto:ops@zknot.io?subject=Notify%20me%20when%20it%20ships%3A%20Vitni">Notify me</a></div>
       </div>
 
-      <div class="prod">
+      <div class="prod" id="vitni-plus">
+        <picture class="prod-img">
+          <source srcset="/img/products/vitni-plus/hero.avif" type="image/avif">
+          <source srcset="/img/products/vitni-plus/hero.webp" type="image/webp">
+          <img src="/img/products/vitni-plus/hero.jpg" width="440" height="1200" alt="Vitni Plus: a slim potted board in clear resin labelled VITNI with five numbered indicators — Ready, Armed, Signed, Error, Verify — a push button at the base and a USB-C port" loading="lazy">
+        </picture>
         <div class="prod-top"><h3>Vitni Plus</h3><div class="prod-price">$99</div></div>
         <div class="prod-sub">First cleared to sell · defeats the signature you did not authorise</div>
         <p>Vitni with a harder element and a press gate that is enforced rather than described. It is the same board as the flagship <strong>minus the screen</strong> — which is the whole of the difference in price.</p>
@@ -236,11 +257,21 @@
           <li>Second signing key on the element neutralised as a manufacturing step</li>
           <li>Available with 20 TamperVerify seals as the Attested Fulfilment Starter — $119</li>
         </ul>
-        <div class="why">The only fleet with a signed sale authorisation. A pilot run of three articles, not a catalogue item — each is hand-built and individually gated before it ships.</div>
-        <div class="prod-foot"><a class="btn-ghost" href="#notify">Notify me</a></div>
+        <div class="why">The only fleet with a signed sale authorisation. A pilot run of three articles, not a catalogue item — each is hand-built and individually gated before it ships. When the three are gone, this button goes and the badge comes back.</div>
+        <div class="prod-foot">
+          <a class="btn" href="https://buy.stripe.com/fZu14m9my60U1BdeV4a7C02" rel="noopener">Buy — $99</a>
+          <a class="btn" href="https://buy.stripe.com/bJe14m1U69d65Rt8wGa7C03" rel="noopener">Starter with 20 seals — $119</a>
+          <a class="btn-ghost" href="https://shop.zknot.io/products/vitni-plus" rel="noopener">Buy on Shopify ↗</a>
+        </div>
+        <p class="buy-note">Card checkout by Stripe · US shipping $5 flat · <a href="/shipping">shipping</a> · <a href="/returns">returns</a> · try one first at <a href="https://verifyknot.io/start">verifyknot.io/start</a></p>
       </div>
 
-      <div class="prod">
+      <div class="prod" id="ostensor">
+        <picture class="prod-img">
+          <source srcset="/img/products/ostensor/hero.avif" type="image/avif">
+          <source srcset="/img/products/ostensor/hero.webp" type="image/webp">
+          <img src="/img/products/ostensor/hero.jpg" width="1200" height="642" alt="Ostensor: a potted board in clear resin with a small dark display, the MCU, and a push button beside the screen" loading="lazy">
+        </picture>
         <div class="prod-top"><h3>Ostensor</h3><div class="prod-price">$129</div></div>
         <div class="prod-sub">Flagship · defeats deception at signing time</div>
         <p>Latin, <em>one who shows</em>. The only device in the line that addresses the hardest problem: <strong>what you were shown is what actually got signed.</strong></p>
@@ -251,7 +282,7 @@
           <li>One physical press permits at most one signature</li>
         </ul>
         <div class="why">Blocked: the security hardening that makes the above enforceable is not yet switched on in shipped units. Proven on the bench, not in a product.</div>
-        <div class="prod-foot"><a class="btn-ghost" href="#notify">Notify me</a></div>
+        <div class="prod-foot"><a class="btn-ghost" href="mailto:ops@zknot.io?subject=Notify%20me%20when%20it%20ships%3A%20Ostensor">Notify me</a></div>
       </div>
 
       <div class="prod">
@@ -260,10 +291,11 @@
         <p>A monstrance and an ostensorium are the same object — the vessel that holds something up so a room can see it.</p>
         <p>The hardened tier, intended for rotating keys and tamper-responsive erasure so that physically attacking a device destroys what it was protecting. <strong>Request-only, and there is no hardware yet</strong> — not a catalogue item and not pretending to be one.</p>
         <div class="why">No article exists. No hardware has been selected. This describes intent, not capability.</div>
-        <div class="prod-foot"><a class="btn-ghost" href="#notify">Enquire</a></div>
+        <div class="prod-foot"><a class="btn-ghost" href="mailto:ops@zknot.io?subject=Monstrance%20enquiry">Enquire</a></div>
       </div>
 
     </div>
+    <p class="photo-note">Bench photographs of the actual articles, 2026-09-18 — un-retouched, on the workbench they were built at. Studio images follow.</p>
   </div></section>
 
   <!-- BOUNDARY -->
@@ -276,7 +308,7 @@
       <p><strong>Every record today sits at the bottom of the ladder.</strong> Not one ZKNOT record has reached level 3. The devices are built for it; the provisioning is not shipped.</p>
       <p><strong>The time on a record is ours.</strong> No ZKNOT record's timestamp is confirmed by an outside authority. That's a property of the <a href="/rails" style="color:var(--accent);text-decoration:none;">rails</a>, and it applies here too.</p>
       <p><strong>Tamper-evident, not tamper-proof.</strong> Nothing here prevents a determined attacker with physical possession — it makes the attempt detectable.</p>
-      <p style="color:var(--text);"><strong>Want to be told when one of these actually ships?</strong> Write to us and say which. We'll tell you what cleared and what's still open, in the same words we use here.</p>
+      <p style="color:var(--text);"><strong>Want to be told when one of these actually ships?</strong> <a href="/contact" style="color:var(--accent);text-decoration:none;">Write to us</a> and say which. We'll tell you what cleared and what's still open, in the same words we use here.</p>
     </div>
   </div></section>
 
@@ -313,8 +345,11 @@
     <a href="https://verifyknot.io">verifyknot.io</a>
     <a href="/docs">Docs</a>
     <a href="/about">About</a>
+    <a href="/contact">Contact</a>
     <a href="/terms">Terms</a>
     <a href="/privacy">Privacy</a>
+    <a href="/shipping">Shipping</a>
+    <a href="/returns">Returns</a>
   </div>
 </div></footer>
 

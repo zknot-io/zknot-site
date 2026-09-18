@@ -1,0 +1,16 @@
+# stripe-links.psv — the Stripe objects behind every Buy button on zknot.io.
+# Created 2026-09-18 on acct_1TRgW6C0q3GgEvbO (ZKNOT Inc., LIVE). Shipping on every
+# link: shr_1UH5NVC0q3GgEvbOkSYVvpXk "USPS with tracking (US only)" $5 flat, US only.
+# After completion every link redirects to https://zknot.io/thanks.
+# Read by check-price-sources.sh. `expected` is the ruled price in whole dollars.
+# shopify_handle "-" = not listed on shop.zknot.io.
+sku|page|shopify_handle|stripe_payment_link|stripe_link_url|expected_usd
+POWERVERIFY-CBL|verifiables.html|powerverify|plink_1UH5OJC0q3GgEvbOCGFb5yGq|https://buy.stripe.com/aFa5kC56i4WQcfR7sCa7C00|39
+POWERVERIFY-CPL|verifiables.html|powerverify-coupler|plink_1UH5ObC0q3GgEvbO0eejd2qk|https://buy.stripe.com/3cI9AS1U6dtm1Bd8wGa7C01|29
+VITNI-PLUS|attestation.html|vitni-plus|plink_1UH5OmC0q3GgEvbOfuA8l5s2|https://buy.stripe.com/fZu14m9my60U1BdeV4a7C02|99
+STARTER-VPLUS-TV20|attestation.html|-|plink_1UH5OxC0q3GgEvbOtuLNDmoH|https://buy.stripe.com/bJe14m1U69d65Rt8wGa7C03|119
+# product / price ids, for the record:
+# POWERVERIFY-CBL     prod_VHe4fHtbQZ6SLC  price_1UH4m1C0q3GgEvbOEsEqJg4Y  https://buy.stripe.com/aFa5kC56i4WQcfR7sCa7C00
+# POWERVERIFY-CPL     prod_VHe4DruXS1Z0yj  price_1UH4mDC0q3GgEvbOzFSphNbP  https://buy.stripe.com/3cI9AS1U6dtm1Bd8wGa7C01
+# VITNI-PLUS          prod_VHe4cz0vmYdsIZ  price_1UH4mNC0q3GgEvbO0b1h9mvl  https://buy.stripe.com/fZu14m9my60U1BdeV4a7C02
+# STARTER-VPLUS-TV20  prod_VHe464V0c2MYaT  price_1UH4mXC0q3GgEvbO2Y2K5YNk  https://buy.stripe.com/bJe14m1U69d65Rt8wGa7C03
