@@ -138,3 +138,28 @@
   --red:       #ff5252;
   --red-dim:   #ff525222;
 }
+
+/* ---------------------------------------------------------------------------
+   BODY LINKS — added 2026-09-18 (D-N4, ruled global).
+   Eight pages had content <a> elements with no colour rule of any kind, so
+   they rendered browser-default #0000EE on #0a0b0d: a 2.10:1 contrast, and
+   :visited #551A8B at 1.79:1. /docs alone carried 18 of them. --accent on the
+   default ground measures 8.64:1 (amber 9.5:1, blue 5.35:1 on the vertical
+   pages) and the underline carries the affordance so colour is not the sole
+   cue. Class-bearing links (buttons, nav, footer, breadcrumbs) are excluded so
+   nothing already designed changes, and :where() gives the rule ZERO
+   specificity so any page-level anchor rule still wins over it.
+   -------------------------------------------------------------------------*/
+:where(a:not([class]):not(nav a):not(footer a):not(.nav-links a):not(.foot-links a):not(.footer-right a):not(.breadcrumb a)) {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+  text-underline-offset: 2px;
+}
+:where(a:not([class]):not(nav a):not(footer a):not(.nav-links a):not(.foot-links a):not(.footer-right a):not(.breadcrumb a)):visited {
+  color: var(--accent);
+}
+:where(a:not([class]):not(nav a):not(footer a):not(.nav-links a):not(.foot-links a):not(.footer-right a):not(.breadcrumb a)):hover {
+  color: var(--white);
+  text-decoration-color: currentColor;
+}
