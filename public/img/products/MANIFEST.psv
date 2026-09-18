@@ -1,15 +1,18 @@
+# NOTE 2026-09-18: the vault folders are SWAPPED — P-Vitni/Vitni_Pics holds VIT-P1-0003 (a Vitni PLUS)
+# and P-Vitni+/Vitni_Plus_Pics holds VIT-R1-0010 (a Vitni Rev 1). Serials read off the labels.
+# The sku column here is the TRUE article; vault_master is where the frame actually sits.
 sku|role|vault_master|web_px
 powerverify-cable|hero|P-PowerVerify/PowerVerify_Rev1_Pics/PXL_20260918_150824774.jpg|1200x374
 powerverify-cable|label|P-PowerVerify/PowerVerify_Rev1_Pics/PXL_20260918_150842723.jpg|1200x904
 powerverify-cable|board|P-PowerVerify/PowerVerify_Rev1_Pics/PXL_20260918_150831453.jpg|1098x1200
 powerverify-coupler|hero|P-PowerVerify/PowerVerify_Rev2_Pics/PXL_20260918_150721890.jpg|870x1200
 powerverify-coupler|label|P-PowerVerify/PowerVerify_Rev2_Pics/PXL_20260918_150750017.jpg|1200x912
-vitni|hero|P-Vitni/Vitni_Pics/PXL_20260918_150629786.jpg|715x1200
-vitni|label|P-Vitni/Vitni_Pics/PXL_20260918_150642665.jpg|455x1200
-vitni|detail|P-Vitni/Vitni_Pics/PXL_20260918_150657383.jpg|888x1200
-vitni-plus|hero|P-Vitni+/Vitni_Plus_Pics/PXL_20260918_150519826.jpg|440x1200
-vitni-plus|label|P-Vitni+/Vitni_Plus_Pics/PXL_20260918_150534085.jpg|656x1200
-vitni-plus|detail|P-Vitni+/Vitni_Plus_Pics/PXL_20260918_150548812.jpg|1200x832
+vitni-plus|hero|P-Vitni/Vitni_Pics/PXL_20260918_150629786.jpg|715x1200
+vitni-plus|label|P-Vitni/Vitni_Pics/PXL_20260918_150642665.jpg|455x1200
+vitni-plus|detail|P-Vitni/Vitni_Pics/PXL_20260918_150657383.jpg|888x1200
+vitni|hero|P-Vitni+/Vitni_Plus_Pics/PXL_20260918_150519826.jpg|440x1200
+vitni|label|P-Vitni+/Vitni_Plus_Pics/PXL_20260918_150534085.jpg|656x1200
+vitni|detail|P-Vitni+/Vitni_Plus_Pics/PXL_20260918_150548812.jpg|1200x832
 selfknot|hero|P-SelfKnot/SelfKnot_Pics/PXL_20260918_153134020.jpg|1200x726
 selfknot|label|P-SelfKnot/SelfKnot_Pics/PXL_20260918_153142528.jpg|1200x668
 ostensor|hero|P-Ostensor/Ostrensor_Pics/PXL_20260918_153630534.jpg|1200x642
