@@ -138,10 +138,10 @@
   <!-- STATUS FIRST — the honest one -->
   <section><div class="wrap">
     <div class="status-banner">
-      <div class="section-label" style="color:var(--amber);">Where this line stands</div>
-      <h2>One of these ships today. Four do not.</h2>
-      <p>We would rather you learn that here than after a checkout. Every device below exists as hardware — boards are built, silicon is proven. <strong>Vitni Plus is the one fleet with a signed sale authorisation</strong>, and it is a pilot run of three hand-built articles, each gated individually before it ships. It has a price and a buy button below.</p>
-      <p>The other four say exactly what is blocking them. Some of it is hardware, most of it is not. When one clears, it gets a price and a buy button on this page and not before.</p>
+      <div class="section-label" style="color:var(--accent);">Where this line stands</div>
+      <h2>Four of these ship today. One is by contract.</h2>
+      <p>Every device below exists as hardware — boards are built, silicon is proven, and each article is hand-built and individually checked before it leaves. <strong>SelfKnot, Vitni, Vitni Plus and Ostensor have a price and a buy button.</strong> These are small runs, not a warehouse: when a run is gone the button goes and a badge comes back until the next one.</p>
+      <p>Each card still says what its current revision does and does not enforce. We would rather you read that here than discover it after a checkout.</p>
       <p style="color:var(--text);"><strong>If you want the thing that works today, it's the <a href="/verifiables" style="color:var(--accent);text-decoration:none;">Verifiables line</a> — no keys, no provisioning, nothing to wait for.</strong></p>
     </div>
   </div></section>
@@ -219,8 +219,12 @@
           <li>Potted · $59</li>
           <li>No confirm button — it makes no human-presence claim</li>
         </ul>
-        <div class="why">Blocked: chip-limited production run, and no built unit yet has a record on the rail.</div>
-        <div class="prod-foot"><a class="btn-ghost" href="mailto:ops@zknot.io?subject=Notify%20me%20when%20it%20ships%3A%20SelfKnot">Notify me</a></div>
+        <div class="why">Small run — the secure element is the supply constraint, so quantities are limited per batch.</div>
+        <div class="prod-foot">
+          <a class="btn" href="https://buy.stripe.com/3cI28qeGS9d693FcMWa7C04" rel="noopener">Buy — $59</a>
+          <a class="btn-ghost" href="https://shop.zknot.io/products/selfknot" rel="noopener">Buy on Shopify ↗</a>
+        </div>
+        <p class="buy-note">Card checkout by Stripe · US shipping $5 flat · <a href="/shipping">shipping</a> · <a href="/returns">returns</a></p>
       </div>
 
       <div class="prod" id="vitni">
@@ -237,8 +241,12 @@
           <li>Firmware locked — not user-replaceable</li>
           <li>Built for a hardware-rooted device identity on the rail</li>
         </ul>
-        <div class="why">Not authorised for sale. Rev 1 boards are built and the rail can issue them an identity — but Rev 1 silk asserts a press gate its copper does not implement, so no Rev 1 article is cleared to sell. Repaired forward in Rev 2.</div>
-        <div class="prod-foot"><a class="btn-ghost" href="mailto:ops@zknot.io?subject=Notify%20me%20when%20it%20ships%3A%20Vitni">Notify me</a></div>
+        <div class="why">Shipping revision is Rev 1. Read before buying: the Rev 1 silkscreen labels the button as a press gate, and on this revision the copper does not enforce one — the button is not a signing gate here. If you need an enforced press gate, that is Vitni Plus. Repaired forward in Rev 2.</div>
+        <div class="prod-foot">
+          <a class="btn" href="https://buy.stripe.com/28EdR88iu8925Rt3cma7C05" rel="noopener">Buy — $79</a>
+          <a class="btn-ghost" href="https://shop.zknot.io/products/vitni" rel="noopener">Buy on Shopify ↗</a>
+        </div>
+        <p class="buy-note">Card checkout by Stripe · US shipping $5 flat · <a href="/shipping">shipping</a> · <a href="/returns">returns</a></p>
       </div>
 
       <div class="prod" id="vitni-plus">
@@ -257,7 +265,7 @@
           <li>Second signing key on the element neutralised as a manufacturing step</li>
           <li>Available with 20 TamperVerify seals as the Attested Fulfilment Starter — $119</li>
         </ul>
-        <div class="why">The only fleet with a signed sale authorisation. A pilot run of three articles, not a catalogue item — each is hand-built and individually gated before it ships. When the three are gone, this button goes and the badge comes back.</div>
+        <div class="why">A pilot run of three articles, not a catalogue item — each is hand-built and individually gated before it ships. When the three are gone, this button goes and the badge comes back.</div>
         <div class="prod-foot">
           <a class="btn" href="https://buy.stripe.com/fZu14m9my60U1BdeV4a7C02" rel="noopener">Buy — $99</a>
           <a class="btn" href="https://buy.stripe.com/bJe14m1U69d65Rt8wGa7C03" rel="noopener">Starter with 20 seals — $119</a>
@@ -272,7 +280,7 @@
           <source srcset="/img/products/ostensor/hero.webp" type="image/webp">
           <img src="/img/products/ostensor/hero.jpg" width="1200" height="642" alt="Ostensor: a potted board in clear resin with a small dark display, the MCU, and a push button beside the screen" loading="lazy">
         </picture>
-        <div class="prod-top"><h3>Ostensor</h3><div class="prod-price">$129</div></div>
+        <div class="prod-top"><h3>Ostensor</h3><div class="prod-price">$199 potted · $179 bare</div></div>
         <div class="prod-sub">Flagship · defeats deception at signing time</div>
         <p>Latin, <em>one who shows</em>. The only device in the line that addresses the hardest problem: <strong>what you were shown is what actually got signed.</strong></p>
         <p>A secure domain owns both the display and the key, so a compromised application can't show you one thing and sign another. This mechanism is proven in silicon on the bench — and it is the <strong>only</strong> device here that carries it.</p>
@@ -281,8 +289,13 @@
           <li>Show-then-confirm: the display and the key share one secure domain</li>
           <li>One physical press permits at most one signature</li>
         </ul>
-        <div class="why">Blocked: the security hardening that makes the above enforceable is not yet switched on in shipped units. Proven on the bench, not in a product.</div>
-        <div class="prod-foot"><a class="btn-ghost" href="mailto:ops@zknot.io?subject=Notify%20me%20when%20it%20ships%3A%20Ostensor">Notify me</a></div>
+        <div class="why">Read before buying: show-then-confirm is proven on the bench. On shipping units the security hardening that would make it enforceable against a compromised application is not yet switched on — the mechanism is present, the lock is not. We say which when it changes.</div>
+        <div class="prod-foot">
+          <a class="btn" href="https://buy.stripe.com/8x200i42e9d60x914ea7C06" rel="noopener">Buy potted — $199</a>
+          <a class="btn" href="https://buy.stripe.com/dRmdR8cyK60U5RtaEOa7C07" rel="noopener">Buy bare board — $179</a>
+          <a class="btn-ghost" href="https://shop.zknot.io/products/ostensor-potted" rel="noopener">Buy on Shopify ↗</a>
+        </div>
+        <p class="buy-note">Potted = cast in clear resin like the rest of the line. Bare = the same board unpotted, for people who want to inspect or mount it themselves. Card checkout by Stripe · US shipping $5 flat · <a href="/shipping">shipping</a> · <a href="/returns">returns</a></p>
       </div>
 
       <div class="prod">
@@ -302,13 +315,13 @@
   <section id="notify"><div class="wrap">
     <div class="boundary">
       <div class="section-label">What these do not do</div>
-      <h3>Stated before you wait for one.</h3>
+      <h3>Stated before you buy one.</h3>
       <p><strong>A signature proves less than people assume.</strong> It shows a specific key signed specific bytes. On its own it does not show who held the key, that a person was present, that anyone approved anything, or that the contents are true. Each rung above adds one of those, and we say which.</p>
       <p><strong>Only Ostensor addresses show-then-confirm.</strong> SelfKnot has no confirm button. Vitni's current revision supports no human-presence claim. If someone tells you a device proves a human approved something, ask which part of the hardware enforces that — and we'll answer the same question about ours.</p>
       <p><strong>Every record today sits at the bottom of the ladder.</strong> Not one ZKNOT record has reached level 3. The devices are built for it; the provisioning is not shipped.</p>
       <p><strong>The time on a record is ours.</strong> No ZKNOT record's timestamp is confirmed by an outside authority. That's a property of the <a href="/rails" style="color:var(--accent);text-decoration:none;">rails</a>, and it applies here too.</p>
       <p><strong>Tamper-evident, not tamper-proof.</strong> Nothing here prevents a determined attacker with physical possession — it makes the attempt detectable.</p>
-      <p style="color:var(--text);"><strong>Want to be told when one of these actually ships?</strong> <a href="/contact" style="color:var(--accent);text-decoration:none;">Write to us</a> and say which. We'll tell you what cleared and what's still open, in the same words we use here.</p>
+      <p style="color:var(--text);"><strong>Buying more than one, or for an organisation?</strong> <a href="/contact" style="color:var(--accent);text-decoration:none;">Write to us</a> — runs are small and we would rather plan a batch with you than sell out under you.</p>
     </div>
   </div></section>
 

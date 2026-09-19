@@ -14,3 +14,13 @@ STARTER-VPLUS-TV20|attestation.html|-|plink_1UH5OxC0q3GgEvbOtuLNDmoH|https://buy
 # POWERVERIFY-CPL     prod_VHe4DruXS1Z0yj  price_1UH4mDC0q3GgEvbOzFSphNbP  https://buy.stripe.com/3cI9AS1U6dtm1Bd8wGa7C01
 # VITNI-PLUS          prod_VHe4cz0vmYdsIZ  price_1UH4mNC0q3GgEvbO0b1h9mvl  https://buy.stripe.com/fZu14m9my60U1BdeV4a7C02
 # STARTER-VPLUS-TV20  prod_VHe464V0c2MYaT  price_1UH4mXC0q3GgEvbO2Y2K5YNk  https://buy.stripe.com/bJe14m1U69d65Rt8wGa7C03
+# 2026-09-19 — operator ruling 2026-09-18 evening: every attestation device ships (SC-8)
+SELFKNOT|attestation.html|selfknot|plink_1UHOCzC0q3GgEvbOJaRvNNEF|https://buy.stripe.com/3cI28qeGS9d693FcMWa7C04|59
+VITNI|attestation.html|vitni|plink_1UHODBC0q3GgEvbOyRi619ul|https://buy.stripe.com/28EdR88iu8925Rt3cma7C05|79
+# SELFKNOT  prod_VHy7t5kPfFb0NW  price_1UHOBEC0q3GgEvbOeFexpXSG
+# VITNI     prod_VHy8wFkgpo0eK0  price_1UHOBqC0q3GgEvbOn1q3DZEt   (Rev 1)
+OSTENSOR-POTTED|attestation.html|ostensor-potted|plink_1UHQK4C0q3GgEvbOWGeP0jCj|https://buy.stripe.com/8x200i42e9d60x914ea7C06|199
+OSTENSOR-BARE|attestation.html|ostensor|plink_1UHQKSC0q3GgEvbO0YI2KYJZ|https://buy.stripe.com/dRmdR8cyK60U5RtaEOa7C07|179
+# OSTENSOR-POTTED  prod_VHy9bkwXpSiPrD  price_1UHQIdC0q3GgEvbOsdv9mxgV ($199; the $129 price_1UHOCmC0q3GgEvbOU01MyKDR is superseded, never linked)
+# OSTENSOR-BARE    prod_VI0Ka0lLrrE0MQ  price_1UHQJfC0q3GgEvbODV2UDTJq ($179)
+# 2026-09-19 operator ruling: Ostensor $199 potted / $179 bare supersedes the $129 of DECISION-NAMING-RESOLUTION-001 §7
