@@ -46,6 +46,12 @@ const ROUTES = {
   "/verticals/law-enforcement":    "/law-enforcement.html",
   "/verticals/election-integrity": "/vertical-election.html",
 
+  // Standards & audit evidence — added 2026-10-06. Organised by the evidence a
+  // customer owes rather than by SKU, deliberately: the per-product claim set is
+  // the catalog's job, and splitting this by product reproduces it badly.
+  "/standards":  "/standards.html",
+  "/compliance": "/standards.html",
+
   // Core pages
   "/about":   "/about.html",
   "/docs":    "/docs.html",

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en" data-accent="amber">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Standards &amp; Audit Evidence — ZKNOT™</title>
+  <meta name="description" content="ZKNOT™ does not certify you. It produces records a third party can verify, and every record states its own assurance level — including what it does not prove." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/zknot-tokens.css"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+    body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.4;}
+
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:64px;background:rgba(10,11,13,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+    .nav-logo-text{font-family:var(--display);font-size:18px;font-weight:800;letter-spacing:0.05em;color:var(--text);}
+    .nav-logo-text sup{font-size:10px;font-weight:400;color:var(--text-muted);vertical-align:super;}
+    .nav-links{display:flex;align-items:center;gap:32px;list-style:none;}
+    .nav-links a{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color 0.2s;}
+    .nav-links a:hover,.nav-links a.active{color:var(--text);}
+    .nav-cta{color:var(--green)!important;border:1px solid rgba(34,197,94,0.3);padding:6px 16px;border-radius:2px;}
+    .nav-cta:hover{color:#000!important;background:var(--green)!important;}
+    .breadcrumb{position:fixed;top:64px;left:0;right:0;z-index:99;padding:10px 40px;background:rgba(10,11,13,0.7);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:0.1em;color:var(--text-muted);}
+    .breadcrumb a{color:var(--text-muted);text-decoration:none;}
+    .breadcrumb .sep{opacity:0.3;}
+    .breadcrumb .current{color:var(--accent);}
+
+    .hero{padding:170px 40px 80px;position:relative;overflow:hidden;}
+    .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse 80% 60% at 50% 30%,black 20%,transparent 100%);}
+    .hero-inner{position:relative;max-width:900px;margin:0 auto;width:100%;}
+    .vertical-tag{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:24px;}
+    .vertical-tag::before{content:'';width:20px;height:1px;background:var(--accent);}
+    h1{font-family:var(--display);font-size:clamp(36px,5.4vw,64px);font-weight:800;letter-spacing:-0.025em;line-height:1.04;margin-bottom:28px;}
+    h1 .em{color:var(--accent);}
+    .hero-sub{font-size:18px;color:var(--text-muted);line-height:1.75;max-width:680px;margin-bottom:20px;}
+    .hero-sub strong{color:var(--text);font-weight:500;}
+    .hero-actions{display:flex;gap:16px;flex-wrap:wrap;margin-top:36px;}
+    .btn-primary{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:13px;letter-spacing:0.06em;font-weight:500;color:#000;background:var(--accent);border:none;padding:13px 26px;border-radius:2px;text-decoration:none;transition:all 0.2s;}
+    .btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 32px var(--accent-glow);}
+    .btn-secondary{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:13px;letter-spacing:0.06em;color:var(--text-muted);background:transparent;border:1px solid var(--border);padding:13px 26px;border-radius:2px;text-decoration:none;transition:all 0.2s;}
+    .btn-secondary:hover{color:var(--text);border-color:var(--border-active);}
+
+    section{padding:88px 40px;border-top:1px solid var(--border);}
+    .section-inner{max-width:900px;margin:0 auto;}
+    .section-label{font-family:var(--mono);font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:18px;}
+    .section-title{font-family:var(--display);font-size:clamp(26px,3.4vw,38px);font-weight:700;letter-spacing:-0.02em;line-height:1.15;margin-bottom:20px;}
+    .section-lede{font-size:17px;color:var(--text-muted);line-height:1.75;margin-bottom:44px;max-width:680px;}
+    .section-lede strong{color:var(--text);font-weight:500;}
+
+    .q-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;}
+    .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:3px;padding:26px;}
+    .q-num{font-family:var(--mono);font-size:10px;letter-spacing:0.12em;color:var(--accent);margin-bottom:12px;}
+    .q-ask{font-family:var(--display);font-size:17px;font-weight:700;margin-bottom:10px;line-height:1.3;}
+    .q-ans{font-size:14.5px;color:var(--text-muted);line-height:1.7;}
+
+    .ladder{display:flex;flex-direction:column;gap:2px;}
+    .rung{background:var(--bg-card);border:1px solid var(--border);border-left:2px solid var(--border-active);border-radius:3px;padding:22px 26px;}
+    .rung-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:14px;}
+    .rung-name{font-family:var(--mono);font-size:13px;letter-spacing:0.1em;color:var(--accent);font-weight:500;}
+    .rung-step{font-family:var(--mono);font-size:10px;letter-spacing:0.12em;color:var(--text-muted);}
+    .rung-row{display:grid;grid-template-columns:116px 1fr;gap:14px;padding:9px 0;border-top:1px solid var(--border);font-size:14.5px;line-height:1.65;}
+    .rung-k{font-family:var(--mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);padding-top:3px;}
+    .rung-v{color:var(--text);}
+    .rung-row.limit .rung-v{color:var(--text-muted);}
+    .rung-row.limit .rung-k{color:#f59e0b;}
+
+    .frame-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;}
+    .frame-card{background:var(--bg-card);border:1px solid var(--border);border-radius:3px;padding:24px;}
+    .frame-need{font-family:var(--display);font-size:16px;font-weight:700;margin-bottom:10px;}
+    .frame-body{font-size:14.5px;color:var(--text-muted);line-height:1.7;margin-bottom:14px;}
+    .frame-tags{display:flex;gap:6px;flex-wrap:wrap;}
+    .tag{font-family:var(--mono);font-size:10px;letter-spacing:0.06em;color:var(--text-muted);border:1px solid var(--border);border-radius:2px;padding:4px 9px;}
+
+    .yard{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;}
+    .yard-card{background:var(--bg-card);border:1px solid var(--border);border-radius:3px;padding:20px;}
+    .yard-std{font-family:var(--mono);font-size:12px;color:var(--accent);margin-bottom:8px;letter-spacing:0.04em;}
+    .yard-why{font-size:13.5px;color:var(--text-muted);line-height:1.65;}
+
+    .limits{background:var(--bg-card);border:1px solid rgba(245,158,11,0.28);border-radius:3px;padding:30px 32px;}
+    .limits ul{list-style:none;}
+    .limits li{position:relative;padding:11px 0 11px 26px;border-bottom:1px solid var(--border);font-size:15px;line-height:1.7;color:var(--text-muted);}
+    .limits li:last-child{border-bottom:none;}
+    .limits li::before{content:'—';position:absolute;left:0;color:#f59e0b;font-family:var(--mono);}
+    .limits li strong{color:var(--text);font-weight:500;}
+
+    .cta{text-align:center;}
+    .cta .section-title{margin-bottom:16px;}
+    .cta-sub{font-size:16px;color:var(--text-muted);max-width:560px;margin:0 auto 32px;line-height:1.75;}
+    .cta-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+
+    footer{padding:48px 40px;border-top:1px solid var(--border);}
+    .footer-inner{max-width:900px;margin:0 auto;display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap;}
+    .footer-brand{font-family:var(--display);font-size:16px;font-weight:800;letter-spacing:0.05em;margin-bottom:8px;}
+    .footer-meta{font-family:var(--mono);font-size:11px;color:var(--text-muted);line-height:1.8;}
+    .footer-right{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start;}
+    .footer-right a{font-family:var(--mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);text-decoration:none;}
+    .footer-right a:hover{color:var(--text);}
+
+    @media(max-width:860px){
+      nav{padding:0 20px;}
+      .nav-links{gap:16px;}
+      .nav-links li:nth-child(-n+3){display:none;}
+      .breadcrumb{padding:10px 20px;}
+      section,.hero{padding-left:20px;padding-right:20px;}
+      .hero{padding-top:150px;}
+      .q-grid,.frame-grid,.yard{grid-template-columns:1fr;}
+      .rung-row{grid-template-columns:1fr;gap:4px;}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="2" fill="#111318"/><path d="M8 8L16 16L24 8" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 24L16 16L24 24" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><circle cx="16" cy="16" r="2.5" fill="#22c55e"/></svg>
+    <span class="nav-logo-text">ZKNOT<sup>&trade;</sup></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/#products">Products</a></li>
+    <li><a href="/protocol">Protocol</a></li>
+    <li><a href="/standards" class="active">Standards</a></li>
+    <li><a href="/docs">Docs</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="/contact" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="breadcrumb">
+  <a href="/">Home</a><span class="sep">/</span><span class="current">Standards &amp; audit evidence</span>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="vertical-tag">For compliance, quality and audit teams</div>
+    <h1>We don't certify you.<br/>We produce evidence<br/><span class="em">that states its own strength.</span></h1>
+    <p class="hero-sub">
+      No device makes an organisation compliant. Auditors don't accept hardware — they accept
+      <strong>records</strong>, and they ask the same four questions of every one.
+    </p>
+    <p class="hero-sub">
+      Every ZKNOT product writes to one public verification rail, and every record on it carries
+      an <strong>assurance tier that declares what it proves and what it does not</strong>. That
+      second half is the unusual part, and it is the half an auditor actually needs.
+    </p>
+    <div class="hero-actions">
+      <a href="/contact" class="btn-primary">Talk about your framework →</a>
+      <a href="https://verifyknot.io" class="btn-secondary" rel="noopener">See a record verified</a>
+    </div>
+  </div>
+</section>
+
+<!-- THE FOUR QUESTIONS -->
+<section>
+  <div class="section-inner">
+    <div class="section-label">The problem</div>
+    <h2 class="section-title">Four questions an auditor asks of any record.</h2>
+    <p class="section-lede">
+      Frameworks differ enormously in scope and wording, but the evidentiary core repeats. A paper
+      log, a spreadsheet, and a database row all fail in the same places: they are assertions by the
+      party being audited, and nothing outside that party can test them.
+    </p>
+    <div class="q-grid">
+      <div class="q-card">
+        <div class="q-num">01</div>
+        <div class="q-ask">What exactly happened?</div>
+        <div class="q-ans">Not a summary written afterwards. The specific bytes — the file, the reading, the image — fixed at the moment of the event, so that "the thing we attested" cannot quietly become a different thing.</div>
+      </div>
+      <div class="q-card">
+        <div class="q-num">02</div>
+        <div class="q-ask">What asserted it, and is that thing identifiable?</div>
+        <div class="q-ans">A signature is only as meaningful as the identity behind the key. The honest question is not "is it signed" but "whose key, and who vouches for that key — you, or someone else?"</div>
+      </div>
+      <div class="q-card">
+        <div class="q-num">03</div>
+        <div class="q-ask">Has it changed since?</div>
+        <div class="q-ans">Records are hash-chained: each entry commits to the one before it. A record altered after the fact no longer matches the chain, and the mismatch is visible to anyone checking — not only to the vendor.</div>
+      </div>
+      <div class="q-card">
+        <div class="q-num">04</div>
+        <div class="q-ask">Can someone outside check it?</div>
+        <div class="q-ans">Verification runs in the reader's own browser against a public endpoint. An auditor, a counterparty, or an opposing expert can check a record without an account, without asking you, and without taking ZKNOT's word for the signature math.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THE LADDER -->
+<section>
+  <div class="section-inner">
+    <div class="section-label">The assurance ladder</div>
+    <h2 class="section-title">Every record declares its own tier — including the limits.</h2>
+    <p class="section-lede">
+      Most security vendors publish what their product proves. The tier text below is what the
+      verifier shows a reader, verbatim, and <strong>each rung carries a &ldquo;does not prove&rdquo;
+      line</strong>. A weak record is not dressed up as a strong one, which means evidence you
+      present is evidence you can defend when someone pushes on it.
+    </p>
+    <div class="ladder">
+
+      <div class="rung">
+        <div class="rung-head"><div class="rung-name">SELF-ASSERTED</div><div class="rung-step">Rung 1</div></div>
+        <div class="rung-row"><div class="rung-k">Proves</div><div class="rung-v">A signature exists that verifies against the public key carried in this record.</div></div>
+        <div class="rung-row limit"><div class="rung-k">Does not prove</div><div class="rung-v">Nothing about who holds that key. The owner is whoever the record claims; no independent party vouches for it.</div></div>
+      </div>
+
+      <div class="rung">
+        <div class="rung-head"><div class="rung-name">REGISTRY-ASSERTED</div><div class="rung-step">Rung 2</div></div>
+        <div class="rung-row"><div class="rung-k">Proves</div><div class="rung-v">The record was signed by ZKNOT's registry key. The registry vouches that this registration exists and has not been altered.</div></div>
+        <div class="rung-row limit"><div class="rung-k">Does not prove</div><div class="rung-v">That an independent device with its own secure element signed it. It is not a device-held key and not a human-presence event.</div></div>
+      </div>
+
+      <div class="rung">
+        <div class="rung-head"><div class="rung-name">KEY-REGISTERED</div><div class="rung-step">Rung 3</div></div>
+        <div class="rung-row"><div class="rung-k">Proves</div><div class="rung-v">The key that signed this is on file in the ZKNOT registry and was generated inside a secure element it has never left. The registry vouches for the key.</div></div>
+        <div class="rung-row limit"><div class="rung-k">Does not prove</div><div class="rung-v">That ZKNOT vouches for the device holding it. The key is on file; the machine around it is not attested, and a modified unit signs with the same registered key.</div></div>
+      </div>
+
+      <div class="rung">
+        <div class="rung-head"><div class="rung-name">REGISTERED</div><div class="rung-step">Rung 4</div></div>
+        <div class="rung-row"><div class="rung-k">Proves</div><div class="rung-v">The signing device's own keypair is on file in the ZKNOT registry.</div></div>
+        <div class="rung-row limit"><div class="rung-k">Does not prove</div><div class="rung-v">An X.509 CA certificate chain — none was verified. Registration vouches for the key; what surrounds the key is a property of the specific product, stated in that product's own claims and not by this rung.</div></div>
+      </div>
+
+      <div class="rung">
+        <div class="rung-head"><div class="rung-name">PUBLISHING-WITNESS</div><div class="rung-step">Rung 5</div></div>
+        <div class="rung-row"><div class="rung-k">Proves</div><div class="rung-v">The signature was produced by the secure element inside a designated witness device whose key ZKNOT vouches for. It commits to the SHA-256 of the attested bytes, so it also fixes the content: change one byte and the record no longer matches.</div></div>
+        <div class="rung-row limit"><div class="rung-k">Does not prove</div><div class="rung-v">That any person was present, was shown the content, or approved anything. It is a witness, not a gate — nothing about who wrote the content, whether it is true, or what may be done with it.</div></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- WHERE IT FITS -->
+<section>
+  <div class="section-inner">
+    <div class="section-label">Where it fits</div>
+    <h2 class="section-title">Organised by the evidence you owe, not by our product line.</h2>
+    <p class="section-lede">
+      Frameworks our customers work under are listed for orientation only. <strong>ZKNOT produces
+      the record; your auditor decides whether it satisfies a given control.</strong> We make no
+      representation that any product satisfies any clause of any framework, and we are not a
+      certification body or a testing laboratory.
+    </p>
+    <div class="frame-grid">
+      <div class="frame-card">
+        <div class="frame-need">Chain of custody</div>
+        <div class="frame-body">Who held the item, and when did it change hands. A signed record at each handoff, chained so a later edit is detectable, and checkable by the receiving party rather than asserted by the sender.</div>
+        <div class="frame-tags"><span class="tag">custody logs</span><span class="tag">handoff records</span><span class="tag">evidence transfer</span></div>
+      </div>
+      <div class="frame-card">
+        <div class="frame-need">Tamper evidence on a physical item</div>
+        <div class="frame-body">A serialised seal bound to a registry entry. Designed to show whether it has been opened and to let a downstream holder check the serial against the record. Tamper-<em>evident</em> — it reveals interference; it does not prevent it.</div>
+        <div class="frame-tags"><span class="tag">seals</span><span class="tag">receipt inspection</span><span class="tag">returns</span></div>
+      </div>
+      <div class="frame-card">
+        <div class="frame-need">Integrity of a file over time</div>
+        <div class="frame-body">A record committing to the SHA-256 of specific bytes at a stated time. Useful wherever you must later show a document, image or dataset is the one you had then — and recompute the hash yourself to confirm it.</div>
+        <div class="frame-tags"><span class="tag">document retention</span><span class="tag">records integrity</span><span class="tag">disclosure</span></div>
+      </div>
+      <div class="frame-card">
+        <div class="frame-need">Field observations you may have to defend</div>
+        <div class="frame-body">An observation captured and signed where it happened, rather than typed up later. The record states its own tier, so the assurance level is on the face of the evidence instead of being argued afterwards.</div>
+        <div class="frame-tags"><span class="tag">inspections</span><span class="tag">surveys</span><span class="tag">site visits</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- YARDSTICKS -->
+<section>
+  <div class="section-inner">
+    <div class="section-label">Our own yardsticks</div>
+    <h2 class="section-title">The standards we hold ourselves against.</h2>
+    <p class="section-lede">
+      We maintain an internal map of the standard or regulation each product is measured against, so
+      design decisions are argued against a published yardstick rather than our own taste.
+      <strong>Measuring against a standard is not a certification, and nothing below is a claim of
+      conformance or of third-party assessment.</strong> Where a product carries a formal
+      obligation, that is a matter of our paperwork, not a feature of yours.
+    </p>
+    <div class="yard">
+      <div class="yard-card"><div class="yard-std">IETF RFC 9334</div><div class="yard-why">Remote attestation roles — attester, verifier, relying party. We use its vocabulary instead of inventing our own, so our records can be reasoned about with published terms.</div></div>
+      <div class="yard-card"><div class="yard-std">IETF RFC 9162</div><div class="yard-why">The verifiable-log model behind certificate transparency. The yardstick for the property we care most about: that a vendor cannot quietly rewrite its own history.</div></div>
+      <div class="yard-card"><div class="yard-std">IETF RFC 3161</div><div class="yard-why">Time-stamp structure. The shape of "this hash existed at this time" that courts and reviewers already recognise.</div></div>
+      <div class="yard-card"><div class="yard-std">IETF RFC 8785</div><div class="yard-why">JSON canonicalisation. A hash must cover stored bytes, never a value re-rendered at read time — a lesson we learned the expensive way and wrote down.</div></div>
+      <div class="yard-card"><div class="yard-std">ISO 22383</div><div class="yard-why">Performance criteria for authentication solutions. The frame for stating what a physical authentication feature resists, instead of calling it "secure".</div></div>
+      <div class="yard-card"><div class="yard-std">NIST SP 800-57</div><div class="yard-why">Key lifecycle. In particular the distinction between a retired key and a compromised one, which a verifier has to be able to express.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- LIMITS -->
+<section>
+  <div class="section-inner">
+    <div class="section-label">Read this before you cite us</div>
+    <h2 class="section-title">What we do not claim.</h2>
+    <p class="section-lede">
+      This list exists because the fastest way to damage your audit is to carry a vendor's
+      overstatement into it. If a ZKNOT surface ever claims more than this page allows, the surface
+      is wrong — write to us and we will correct it.
+    </p>
+    <div class="limits">
+      <ul>
+        <li><strong>We are not a certification body, testing laboratory, or notified body.</strong> We do not assess, accredit, or certify you or anyone else.</li>
+        <li><strong>No ZKNOT product makes any organisation compliant with any framework.</strong> Controls are satisfied by your processes and judged by your assessor. We supply evidence that enters that judgement.</li>
+        <li><strong>No product is certified to any standard named on this page.</strong> These are yardsticks we measure ourselves against, not certifications we hold.</li>
+        <li><strong>No FIPS claim of any kind</strong> is made for any shipping product. A cryptographic module claim requires a live CMVP validation; we will say so by certificate number if that ever changes.</li>
+        <li><strong>Tamper-evident, never tamper-proof.</strong> A seal is designed to reveal interference. It does not prevent it, and it says nothing about the contents it seals.</li>
+        <li><strong>A signature is not a statement that a human was present</strong> unless the tier says so. Registration vouches for a key; it does not attest the machine around it or anyone standing near it.</li>
+        <li><strong>Registry-vouched is not independently anchored.</strong> Where the only party vouching for a key's identity is ZKNOT, the verifier says exactly that, in those words.</li>
+        <li><strong>We do not hold your data to make verification work.</strong> A verifier re-checks signature math in the reader's browser; you can recompute the hash of your own copy yourself.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="section-inner">
+    <h2 class="section-title">Bring the clause, not the product name.</h2>
+    <p class="cta-sub">
+      The useful conversation starts with the control you have to evidence and who assesses you.
+      We will tell you plainly which tier is reachable today, what it will not prove, and whether
+      that is enough — including when the answer is that it is not.
+    </p>
+    <div class="cta-actions">
+      <a href="/contact" class="btn-primary">Start that conversation →</a>
+      <a href="/docs" class="btn-secondary">Read the docs</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div><div class="footer-brand">ZKNOT&trade;</div><div class="footer-meta">ZKNOT, Inc. — Utah-based SDVOSB · UEI: C4SKW13JPEL5<br/>ops@zknot.io · William Shane Wilkinson, Founder &amp; CEO</div></div>
+    <div class="footer-right"><a href="/">Home</a><a href="/#products">Products</a><a href="/protocol">Protocol</a><a href="https://verifyknot.io">Verify</a><a href="/about">About</a></div>
+  </div>
+</footer>
+
+</body>
+</html>
