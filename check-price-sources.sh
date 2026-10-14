@@ -19,6 +19,8 @@ cd "$(dirname "$0")"
 FAIL=0; INC=0
 
 # sku|page|shopify_handle|stripe_link_id|stripe_link_url|expected_usd
+# shopify_handle may be "handle#Variant title" to check one variant of a multi-variant
+# listing; a bare handle checks the first variant.
 # Stripe link ids are filled from the manifest written when the links were made.
 MANIFEST="stripe-links.psv"
 [ -f "$MANIFEST" ] || { echo "INCONCLUSIVE: $MANIFEST missing"; exit 2; }
@@ -33,9 +35,12 @@ while IFS='|' read -r sku page shopify_handle link_id link_url expected; do
   stripe_cents=$(stripe get "/v1/payment_links/$link_id/line_items" --live 2>/dev/null | python3 -c "import json,sys; d=json.load(sys.stdin); print(sum(li['price']['unit_amount']*li['quantity'] for li in d['data']))" 2>/dev/null)
   # 3. shopify
   shopify=$(printf '%s' "$shop_json" | python3 -c "
-import json,sys; h=sys.argv[1]
+import json,sys; h,_,vt=sys.argv[1].partition('#')
 for p in json.load(sys.stdin)['products']:
-    if p['handle']==h: print(p['variants'][0]['price'].split('.')[0]); break" "$shopify_handle" 2>/dev/null)
+    if p['handle']==h:
+        vs=[v for v in p['variants'] if v['title']==vt] if vt else p['variants'][:1]
+        if vs: print(vs[0]['price'].split('.')[0])
+        break" "$shopify_handle" 2>/dev/null)
 
   line="$sku: rendered=\$${rendered:-?} stripe=\$$(( ${stripe_cents:-0} / 100 )) shopify=\$${shopify:-n/a} expected=\$$expected"
   if [ -z "$rendered" ] || [ -z "$stripe_cents" ]; then echo "  INCONCLUSIVE $line"; INC=$((INC+1)); continue; fi

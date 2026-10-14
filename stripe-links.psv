@@ -36,3 +36,11 @@ ELEMENT-OPTIGA-IC|attestation.html|-|plink_1UQU1pC0q3GgEvbOIvBeKlxc|https://buy.
 # 2026-10-14 — Ciborium founding-run deposit, operator ruling: $49 refundable, take money now. No shipping (nothing ships); billing address + phone collected.
 CIBORIUM-DEPOSIT|ciborium.html|-|plink_1UQUMnC0q3GgEvbOeLMAqcnU|https://buy.stripe.com/dRmaEW1U61KEcfR4gqa7C0c|49
 # CIBORIUM-DEPOSIT  prod_VRN60OhTzJ0xfK  price_1UQUMgC0q3GgEvbOkMcIaMTM
+# 2026-10-14 — TamperVerify on sale. Price DECISION-PRICE-TABLE-001 ($20/10, $30/20, $60/50); ship-ready G12 PASS 2026-08-13;
+# LR-2's "not yet available" lifted by operator 2026-10-14. One Shopify listing, three variants — handle#variant-title selects the variant.
+TAMPERVERIFY-10|verifiables.html|tamperverify#10 seals|plink_1UQUzEC0q3GgEvbOQTQ0hd33|https://buy.stripe.com/5kQ14mfKW2OI3Jl7sCa7C0d|20
+TAMPERVERIFY-20|verifiables.html|tamperverify#20 seals|plink_1UQUzFC0q3GgEvbOAzwfUJdJ|https://buy.stripe.com/14AaEW42egFygw7fZ8a7C0e|30
+TAMPERVERIFY-50|verifiables.html|tamperverify#50 seals|plink_1UQUzGC0q3GgEvbOGjsCfcJP|https://buy.stripe.com/dRm9AS42edtm0x900aa7C0f|60
+# TAMPERVERIFY-10  prod_VRNCW2iAx3mLw2  price_1UQURvC0q3GgEvbOoMi1z5ES
+# TAMPERVERIFY-20  prod_VRNC7SSpPu14or  price_1UQURvC0q3GgEvbOiwLZF8cT
+# TAMPERVERIFY-50  prod_VRNkyZC6V3rBNc  price_1UQUyrC0q3GgEvbOM1uLK3st
