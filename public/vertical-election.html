@@ -138,7 +138,7 @@
     <div class="threat-cell"><div class="threat-label problem">Problem</div><div class="threat-title">Audit logs can be altered by the systems they audit</div><div class="threat-desc">Software logs are written by the same software being audited. An adversary with system access can modify both the evidence and the record of the evidence simultaneously.</div></div>
     <div class="threat-cell"><div class="threat-label solution">ZKNOT™ Solution</div><div class="threat-title">Append-only offline chain, independently verifiable</div><div class="threat-desc"><!-- claims: CHAIN-001, CHAIN-002, CHAIN-003 -->the ZKNOT chain is append-only and hash-linked. Removing or reordering an entry breaks the linkage and the record stops verifying for everyone who checks it — this is tamper-evidence, not technical impossibility. The chain itself is publicly auditable without connecting to any ZKNOT server.</div></div>
     <div class="threat-cell"><div class="threat-label problem">Problem</div><div class="threat-title">Physical seals don't prove sequence</div><div class="threat-desc">Tamper-evident seals record physical intrusion. They cannot prove the seal was applied before the evidence was altered — only that the box was opened.</div></div>
-    <div class="threat-cell"><div class="threat-label solution">ZKNOT™ Solution</div><div class="threat-title">TamperVerify™ cryptographically bound at application moment</div><div class="threat-desc">TamperVerify™ is applied while Ostensor™ is signing. The seal ID appears in the chain entry. Any attempt to reseal after the fact produces a different chain position — detectable immediately.</div></div>
+    <div class="threat-cell"><div class="threat-label solution">ZKNOT™ Solution</div><div class="threat-title">TamperVerify™ code recorded in the signed entry</div><div class="threat-desc">The seal’s code is written into the entry Ostensor™ signs. Replacing the seal means a new code that does not match the record; lifting the original leaves a VOID pattern on the box.</div></div>
   </div>
 </div>
 
@@ -161,7 +161,7 @@
     <div class="guarantee-cell"><div class="g-num">01</div><div class="g-claim">This image was not modified after signing</div><div class="g-proof">SHA-256 hash of the image matches the chain entry. Any single-pixel change produces a different hash. Test: rehash the file yourself.</div></div>
     <div class="guarantee-cell"><div class="g-num">02</div><div class="g-claim">A record cannot be reordered or predate its challenge</div><div class="g-proof">The verifier issues a fresh nonce and the device signs it, so a signature cannot predate the challenge — that is a verifiable lower bound on when signing happened. Chain position fixes each record's order relative to every other. The wall-clock value itself is recorded by ZKNOT and is not signed by the device.</div></div>
     <div class="guarantee-cell"><div class="g-num">03</div><div class="g-claim">No entries were added or removed from the chain</div><div class="g-proof">Each entry contains the hash of the previous entry. Any gap or insertion breaks the hash chain at that position — detectable by anyone with the chain export.</div></div>
-    <div class="guarantee-cell"><div class="g-num">04</div><div class="g-claim">The seal was applied before this entry was signed</div><div class="g-proof">TamperVerify™ ID appears in the signed payload. A seal applied after signing produces no chain entry. The only valid seal for this entry is the one in the record.</div></div>
+    <div class="guarantee-cell"><div class="g-num">04</div><div class="g-claim">The seal on the box is the seal in the record</div><div class="g-proof">The seal’s code is in the signed entry. A substitute seal carries a different code, and removing the original leaves VOID on the surface.</div></div>
   </div>
 </div>
 
@@ -171,7 +171,7 @@
     <a href="/products/powerverify" class="product-cell"><div class="product-name">PowerVerify™</div><div class="product-role">Physical data-path elimination at scan capture</div></a>
     <a href="/products/zkkey" class="product-cell"><div class="product-name">Ostensor™</div><div class="product-role">Human-gated signing — official review gate</div></a>
     <a href="/products/zk-localchain" class="product-cell"><div class="product-name">the ZKNOT chain</div><div class="product-role">Offline append-only ledger for intermittently-connected environments</div></a>
-    <a href="/products/tamperverify" class="product-cell"><div class="product-name">TamperVerify™</div><div class="product-role">Cryptographically bound physical tamper evidence</div></a>
+    <a href="/verifiables#tamperverify" class="product-cell"><div class="product-name">TamperVerify™</div><div class="product-role">Serialized tamper-evident seal, code recorded on the rail</div></a>
   </div>
 </div>
 
