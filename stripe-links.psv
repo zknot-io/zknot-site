@@ -33,3 +33,6 @@ ELEMENT-OPTIGA-IC|attestation.html|-|plink_1UQU1pC0q3GgEvbOIvBeKlxc|https://buy.
 # ELEMENT-ATECC-IC    prod_VRMku0sXQrjc3d  price_1UQU1KC0q3GgEvbOtQRqcohi
 # ELEMENT-OPTIGA-BRK  prod_VRMkrp7pOCHl5y  price_1UQU1LC0q3GgEvbOWd8LPVYk
 # ELEMENT-OPTIGA-IC   prod_VRMkH4bEcMXPeN  price_1UQU1MC0q3GgEvbOOL5CyhC6
+# 2026-10-14 — Ciborium founding-run deposit, operator ruling: $49 refundable, take money now. No shipping (nothing ships); billing address + phone collected.
+CIBORIUM-DEPOSIT|ciborium.html|-|plink_1UQUMnC0q3GgEvbOeLMAqcnU|https://buy.stripe.com/dRmaEW1U61KEcfR4gqa7C0c|49
+# CIBORIUM-DEPOSIT  prod_VRN60OhTzJ0xfK  price_1UQUMgC0q3GgEvbOkMcIaMTM
