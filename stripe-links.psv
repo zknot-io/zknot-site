@@ -24,3 +24,12 @@ OSTENSOR-BARE|attestation.html|ostensor|plink_1UHQKSC0q3GgEvbO0YI2KYJZ|https://b
 # OSTENSOR-POTTED  prod_VHy9bkwXpSiPrD  price_1UHQIdC0q3GgEvbOsdv9mxgV ($199; the $129 price_1UHOCmC0q3GgEvbOU01MyKDR is superseded, never linked)
 # OSTENSOR-BARE    prod_VI0Ka0lLrrE0MQ  price_1UHQJfC0q3GgEvbODV2UDTJq ($179)
 # 2026-09-19 operator ruling: Ostensor $199 potted / $179 bare supersedes the $129 of DECISION-NAMING-RESOLUTION-001 §7
+# 2026-10-14 — secure elements, operator ruling 2026-10-14: both forms, rail-registered, sell now / register before ship; zknot.io + Stripe only
+ELEMENT-ATECC-BRK|attestation.html|-|plink_1UQU1nC0q3GgEvbO6o9hWPef|https://buy.stripe.com/28EfZg0Q2ble93F5kua7C08|25
+ELEMENT-ATECC-IC|attestation.html|-|plink_1UQU1nC0q3GgEvbOg5Vy4LTt|https://buy.stripe.com/cNicN4buG4WQfs300aa7C09|15
+ELEMENT-OPTIGA-BRK|attestation.html|-|plink_1UQU1oC0q3GgEvbOYjJt24JQ|https://buy.stripe.com/aFa28q56i74Ygw7fZ8a7C0a|39
+ELEMENT-OPTIGA-IC|attestation.html|-|plink_1UQU1pC0q3GgEvbOIvBeKlxc|https://buy.stripe.com/00w8wO42eexqgw7eV4a7C0b|25
+# ELEMENT-ATECC-BRK   prod_VRMk1GeiY0cjPl  price_1UQU1JC0q3GgEvbONBhJDReZ
+# ELEMENT-ATECC-IC    prod_VRMku0sXQrjc3d  price_1UQU1KC0q3GgEvbOtQRqcohi
+# ELEMENT-OPTIGA-BRK  prod_VRMkrp7pOCHl5y  price_1UQU1LC0q3GgEvbOWd8LPVYk
+# ELEMENT-OPTIGA-IC   prod_VRMkH4bEcMXPeN  price_1UQU1MC0q3GgEvbOOL5CyhC6
