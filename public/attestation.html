@@ -311,6 +311,54 @@
     <p class="photo-note">Bench photographs of the actual articles, 2026-09-18 — un-retouched, on the workbench they were built at. Studio images follow.</p>
   </div></section>
 
+  <!-- ELEMENTS — added 2026-10-14 (operator ruling: both forms, rail-registered, sell now).
+       Not a rung: a loose element is a component for someone building their own article. -->
+  <section id="elements"><div class="wrap">
+    <div class="section-label">Secure elements</div>
+    <h2>The part inside, registered</h2>
+    <p>The same secure elements our devices are built on, sold on their own for people building their own hardware. Each one leaves here with its public key enrolled on the <a href="https://verifyknot.io" style="color:var(--accent);text-decoration:none;">verifyknot.io</a> rail, so a signature it makes can be checked against a key we have on file. Available as a bare chip or on a small breakout board.</p>
+
+    <div class="prods">
+
+      <div class="prod" id="atecc608b">
+        <div class="prod-top"><h3>ATECC608B, ZKNOT-provisioned</h3><div class="prod-price">$25 board · $15 chip</div></div>
+        <div class="prod-sub">Microchip CryptoAuthentication · P-256</div>
+        <p>Configured to the ZKNOT layout and locked, with a P-256 keypair generated on the chip. The private key cannot be read out in software. We record the public key and enrol it on the rail before the part ships.</p>
+        <ul class="spec">
+          <li>Microchip ATECC608B, SOIC-8</li>
+          <li>Configuration and data zones locked; signing key generated on-chip</li>
+          <li>Public key enrolled on the verifyknot.io rail before shipping</li>
+          <li>Breakout board $25 · bare chip $15</li>
+        </ul>
+        <div class="why">Read before buying: the configuration is locked, so you can't re-key this part. Registration shows that this key is on file with us. It doesn't show which device you later solder the part into, or who presses its button. The rail's registration path for loose elements is still being built, and a part ships once its enrolment is done.</div>
+        <div class="prod-foot">
+          <a class="btn" href="STRIPE_LINK_ELEMENT-ATECC-BRK" rel="noopener">Buy breakout — $25</a>
+          <a class="btn" href="STRIPE_LINK_ELEMENT-ATECC-IC" rel="noopener">Buy bare chip — $15</a>
+        </div>
+        <p class="buy-note">Card checkout by Stripe · US shipping $5 flat · <a href="/shipping">shipping</a> · <a href="/returns">returns</a></p>
+      </div>
+
+      <div class="prod" id="optiga">
+        <div class="prod-top"><h3>OPTIGA Trust M, rail-registered</h3><div class="prod-price">$39 board · $25 chip</div></div>
+        <div class="prod-sub">Infineon OPTIGA Trust M · P-256 · CC EAL6+ (element)</div>
+        <p>The element in Vitni Plus and Ostensor. Its factory key comes with Infineon's certificate. We read that key and enrol it on the rail before the part ships, so its signatures resolve on verifyknot.io.</p>
+        <ul class="spec">
+          <li>Infineon OPTIGA Trust M, USON-10</li>
+          <li>Factory key and certificate from Infineon; public key enrolled on the verifyknot.io rail</li>
+          <li>The EAL6+ certification covers the element itself, not what you build around it</li>
+          <li>Breakout board $39 · bare chip $25</li>
+        </ul>
+        <div class="why">Read before buying: the factory key signs for whoever holds the chip, because using it needs no authorisation. Registration shows this key is on file with us. It doesn't show who used it. The rail's registration path for loose elements is still being built, and a part ships once its enrolment is done.</div>
+        <div class="prod-foot">
+          <a class="btn" href="STRIPE_LINK_ELEMENT-OPTIGA-BRK" rel="noopener">Buy breakout — $39</a>
+          <a class="btn" href="STRIPE_LINK_ELEMENT-OPTIGA-IC" rel="noopener">Buy bare chip — $25</a>
+        </div>
+        <p class="buy-note">Card checkout by Stripe · US shipping $5 flat · <a href="/shipping">shipping</a> · <a href="/returns">returns</a></p>
+      </div>
+
+    </div>
+  </div></section>
+
   <!-- BOUNDARY -->
   <section id="notify"><div class="wrap">
     <div class="boundary">

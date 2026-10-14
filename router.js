@@ -64,6 +64,11 @@ const ROUTES = {
   "/contact": "/contact.html",
   // Stripe Payment Links redirect here after a completed checkout.
   "/thanks":  "/thanks.html",
+  // Support + Ciborium — added 2026-10-14 with their assets in the same change.
+  // /support#partners is where investor/partner traffic is sent from /ciborium.
+  "/support":  "/support.html",
+  "/ciborium": "/ciborium.html",
+  "/wallet":   "/ciborium.html",
 
   // Legal pages — added 2026-08-05 with their assets in the same change, per the
   // standing rule below. check-legal-pages.sh was failing on all four (missing
