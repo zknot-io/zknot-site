@@ -59,8 +59,19 @@
   .reasons li a{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;display:inline-block;margin-top:6px}
   .reasons li span{display:block;color:var(--text-muted)}
 </style>
+<style id="proto-strip-css">
+  /* Prototype + founder-support strip — every page, 2026-10-14 operator ruling. */
+  body{padding-top:32px}
+  nav{top:32px!important}
+  .proto-strip{position:fixed;top:0;left:0;right:0;z-index:101;height:32px;display:flex;align-items:center;justify-content:center;gap:10px;padding:0 16px;background:#0f2a1a;border-bottom:1px solid rgba(34,197,94,.35);font-family:'DM Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.06em;color:#bbf7d0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .proto-strip a{color:#22c55e;text-decoration:none}
+  .proto-strip a:hover{text-decoration:underline}
+  .proto-strip .ps-short{display:none}
+  @media(max-width:720px){.proto-strip .ps-long{display:none}.proto-strip .ps-short{display:inline}}
+</style>
 </head>
 <body>
+<div class="proto-strip" role="note"><span class="ps-long">PROTOTYPES · hand-built in small runs · every buyer gets founder-level one-on-one support: custom hardware, firmware &amp; software</span><span class="ps-short">PROTOTYPES · founder 1:1 support</span> <a href="/support#founder">How it works →</a></div>
 
 <nav>
   <a href="/" class="nav-logo">
@@ -87,6 +98,16 @@
   <div class="updated">One inbox · one person answers · within one business day</div>
 
   <p class="lede">Every route below goes to <strong>ops@zknot.io</strong> and is read by the person who builds the hardware. Pick the one that fits, and the subject line is filled in for you.</p>
+
+  <h2 id="founder">Founder-level support, for every buyer</h2>
+  <p><strong>Everything ZKNOT sells today is a prototype</strong>, built by hand in small runs. That comes with something a catalogue product can't offer: the person who designed it works with you directly to fit it into how you actually work.</p>
+  <ul>
+    <li><strong>One on one:</strong> video calls and email with the founder, not a ticket queue</li>
+    <li><strong>Custom hardware:</strong> a different form factor, connector, enclosure or element</li>
+    <li><strong>Custom firmware:</strong> what gets signed, when, and what the device refuses to do</li>
+    <li><strong>Software and integration:</strong> getting ZKNOT records into your systems and your audit trail</li>
+  </ul>
+  <p>Bought something, or thinking about it? <a href="mailto:ops@zknot.io?subject=Founder%20support%3A%20">Book a call or start a thread →</a> Tell us what you're trying to prove and to whom, and we'll take it from there. If working together looks like more than a sale, we're open to a partnership. See <a href="#partners">investors and partners</a> below.</p>
 
   <h2>An order</h2>
   <ul class="reasons">

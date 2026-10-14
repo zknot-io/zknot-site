@@ -253,8 +253,19 @@
     }
     @media (max-width: 500px) { .audiences-grid { grid-template-columns: 1fr; } }
   </style>
+<style id="proto-strip-css">
+  /* Prototype + founder-support strip — every page, 2026-10-14 operator ruling. */
+  body{padding-top:32px}
+  nav{top:32px!important}
+  .proto-strip{position:fixed;top:0;left:0;right:0;z-index:101;height:32px;display:flex;align-items:center;justify-content:center;gap:10px;padding:0 16px;background:#0f2a1a;border-bottom:1px solid rgba(34,197,94,.35);font-family:'DM Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.06em;color:#bbf7d0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .proto-strip a{color:#22c55e;text-decoration:none}
+  .proto-strip a:hover{text-decoration:underline}
+  .proto-strip .ps-short{display:none}
+  @media(max-width:720px){.proto-strip .ps-long{display:none}.proto-strip .ps-short{display:inline}}
+</style>
 </head>
 <body>
+<div class="proto-strip" role="note"><span class="ps-long">PROTOTYPES · hand-built in small runs · every buyer gets founder-level one-on-one support: custom hardware, firmware &amp; software</span><span class="ps-short">PROTOTYPES · founder 1:1 support</span> <a href="/support#founder">How it works →</a></div>
 
 <!-- ─── NAV ─── -->
 <nav>
@@ -415,7 +426,7 @@
 <section class="products-section" id="products">
   <div class="section-inner">
     <div class="section-label reveal">The three bands</div>
-    <h2 class="section-title reveal">Three ways to know.</h2>
+    <h2 class="section-title reveal">Three ways to know, and a place to keep keys.</h2>
     <p class="section-sub reveal">They differ by <em>how you check</em> — your eyes, a device's signature, or a stranger's re-check. Capability rises across them, and so does the amount you have to take on faith. The cheapest thing we make is the one you have to trust us least about.</p>
     <div class="products-grid reveal">
 
@@ -458,8 +469,20 @@
         </div>
       </a>
 
+      <a href="/ciborium" class="product-card">
+        <div class="product-arrow">↗</div>
+        <div class="product-tag">Keep it, and check how it was made</div>
+        <div class="product-name">Hardware Wallets</div>
+        <div class="product-desc">Ciborium: a hardware wallet built under one roof, with a signed record of every step of its build that you can check before you trust it with a key. In design, with a founding run open now.</div>
+        <div class="product-specs">
+          <div class="product-spec">Ciborium — in design, no ship date yet</div>
+          <div class="product-spec">Every build step signed on verifyknot.io</div>
+          <div class="product-spec">Founding run: $49 refundable deposit</div>
+          <div class="product-spec">Founder-level one-on-one support included</div>
+        </div>
+      </a>
+
     </div>
-    <p class="section-sub reveal" style="margin-top:28px;"><strong>Coming soon: <a href="/ciborium" style="color:var(--accent);text-decoration:none;">Ciborium</a></strong>, a hardware wallet with a signed record of every step of its build, made under one roof. <a href="/ciborium" style="color:var(--accent);text-decoration:none;">Get updates →</a></p>
   </div>
 </section>
 

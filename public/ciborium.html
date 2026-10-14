@@ -59,8 +59,19 @@
   .reasons li a{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;display:inline-block;margin-top:6px}
   .reasons li span{display:block;color:var(--text-muted)}
 </style>
+<style id="proto-strip-css">
+  /* Prototype + founder-support strip — every page, 2026-10-14 operator ruling. */
+  body{padding-top:32px}
+  nav{top:32px!important}
+  .proto-strip{position:fixed;top:0;left:0;right:0;z-index:101;height:32px;display:flex;align-items:center;justify-content:center;gap:10px;padding:0 16px;background:#0f2a1a;border-bottom:1px solid rgba(34,197,94,.35);font-family:'DM Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.06em;color:#bbf7d0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .proto-strip a{color:#22c55e;text-decoration:none}
+  .proto-strip a:hover{text-decoration:underline}
+  .proto-strip .ps-short{display:none}
+  @media(max-width:720px){.proto-strip .ps-long{display:none}.proto-strip .ps-short{display:inline}}
+</style>
 </head>
 <body>
+<div class="proto-strip" role="note"><span class="ps-long">PROTOTYPES · hand-built in small runs · every buyer gets founder-level one-on-one support: custom hardware, firmware &amp; software</span><span class="ps-short">PROTOTYPES · founder 1:1 support</span> <a href="/support#founder">How it works →</a></div>
 
 <nav>
   <a href="/" class="nav-logo">
@@ -84,7 +95,7 @@
 <main>
   <div class="breadcrumb"><a href="/">ZKNOT</a> <span>/</span> Ciborium</div>
   <h1>Ciborium</h1>
-  <div class="updated">Hardware wallet · coming soon · in design</div>
+  <div class="updated">Hardware wallet · prototype · founding run open</div>
 
   <p class="lede">A hardware wallet whose build you can check. Every Ciborium will be made under one roof, by us, and every step of making it will leave a signed record on <a href="https://verifyknot.io">verifyknot.io</a> that you can read before you trust the device with a key.</p>
 
@@ -104,6 +115,17 @@
   <div class="note">
     <p><strong>What it won't claim.</strong> A signed record shows that our key signed a statement about a step. It doesn't make the statement true, and the time on it is our clock, not an outside authority's. Each step's record will say what it does and doesn't show, the same way every other ZKNOT article does. Ciborium is in design: no unit exists yet and there is no ship date. This page describes what we intend to build, not something we've built.</p>
   </div>
+
+  <h2>Join the founding run</h2>
+  <p>A <strong>$49 deposit</strong> reserves one founding-run Ciborium and starts founder-level support straight away. You work with the person designing it, one on one, by video call or email, and what you need feeds into the design.</p>
+  <ul>
+    <li><strong>It's a prototype.</strong> No unit exists yet and there's no ship date. The design will change, and you'll hear why.</li>
+    <li><strong>Fully refundable.</strong> Ask for your deposit back any time before your unit ships, for any reason, and you'll get all of it.</li>
+    <li><strong>The balance is set when the hardware is real.</strong> You'll see the price and what cleared before you're asked to pay anything more, and you can take the refund then instead.</li>
+    <li><strong>We'll keep you told.</strong> If we can't ship within 30 days of your deposit, we'll write to say when we expect to, and you can cancel for a full refund.</li>
+  </ul>
+  <p><a class="copy" style="display:inline-block;text-decoration:none;" href="STRIPE_LINK_CIBORIUM-DEPOSIT" rel="noopener">Reserve one — $49 refundable deposit</a></p>
+  <p style="font-size:13px;">Card checkout by Stripe · <a href="/returns">returns</a> · <a href="/support#founder">what founder support covers</a></p>
 
   <h2>Hear when it's real</h2>
   <p>Send one email and we'll write back when there's hardware to show, with what cleared and what's still open. We keep your address for that and nothing else. <a href="/privacy">Privacy</a>.</p>
