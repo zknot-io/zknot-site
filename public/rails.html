@@ -75,6 +75,8 @@
     .rail-foot { margin-top: auto; padding-top: 18px; }
     .btn { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.07em; text-transform: uppercase; color: #000; background: var(--accent); border: none; padding: 12px 22px; border-radius: 2px; text-decoration: none; transition: opacity 0.2s; }
     .btn:hover { opacity: 0.85; }
+    /* "Verify a record" is a CTA: green (operator 2026-10-18). hashstamp.io .btn stays accent. */
+    .btn[href="https://verifyknot.io"] { background: var(--cta); border-color: var(--cta); }
     .btn-ghost { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-muted); border: 1px solid var(--border); padding: 12px 22px; border-radius: 2px; text-decoration: none; transition: all 0.2s; }
     .btn-ghost:hover { color: var(--text); border-color: var(--border-active); }
 
