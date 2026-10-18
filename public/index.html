@@ -149,19 +149,19 @@
     .layer-card { background: var(--bg-card); padding: 48px 36px; position: relative; overflow: hidden; transition: background 0.3s; }
     .layer-card:hover { background: var(--bg-2); }
     .layer-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
-    .layer-card:nth-child(1)::before { background: var(--amber); }
+    .layer-card:nth-child(1)::before { background: var(--physics); }
     .layer-card:nth-child(2)::before { background: var(--blue); }
     .layer-card:nth-child(3)::before { background: var(--accent); }
     .layer-num { font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px; }
     .layer-icon { width: 44px; height: 44px; margin-bottom: 20px; }
     .layer-title { font-family: var(--display); font-size: 22px; font-weight: 700; margin-bottom: 8px; }
-    .layer-card:nth-child(1) .layer-title { color: var(--amber); }
+    .layer-card:nth-child(1) .layer-title { color: var(--physics); }
     .layer-card:nth-child(2) .layer-title { color: var(--blue); }
     .layer-card:nth-child(3) .layer-title { color: var(--accent); }
     .layer-sub { font-family: var(--mono); font-size: 12px; color: var(--text-muted); letter-spacing: 0.05em; margin-bottom: 20px; }
     .layer-body { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
     .layer-constraint { margin-top: 24px; padding: 12px; border-radius: 2px; font-family: var(--mono); font-size: 11px; line-height: 1.6; }
-    .layer-card:nth-child(1) .layer-constraint { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(245,158,11,0.2); }
+    .layer-card:nth-child(1) .layer-constraint { background: var(--physics-dim); color: var(--physics); border: 1px solid rgba(34,197,94,0.2); }
     .layer-card:nth-child(2) .layer-constraint { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(59,130,246,0.2); }
     .layer-card:nth-child(3) .layer-constraint { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(56,189,248,0.2); }
 
@@ -397,7 +397,7 @@
     <div class="layers-grid reveal">
       <div class="layer-card">
         <div class="layer-num">Layer 01</div>
-        <svg class="layer-icon" viewBox="0 0 44 44" fill="none"><rect x="8" y="12" width="28" height="22" rx="2" stroke="#f59e0b" stroke-width="1.5"/><path d="M15 12V10a7 7 0 0114 0v2" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round"/><circle cx="22" cy="23" r="3" fill="#f59e0b" opacity="0.4"/><path d="M22 26v4" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <svg class="layer-icon" viewBox="0 0 44 44" fill="none"><rect x="8" y="12" width="28" height="22" rx="2" stroke="#22c55e" stroke-width="1.5"/><path d="M15 12V10a7 7 0 0114 0v2" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"/><circle cx="22" cy="23" r="3" fill="#22c55e" opacity="0.4"/><path d="M22 26v4" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"/></svg>
         <div class="layer-title">Physics Enforces</div>
         <div class="layer-sub">Hardware makes certain states impossible.</div>
         <div class="layer-body">PowerVerify has no data conductors — not disabled, absent. No firmware update can enable a path that was never built, and you can confirm that with a multimeter and your own eyes. The hardware constraint is the guarantee, and it is the only layer that requires nothing of us.</div>

@@ -55,6 +55,13 @@
   --pass-dim:  rgba(34,197,94,0.12);
   --pass-glow: rgba(34,197,94,0.25);
 
+  /* --- physics layer --------------------------------------------------- *
+   * "Physics enforces" (Layer 01) wears the retired green; was amber until
+   * 2026-10-18 (operator). Same hex as --pass by choice, separate token so
+   * either can move alone.                                                */
+  --physics:     #22c55e;
+  --physics-dim: rgba(34,197,94,0.12);
+
   /* --- semantic -------------------------------------------------------- */
   --amber:     #f59e0b;
   --amber-dim: rgba(245,158,11,0.12);
