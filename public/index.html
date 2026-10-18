@@ -18,7 +18,7 @@
   <meta name="twitter:image" content="https://zknot.io/og-image.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=IBM+Plex+Sans:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/css/zknot-tokens.css"/>
   <style>
 
@@ -66,12 +66,12 @@
     .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
     .nav-links a { font-family: var(--mono); font-size: 12px; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
     .nav-links a:hover { color: var(--text); }
-    .nav-cta { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent) !important; border: 1px solid rgba(34,197,94,0.3); padding: 6px 16px; border-radius: 2px; transition: all 0.2s !important; }
+    .nav-cta { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent) !important; border: 1px solid rgba(56,189,248,0.3); padding: 6px 16px; border-radius: 2px; transition: all 0.2s !important; }
     .nav-cta:hover { color: #000 !important; background: var(--accent); border-color: var(--accent); }
 
     .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 120px 40px 80px; position: relative; overflow: hidden; }
     .hero-grid-bg { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px); background-size: 48px 48px; mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 100%); }
-    .hero-glow { position: absolute; top: -200px; left: 50%; transform: translateX(-50%); width: 800px; height: 600px; background: radial-gradient(ellipse, rgba(34,197,94,0.06) 0%, transparent 70%); pointer-events: none; }
+    .hero-glow { position: absolute; top: -200px; left: 50%; transform: translateX(-50%); width: 800px; height: 600px; background: radial-gradient(ellipse, rgba(56,189,248,0.06) 0%, transparent 70%); pointer-events: none; }
     .hero-glow-2 { position: absolute; bottom: 0; right: -100px; width: 500px; height: 400px; background: radial-gradient(ellipse, rgba(59,130,246,0.04) 0%, transparent 70%); pointer-events: none; }
     .hero-inner { position: relative; max-width: 1100px; margin: 0 auto; width: 100%; }
 
@@ -87,7 +87,7 @@
     .hero-actions { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.7s 0.5s ease forwards; }
 
     .btn-primary { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; font-weight: 500; color: #000; background: var(--accent); border: none; padding: 14px 28px; border-radius: 2px; text-decoration: none; cursor: pointer; transition: all 0.2s; }
-    .btn-primary:hover { background: #16a34a; transform: translateY(-1px); box-shadow: 0 8px 32px rgba(34,197,94,0.3); }
+    .btn-primary:hover { background: #0ea5e9; transform: translateY(-1px); box-shadow: 0 8px 32px rgba(56,189,248,0.3); }
     .btn-secondary { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; color: var(--text-muted); background: transparent; border: 1px solid var(--border); padding: 14px 28px; border-radius: 2px; text-decoration: none; cursor: pointer; transition: all 0.2s; }
     .btn-secondary:hover { color: var(--text); border-color: var(--border-active); }
 
@@ -115,14 +115,14 @@
     .demo-input { flex: 1; background: var(--bg-2); border: 1px solid var(--border); border-radius: 2px; padding: 10px 14px; font-family: var(--mono); font-size: 14px; color: var(--text); letter-spacing: 0.1em; outline: none; transition: border-color 0.2s; }
     .demo-input:focus { border-color: var(--accent); }
     .demo-verify-btn { background: var(--accent); color: #000; border: none; padding: 10px 20px; border-radius: 2px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; cursor: pointer; font-weight: 500; transition: all 0.2s; }
-    .demo-verify-btn:hover { background: #16a34a; }
+    .demo-verify-btn:hover { background: #0ea5e9; }
 
     .demo-result { display: none; }
     .demo-result.visible { display: block; }
 
-    .demo-result-header { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--accent-dim); border: 1px solid rgba(34,197,94,0.2); border-radius: 2px; margin-bottom: 16px; }
+    .demo-result-header { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--accent-dim); border: 1px solid rgba(56,189,248,0.2); border-radius: 2px; margin-bottom: 16px; }
     .demo-result-header .check { width: 20px; height: 20px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 11px; color: #000; }
-    .demo-result-header .verified-text { font-size: 12px; color: var(--accent); letter-spacing: 0.08em; font-weight: 500; }
+    .demo-result-header .verified-text { font-size: 12px; color: var(--pass); letter-spacing: 0.08em; font-weight: 500; }
     .demo-result-header.demo-unverified { background: var(--amber-dim); border-color: rgba(245,158,11,0.3); }
     .demo-result-header.demo-unverified .check { background: var(--amber); }
     .demo-result-header.demo-unverified .verified-text { color: var(--amber); }
@@ -163,7 +163,7 @@
     .layer-constraint { margin-top: 24px; padding: 12px; border-radius: 2px; font-family: var(--mono); font-size: 11px; line-height: 1.6; }
     .layer-card:nth-child(1) .layer-constraint { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(245,158,11,0.2); }
     .layer-card:nth-child(2) .layer-constraint { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(59,130,246,0.2); }
-    .layer-card:nth-child(3) .layer-constraint { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(34,197,94,0.2); }
+    .layer-card:nth-child(3) .layer-constraint { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(56,189,248,0.2); }
 
     /* ─── PRODUCTS ─── */
     .products-section { padding: 100px 40px; background: var(--bg-1); border-top: 1px solid var(--border); }
@@ -204,7 +204,7 @@
 
     /* ─── CTA ─── */
     .cta-section { padding: 120px 40px; text-align: center; position: relative; overflow: hidden; }
-    .cta-section::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 400px; background: radial-gradient(ellipse, rgba(34,197,94,0.06) 0%, transparent 70%); pointer-events: none; }
+    .cta-section::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 400px; background: radial-gradient(ellipse, rgba(56,189,248,0.06) 0%, transparent 70%); pointer-events: none; }
     .cta-inner { position: relative; max-width: 640px; margin: 0 auto; }
     .cta-inner h2 { font-family: var(--display); font-size: clamp(32px, 4vw, 52px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 20px; }
     .cta-inner p { font-size: 16px; color: var(--text-muted); line-height: 1.7; margin-bottom: 40px; }
@@ -257,8 +257,8 @@
   /* Prototype + founder-support strip — every page, 2026-10-14 operator ruling. */
   body{padding-top:32px}
   nav{top:32px!important}
-  .proto-strip{position:fixed;top:0;left:0;right:0;z-index:101;height:32px;display:flex;align-items:center;justify-content:center;gap:10px;padding:0 16px;background:#0f2a1a;border-bottom:1px solid rgba(34,197,94,.35);font-family:'DM Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.06em;color:#bbf7d0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .proto-strip a{color:#22c55e;text-decoration:none}
+  .proto-strip{position:fixed;top:0;left:0;right:0;z-index:101;height:32px;display:flex;align-items:center;justify-content:center;gap:10px;padding:0 16px;background:#0c1d2b;border-bottom:1px solid rgba(56,189,248,.35);font-family:'DM Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.06em;color:#bae6fd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .proto-strip a{color:#38bdf8;text-decoration:none}
   .proto-strip a:hover{text-decoration:underline}
   .proto-strip .ps-short{display:none}
   @media(max-width:720px){.proto-strip .ps-long{display:none}.proto-strip .ps-short{display:inline}}
@@ -272,9 +272,9 @@
   <a href="/" class="nav-logo">
     <svg class="nav-logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect width="32" height="32" rx="2" fill="#111318"/>
-      <path d="M8 8L16 16L24 8" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M8 24L16 16L24 24" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/>
-      <circle cx="16" cy="16" r="2.5" fill="#22c55e"/>
+      <path d="M8 8L16 16L24 8" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M8 24L16 16L24 24" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/>
+      <circle cx="16" cy="16" r="2.5" fill="#38bdf8"/>
     </svg>
     <span class="nav-logo-text">ZKNOT<sup>™</sup></span>
   </a>
@@ -413,7 +413,7 @@
       </div>
       <div class="layer-card">
         <div class="layer-num">Layer 03</div>
-        <svg class="layer-icon" viewBox="0 0 44 44" fill="none"><circle cx="22" cy="22" r="12" stroke="#22c55e" stroke-width="1.5"/><circle cx="22" cy="22" r="5" fill="#22c55e" opacity="0.3"/><circle cx="22" cy="22" r="2" fill="#22c55e"/><path d="M22 10V8M22 36v-2M10 22H8M36 22h-2" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/></svg>
+        <svg class="layer-icon" viewBox="0 0 44 44" fill="none"><circle cx="22" cy="22" r="12" stroke="#38bdf8" stroke-width="1.5"/><circle cx="22" cy="22" r="5" fill="#38bdf8" opacity="0.3"/><circle cx="22" cy="22" r="2" fill="#38bdf8"/><path d="M22 10V8M22 36v-2M10 22H8M36 22h-2" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/></svg>
         <div class="layer-title">You Verify</div>
         <div class="layer-sub">Your browser does the checking.</div>
         <div class="layer-body">No account, no login. Anyone with the short code resolves the record at verifyknot.io, and the verdict is computed in your browser from the record itself rather than handed down by our server. Our API still has to answer — checking a record offline, with no network and no ZKNOT, is the rung we most want to ship and have not.</div>

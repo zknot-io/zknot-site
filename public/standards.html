@@ -7,7 +7,7 @@
   <meta name="description" content="ZKNOT™ does not certify you. It produces records a third party can verify, and every record states its own assurance level — including what it does not prove." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=IBM+Plex+Sans:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/css/zknot-tokens.css"/>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -22,7 +22,7 @@
     .nav-links{display:flex;align-items:center;gap:32px;list-style:none;}
     .nav-links a{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color 0.2s;}
     .nav-links a:hover,.nav-links a.active{color:var(--text);}
-    .nav-cta{color:var(--green)!important;border:1px solid rgba(34,197,94,0.3);padding:6px 16px;border-radius:2px;}
+    .nav-cta{color:var(--green)!important;border:1px solid rgba(56,189,248,0.3);padding:6px 16px;border-radius:2px;}
     .nav-cta:hover{color:#000!important;background:var(--green)!important;}
     .breadcrumb{position:fixed;top:64px;left:0;right:0;z-index:99;padding:10px 40px;background:rgba(10,11,13,0.7);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:0.1em;color:var(--text-muted);}
     .breadcrumb a{color:var(--text-muted);text-decoration:none;}
@@ -115,8 +115,8 @@
   /* Prototype + founder-support strip — every page, 2026-10-14 operator ruling. */
   body{padding-top:32px}
   nav{top:32px!important}
-  .proto-strip{position:fixed;top:0;left:0;right:0;z-index:101;height:32px;display:flex;align-items:center;justify-content:center;gap:10px;padding:0 16px;background:#0f2a1a;border-bottom:1px solid rgba(34,197,94,.35);font-family:'DM Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.06em;color:#bbf7d0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .proto-strip a{color:#22c55e;text-decoration:none}
+  .proto-strip{position:fixed;top:0;left:0;right:0;z-index:101;height:32px;display:flex;align-items:center;justify-content:center;gap:10px;padding:0 16px;background:#0c1d2b;border-bottom:1px solid rgba(56,189,248,.35);font-family:'DM Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.06em;color:#bae6fd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .proto-strip a{color:#38bdf8;text-decoration:none}
   .proto-strip a:hover{text-decoration:underline}
   .proto-strip .ps-short{display:none}
   @media(max-width:720px){.proto-strip .ps-long{display:none}.proto-strip .ps-short{display:inline}}
@@ -127,7 +127,7 @@
 
 <nav>
   <a href="/" class="nav-logo">
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="2" fill="#111318"/><path d="M8 8L16 16L24 8" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 24L16 16L24 24" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><circle cx="16" cy="16" r="2.5" fill="#22c55e"/></svg>
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="2" fill="#111318"/><path d="M8 8L16 16L24 8" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 24L16 16L24 24" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><circle cx="16" cy="16" r="2.5" fill="#38bdf8"/></svg>
     <span class="nav-logo-text">ZKNOT<sup>&trade;</sup></span>
   </a>
   <ul class="nav-links">

@@ -7,7 +7,7 @@
   <meta name="description" content="ZKNOT Docs: integration and verification reference — attestation API, device lifecycle, artifact schema, and the offline verification path (SHA-256 + ECDSA P-256)." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=IBM+Plex+Sans:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/css/zknot-tokens.css"/>
   <style>
 
@@ -43,7 +43,7 @@
     .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
     .nav-links a { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
     .nav-links a:hover { color: var(--text); }
-    .nav-cta { color: var(--green) !important; border: 1px solid rgba(34,197,94,0.3); padding: 6px 16px; border-radius: 2px; }
+    .nav-cta { color: var(--green) !important; border: 1px solid rgba(56,189,248,0.3); padding: 6px 16px; border-radius: 2px; }
     .nav-cta:hover { color: #000 !important; background: var(--green) !important; }
 
     .breadcrumb {
@@ -76,7 +76,7 @@
     .hero-glow {
       position: absolute; top: -200px; left: 50%; transform: translateX(-50%);
       width: 900px; height: 700px;
-      background: radial-gradient(ellipse, rgba(34,197,94,0.05) 0%, transparent 65%);
+      background: radial-gradient(ellipse, rgba(56,189,248,0.05) 0%, transparent 65%);
       pointer-events: none;
     }
     .hero-inner { position: relative; max-width: 900px; margin: 0 auto; width: 100%; text-align: center; }
@@ -118,10 +118,10 @@
       border: 1px solid transparent;
     }
     .flow-pill.s1 { color: var(--s1); background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.2); }
-    .flow-pill.s2 { color: var(--s2); background: rgba(34,197,94,0.08); border-color: rgba(34,197,94,0.2); }
+    .flow-pill.s2 { color: var(--s2); background: rgba(56,189,248,0.08); border-color: rgba(56,189,248,0.2); }
     .flow-pill.s3 { color: var(--s3); background: rgba(168,85,247,0.08); border-color: rgba(168,85,247,0.2); }
     .flow-pill.s4 { color: var(--s4); background: rgba(59,130,246,0.08); border-color: rgba(59,130,246,0.2); }
-    .flow-pill.s5 { color: var(--s5); background: rgba(34,197,94,0.08); border-color: rgba(34,197,94,0.2); }
+    .flow-pill.s5 { color: var(--s5); background: rgba(56,189,248,0.08); border-color: rgba(56,189,248,0.2); }
     .flow-pill.s6 { color: var(--text-dim); background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); }
     .flow-arrow { font-family: var(--mono); font-size: 14px; color: var(--text-muted); padding: 0 4px; opacity: 0.4; }
 
@@ -151,10 +151,10 @@
       background: linear-gradient(
         var(--border),
         rgba(245,158,11,0.3) 15%,
-        rgba(34,197,94,0.3) 30%,
+        rgba(56,189,248,0.3) 30%,
         rgba(168,85,247,0.3) 48%,
         rgba(59,130,246,0.3) 64%,
-        rgba(34,197,94,0.3) 80%,
+        rgba(56,189,248,0.3) 80%,
         rgba(255,255,255,0.15) 95%,
         var(--border)
       );
@@ -251,7 +251,7 @@
     .t-comment { color: #4b5563; }
     .t-cmd { color: #e8eaed; }
     .t-key { color: #9ca3af; }
-    .t-val-green { color: #22c55e; }
+    .t-val-green { color: #38bdf8; }
     .t-val-blue { color: #3b82f6; }
     .t-val-amber { color: #f59e0b; }
     .t-val-purple { color: #a855f7; }
@@ -284,10 +284,10 @@
     /* Step 2 - Green - Capture */
     .step-2 .step-tag { color: var(--s2); }
     .step-2 .step-tag::before { background: var(--s2); }
-    .step-2 .step-node-circle { background: rgba(34,197,94,0.12); color: var(--s2); border: 1px solid rgba(34,197,94,0.3); }
+    .step-2 .step-node-circle { background: rgba(56,189,248,0.12); color: var(--s2); border: 1px solid rgba(56,189,248,0.3); }
     .step-2 .step-node-circle::before { background: var(--s2); }
-    .step-2 .step-product-link { color: var(--s2); border-color: rgba(34,197,94,0.25); background: rgba(34,197,94,0.05); }
-    .step-2 .step-product-link:hover { background: rgba(34,197,94,0.12); }
+    .step-2 .step-product-link { color: var(--s2); border-color: rgba(56,189,248,0.25); background: rgba(56,189,248,0.05); }
+    .step-2 .step-product-link:hover { background: rgba(56,189,248,0.12); }
     .step-2 .step-constraint-bullet { color: var(--s2); }
 
     /* Step 3 - Purple - TamperVerify */
@@ -311,10 +311,10 @@
     /* Step 5 - Green - Chain */
     .step-5 .step-tag { color: var(--s5); }
     .step-5 .step-tag::before { background: var(--s5); }
-    .step-5 .step-node-circle { background: rgba(34,197,94,0.12); color: var(--s5); border: 1px solid rgba(34,197,94,0.3); }
+    .step-5 .step-node-circle { background: rgba(56,189,248,0.12); color: var(--s5); border: 1px solid rgba(56,189,248,0.3); }
     .step-5 .step-node-circle::before { background: var(--s5); }
-    .step-5 .step-product-link { color: var(--s5); border-color: rgba(34,197,94,0.25); background: rgba(34,197,94,0.05); }
-    .step-5 .step-product-link:hover { background: rgba(34,197,94,0.12); }
+    .step-5 .step-product-link { color: var(--s5); border-color: rgba(56,189,248,0.25); background: rgba(56,189,248,0.05); }
+    .step-5 .step-product-link:hover { background: rgba(56,189,248,0.12); }
     .step-5 .step-constraint-bullet { color: var(--s5); }
 
     /* Step 6 - White - Report */
@@ -374,13 +374,13 @@
 
     /* ── CTA ── */
     .cta-section { padding: 100px 40px; text-align: center; position: relative; overflow: hidden; }
-    .cta-section::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 400px; background: radial-gradient(ellipse, rgba(34,197,94,0.06) 0%, transparent 70%); }
+    .cta-section::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 400px; background: radial-gradient(ellipse, rgba(56,189,248,0.06) 0%, transparent 70%); }
     .cta-inner { position: relative; max-width: 600px; margin: 0 auto; }
     .cta-inner h2 { font-family: var(--display); font-size: clamp(28px, 3.5vw, 48px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; }
     .cta-inner p { font-size: 16px; color: var(--text-muted); line-height: 1.7; margin-bottom: 40px; }
     .cta-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
     .btn-primary { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; font-weight: 500; color: #000; background: var(--green); border: none; padding: 14px 28px; border-radius: 2px; text-decoration: none; transition: all 0.2s; }
-    .btn-primary:hover { background: #16a34a; transform: translateY(-1px); box-shadow: 0 8px 32px rgba(34,197,94,0.28); }
+    .btn-primary:hover { background: #0ea5e9; transform: translateY(-1px); box-shadow: 0 8px 32px rgba(56,189,248,0.28); }
     .btn-secondary { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; color: var(--text-muted); background: transparent; border: 1px solid var(--border); padding: 14px 28px; border-radius: 2px; text-decoration: none; transition: all 0.2s; }
     .btn-secondary:hover { color: var(--text); border-color: var(--border-active); }
 
@@ -428,8 +428,8 @@
   /* Prototype + founder-support strip — every page, 2026-10-14 operator ruling. */
   body{padding-top:32px}
   nav{top:32px!important}
-  .proto-strip{position:fixed;top:0;left:0;right:0;z-index:101;height:32px;display:flex;align-items:center;justify-content:center;gap:10px;padding:0 16px;background:#0f2a1a;border-bottom:1px solid rgba(34,197,94,.35);font-family:'DM Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.06em;color:#bbf7d0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .proto-strip a{color:#22c55e;text-decoration:none}
+  .proto-strip{position:fixed;top:0;left:0;right:0;z-index:101;height:32px;display:flex;align-items:center;justify-content:center;gap:10px;padding:0 16px;background:#0c1d2b;border-bottom:1px solid rgba(56,189,248,.35);font-family:'DM Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.06em;color:#bae6fd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .proto-strip a{color:#38bdf8;text-decoration:none}
   .proto-strip a:hover{text-decoration:underline}
   .proto-strip .ps-short{display:none}
   @media(max-width:720px){.proto-strip .ps-long{display:none}.proto-strip .ps-short{display:inline}}
@@ -441,7 +441,7 @@
 <!-- NAV -->
 <nav>
   <a href="/" class="nav-logo">
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="2" fill="#111318"/><path d="M8 8L16 16L24 8" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 24L16 16L24 24" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><circle cx="16" cy="16" r="2.5" fill="#22c55e"/></svg>
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="2" fill="#111318"/><path d="M8 8L16 16L24 8" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 24L16 16L24 24" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><circle cx="16" cy="16" r="2.5" fill="#38bdf8"/></svg>
     <span class="nav-logo-text">ZKNOT<sup>™</sup></span>
   </a>
   <ul class="nav-links">

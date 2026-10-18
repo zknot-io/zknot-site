@@ -7,7 +7,7 @@
   <meta name="description" content="ZKNOT™ is a Utah-based SDVOSB building cryptographic hardware attestation and chain-of-custody products. Founded by William Shane Wilkinson, U.S. Army veteran." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=IBM+Plex+Sans:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/css/zknot-tokens.css"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -42,7 +42,7 @@
     .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
     .nav-links a { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
     .nav-links a:hover, .nav-links a.active { color: var(--text); }
-    .nav-cta { color: var(--accent) !important; border: 1px solid rgba(34,197,94,0.3); padding: 6px 16px; border-radius: 2px; transition: all 0.2s !important; }
+    .nav-cta { color: var(--accent) !important; border: 1px solid rgba(56,189,248,0.3); padding: 6px 16px; border-radius: 2px; transition: all 0.2s !important; }
     .nav-cta:hover { color: #000 !important; background: var(--accent) !important; }
 
     .breadcrumb {
@@ -76,7 +76,7 @@
     .hero-glow {
       position: absolute; bottom: -100px; left: -100px;
       width: 700px; height: 500px;
-      background: radial-gradient(ellipse, rgba(34,197,94,0.05) 0%, transparent 65%);
+      background: radial-gradient(ellipse, rgba(56,189,248,0.05) 0%, transparent 65%);
       pointer-events: none;
     }
     .hero-inner { position: relative; max-width: 1100px; margin: 0 auto; width: 100%; }
@@ -169,7 +169,7 @@
       position: absolute;
       inset: 0;
       border-radius: 4px;
-      box-shadow: inset 0 0 0 1px rgba(34,197,94,0.12);
+      box-shadow: inset 0 0 0 1px rgba(56,189,248,0.12);
       pointer-events: none;
     }
     .founder-photo-caption {
@@ -203,7 +203,7 @@
       font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
       padding: 6px 12px; border-radius: 2px; border: 1px solid;
     }
-    .badge.green { color: var(--accent); border-color: rgba(34,197,94,0.25); background: rgba(34,197,94,0.06); }
+    .badge.green { color: var(--accent); border-color: rgba(56,189,248,0.25); background: rgba(56,189,248,0.06); }
     .badge.amber { color: var(--amber); border-color: rgba(245,158,11,0.25); background: rgba(245,158,11,0.06); }
     .badge.blue { color: var(--blue); border-color: rgba(59,130,246,0.25); background: rgba(59,130,246,0.06); }
     .badge.dim { color: var(--text-muted); border-color: var(--border); background: rgba(255,255,255,0.03); }
@@ -298,18 +298,18 @@
       text-decoration: none; display: block; margin-bottom: 12px;
       transition: color 0.2s;
     }
-    .contact-card-value:hover { color: #16a34a; }
+    .contact-card-value:hover { color: #0ea5e9; }
     .contact-card-body { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
 
     /* ── CTA ── */
     .cta-section { padding: 100px 40px; text-align: center; position: relative; overflow: hidden; border-top: 1px solid var(--border); }
-    .cta-section::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 600px; height: 400px; background: radial-gradient(ellipse, rgba(34,197,94,0.05) 0%, transparent 70%); }
+    .cta-section::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 600px; height: 400px; background: radial-gradient(ellipse, rgba(56,189,248,0.05) 0%, transparent 70%); }
     .cta-inner { position: relative; max-width: 600px; margin: 0 auto; }
     .cta-inner h2 { font-family: var(--display); font-size: clamp(28px,3.5vw,48px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; }
     .cta-inner p { font-size: 16px; color: var(--text-muted); line-height: 1.7; margin-bottom: 40px; }
     .cta-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
     .btn-primary { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; font-weight: 500; color: #000; background: var(--accent); border: none; padding: 14px 28px; border-radius: 2px; text-decoration: none; transition: all 0.2s; }
-    .btn-primary:hover { background: #16a34a; transform: translateY(-1px); box-shadow: 0 8px 32px rgba(34,197,94,0.28); }
+    .btn-primary:hover { background: #0ea5e9; transform: translateY(-1px); box-shadow: 0 8px 32px rgba(56,189,248,0.28); }
     .btn-secondary { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; color: var(--text-muted); background: transparent; border: 1px solid var(--border); padding: 14px 28px; border-radius: 2px; text-decoration: none; transition: all 0.2s; }
     .btn-secondary:hover { color: var(--text); border-color: var(--border-active); }
 
@@ -344,8 +344,8 @@
   /* Prototype + founder-support strip — every page, 2026-10-14 operator ruling. */
   body{padding-top:32px}
   nav{top:32px!important}
-  .proto-strip{position:fixed;top:0;left:0;right:0;z-index:101;height:32px;display:flex;align-items:center;justify-content:center;gap:10px;padding:0 16px;background:#0f2a1a;border-bottom:1px solid rgba(34,197,94,.35);font-family:'DM Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.06em;color:#bbf7d0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .proto-strip a{color:#22c55e;text-decoration:none}
+  .proto-strip{position:fixed;top:0;left:0;right:0;z-index:101;height:32px;display:flex;align-items:center;justify-content:center;gap:10px;padding:0 16px;background:#0c1d2b;border-bottom:1px solid rgba(56,189,248,.35);font-family:'DM Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.06em;color:#bae6fd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .proto-strip a{color:#38bdf8;text-decoration:none}
   .proto-strip a:hover{text-decoration:underline}
   .proto-strip .ps-short{display:none}
   @media(max-width:720px){.proto-strip .ps-long{display:none}.proto-strip .ps-short{display:inline}}
@@ -357,7 +357,7 @@
 <!-- NAV -->
 <nav>
   <a href="/" class="nav-logo">
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="2" fill="#111318"/><path d="M8 8L16 16L24 8" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 24L16 16L24 24" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><circle cx="16" cy="16" r="2.5" fill="#22c55e"/></svg>
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="2" fill="#111318"/><path d="M8 8L16 16L24 8" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 24L16 16L24 24" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><circle cx="16" cy="16" r="2.5" fill="#38bdf8"/></svg>
     <span class="nav-logo-text">ZKNOT<sup>™</sup></span>
   </a>
   <ul class="nav-links">
