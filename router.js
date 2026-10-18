@@ -69,6 +69,10 @@ const ROUTES = {
   "/support":  "/support.html",
   "/ciborium": "/ciborium.html",
   "/wallet":   "/ciborium.html",
+  // Services — added 2026-10-18 with its asset in the same change
+  // (CCPROMPT-CONSULT-LEASE-001 Task 7, copy Candidate A). Not linked from the
+  // nav: the nav is hard-coded in every page and is a separate ruling.
+  "/services": "/services.html",
 
   // Legal pages — added 2026-08-05 with their assets in the same change, per the
   // standing rule below. check-legal-pages.sh was failing on all four (missing
