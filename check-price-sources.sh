@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
-# check-price-sources.sh — one price per SKU across zknot.io, Shopify and Stripe.
+# check-price-sources.sh — one price per SKU across zknot.io and Stripe.
+#
+# 2026-10-22: Shopify retired (operator ruling). Stripe is the only platform that
+# charges; the Shopify fetch is removed so a closed store cannot turn every run
+# INCONCLUSIVE. The shopify_handle column stays in the manifest, all "-".
 #
 # CATALOG-SSOT-001 §0.3: one platform object per SKU is the charging authority.
 # From 2026-09-18 two platforms charge for the same articles (operator ruling,
@@ -9,8 +13,7 @@
 # What it does, per Buy button in public/*.html:
 #   1. reads the rendered price from the button text  ("Buy — $39")
 #   2. follows the Stripe link's price via the API   (read-only key is enough)
-#   3. reads the Shopify variant price from products.json (public, unauthenticated)
-#   4. FAIL if any of the three disagree; INCONCLUSIVE if a source cannot be read.
+#   3. FAIL if the rendered, Stripe and expected prices disagree; INCONCLUSIVE if a source cannot be read.
 #
 # EXIT 0 = PASS. 1 = FAIL. 2 = INCONCLUSIVE (a source was unreachable — that is
 # NOT a pass; CLAUDE.md "every guard has three outcomes").
@@ -25,7 +28,6 @@ FAIL=0; INC=0
 MANIFEST="stripe-links.psv"
 [ -f "$MANIFEST" ] || { echo "INCONCLUSIVE: $MANIFEST missing"; exit 2; }
 
-shop_json=$(curl -sf --max-time 20 "https://shop.zknot.io/products.json?limit=250") || { echo "INCONCLUSIVE: shop.zknot.io/products.json unreachable"; exit 2; }
 
 while IFS='|' read -r sku page shopify_handle link_id link_url expected; do
   [[ "$sku" =~ ^#|^sku ]] && continue
@@ -33,24 +35,15 @@ while IFS='|' read -r sku page shopify_handle link_id link_url expected; do
   rendered=$(grep -o "href=\"$link_url\"[^>]*>[^<]*" "public/$page" | grep -o '\$[0-9]*' | tr -d '$' | head -1)
   # 2. stripe — the link's line item price
   stripe_cents=$(stripe get "/v1/payment_links/$link_id/line_items" --live 2>/dev/null | python3 -c "import json,sys; d=json.load(sys.stdin); print(sum(li['price']['unit_amount']*li['quantity'] for li in d['data']))" 2>/dev/null)
-  # 3. shopify
-  shopify=$(printf '%s' "$shop_json" | python3 -c "
-import json,sys; h,_,vt=sys.argv[1].partition('#')
-for p in json.load(sys.stdin)['products']:
-    if p['handle']==h:
-        vs=[v for v in p['variants'] if v['title']==vt] if vt else p['variants'][:1]
-        if vs: print(vs[0]['price'].split('.')[0])
-        break" "$shopify_handle" 2>/dev/null)
 
-  line="$sku: rendered=\$${rendered:-?} stripe=\$$(( ${stripe_cents:-0} / 100 )) shopify=\$${shopify:-n/a} expected=\$$expected"
+  line="$sku: rendered=\$${rendered:-?} stripe=\$$(( ${stripe_cents:-0} / 100 )) expected=\$$expected"
   if [ -z "$rendered" ] || [ -z "$stripe_cents" ]; then echo "  INCONCLUSIVE $line"; INC=$((INC+1)); continue; fi
   ok=1
   [ "$rendered" = "$expected" ] || ok=0
   [ "$((stripe_cents/100))" = "$expected" ] || ok=0
-  if [ "$shopify_handle" != "-" ]; then [ "$shopify" = "$expected" ] || ok=0; fi
   if [ $ok = 1 ]; then echo "  PASS  $line"; else echo "  FAIL  $line"; FAIL=$((FAIL+1)); fi
 done < "$MANIFEST"
 
 if [ $FAIL -gt 0 ]; then echo "✗ $FAIL price disagreement(s) — a customer can be charged a figure the site does not show"; exit 1; fi
 if [ $INC -gt 0 ]; then echo "? $INC source(s) unreadable — INCONCLUSIVE, not a pass"; exit 2; fi
-echo "✓ every rendered price equals what both platforms charge"
+echo "✓ every rendered price equals what Stripe charges"

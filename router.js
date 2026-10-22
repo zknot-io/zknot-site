@@ -96,7 +96,7 @@ const ROUTES = {
 // content is now covered by the three category pages.
 //
 // These are 301s and not deletions for one reason that outranks tidiness:
-// /products/powerverify is the target of the live Shopify listing AND it sits
+// /products/powerverify was the target of the Shopify listing (retired 2026-10-22) AND it sits
 // beside the QR code on potted PowerVerify units. A URL cast into resin cannot
 // be recalled, so it must resolve forever. The other three cost nothing to keep
 // and are retained for the same class of reason — inbound links we do not control.
