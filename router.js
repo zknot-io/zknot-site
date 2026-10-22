@@ -92,25 +92,13 @@ const ROUTES = {
   // line in the same change.
 };
 
-// Permanent redirects. The four product pages were retired 2026-07-31 and their
-// content is now covered by the three category pages.
+// Permanent redirects.
 //
-// These are 301s and not deletions for one reason that outranks tidiness:
-// /products/powerverify was the target of the Shopify listing (retired 2026-10-22) AND it sits
-// beside the QR code on potted PowerVerify units. A URL cast into resin cannot
-// be recalled, so it must resolve forever. The other three cost nothing to keep
-// and are retained for the same class of reason — inbound links we do not control.
+// 2026-10-22: the five /products/* redirects were removed (operator ruling). No
+// PowerVerify unit was ever sold to a customer, so no resin QR code in the field
+// points at /products/powerverify, and our own pages now link to the category pages
+// directly. /shop and /buy stay: they are typed or spoken entry points, not old URLs.
 const REDIRECTS = {
-  "/products/powerverify":   "/verifiables",
-  // Both spellings resolve. /products/trustseal is the RETIRED name (T-7, 2026-08-05) and is
-  // kept for the reason stated above — inbound links we do not control. /products/tamperverify
-  // is the current name and is what authored markup now points at, so new links stop minting
-  // the dead one. Neither may be removed: the old one because it is out there, the new one
-  // because it is now in our own pages.
-  "/products/trustseal":     "/verifiables",
-  "/products/tamperverify":  "/verifiables",
-  "/products/zkkey":         "/attestation",
-  "/products/zk-localchain": "/rails",
   // Storefront entry points. The buy buttons live on the category pages; these
   // exist so "zknot.io/shop" typed from a label or said aloud lands somewhere.
   "/shop":                   "/verifiables#products",
