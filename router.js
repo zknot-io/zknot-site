@@ -105,6 +105,59 @@ const REDIRECTS = {
   "/buy":                    "/verifiables#products",
 };
 
+// FallDawn — a sign-in-gated client demo, added 2026-10-29. The pages live in
+// public/_falldawn/, which is gitignored (this repo is public); the source is in the
+// vault at OPS/consulting/somerset/catalog-demo/ and tools/build_hosted.py writes them.
+// The login is checked here, not in the page, so /_falldawn/* is never served directly.
+// Secrets (wrangler secret put): FALLDAWN_PASSWORD, FALLDAWN_SESSION (random token).
+const FD_USER = "somerset"; // compared case-insensitively
+const FD_COOKIE = "fd_session";
+
+function fdSame(a, b) {
+  if (typeof a !== "string" || typeof b !== "string" || a.length !== b.length) return false;
+  let d = 0;
+  for (let i = 0; i < a.length; i++) d |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return d === 0;
+}
+
+async function fallDawn(request, env, url, pathname) {
+  const page = async (asset) => {
+    const r = await env.ASSETS.fetch(new Request(new URL(asset, url.origin).toString()));
+    return withSecurityHeaders(new Response(r.body, {
+      status: r.ok ? 200 : 404,
+      headers: {
+        "Content-Type": "text/html; charset=utf-8",
+        "Cache-Control": "private, no-store",
+        "X-Robots-Tag": "noindex, nofollow",
+      },
+    }));
+  };
+  const go = (to, cookie) => {
+    const h = new Headers({ Location: new URL(to, url.origin).toString(), "Cache-Control": "no-store" });
+    if (cookie) h.append("Set-Cookie", cookie);
+    return withSecurityHeaders(new Response(null, { status: 303, headers: h }));
+  };
+  const session = env.FALLDAWN_SESSION;
+  const cookies = Object.fromEntries((request.headers.get("Cookie") || "").split(/;\s*/).filter(Boolean)
+    .map((c) => [c.slice(0, c.indexOf("=")), c.slice(c.indexOf("=") + 1)]));
+  const signedIn = !!session && fdSame(cookies[FD_COOKIE] || "", session);
+
+  if (pathname === "/FallDawn/login" && request.method === "POST") {
+    const form = await request.formData().catch(() => null);
+    const ok = !!form && !!session && !!env.FALLDAWN_PASSWORD &&
+      String(form.get("username") || "").trim().toLowerCase() === FD_USER &&
+      fdSame(String(form.get("password") || ""), env.FALLDAWN_PASSWORD);
+    return ok
+      ? go("/FallDawn", `${FD_COOKIE}=${session}; Path=/FallDawn; HttpOnly; Secure; SameSite=Lax; Max-Age=43200`)
+      : go("/FallDawn?e=1");
+  }
+  if (pathname === "/FallDawn/logout") {
+    return go("/FallDawn", `${FD_COOKIE}=; Path=/FallDawn; HttpOnly; Secure; SameSite=Lax; Max-Age=0`);
+  }
+  if (pathname === "/FallDawn") return page(signedIn ? "/_falldawn/app.html" : "/_falldawn/login.html");
+  return withSecurityHeaders(new Response("Not found", { status: 404 }));
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -113,6 +166,19 @@ export default {
     // Strip trailing slash (except root)
     if (pathname !== "/" && pathname.endsWith("/")) {
       pathname = pathname.slice(0, -1);
+    }
+
+    // FallDawn runs before everything else so its raw files can never be served.
+    // Any other casing (/falldawn, /FALLDAWN) is sent to the canonical path.
+    const lower = pathname.toLowerCase();
+    if (lower === "/_falldawn" || lower.startsWith("/_falldawn/")) {
+      return withSecurityHeaders(new Response("Not found", { status: 404 }));
+    }
+    if (lower === "/falldawn" || lower.startsWith("/falldawn/")) {
+      if (!pathname.startsWith("/FallDawn")) {
+        return withSecurityHeaders(Response.redirect(new URL("/FallDawn" + pathname.slice(9), url.origin).toString(), 301));
+      }
+      return fallDawn(request, env, url, pathname);
     }
 
     // Permanent redirects run before the route map, so a retired path can never
