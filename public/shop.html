@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shop — Everything ZKNOT Sells | ZKNOT™</title>
+  <meta name="description" content="Every ZKNOT article, device, secure element and service on one page, with prices. Pick one for the full details and checkout."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=IBM+Plex+Sans:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/css/zknot-tokens.css"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 64px; background: rgba(10,11,13,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-mark { width: 32px; height: 32px; }
+    .nav-logo-text { font-family: var(--display); font-size: 18px; font-weight: 800; letter-spacing: 0.05em; color: var(--text); }
+    .nav-logo-text sup { font-size: 10px; font-weight: 400; color: var(--text-muted); vertical-align: super; }
+    .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+    .nav-links a { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.here { color: var(--text); }
+
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 40px; }
+
+    .hero { padding-block: 148px 56px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 26px; }
+    .eyebrow::before { content: ''; width: 22px; height: 1px; background: var(--accent); }
+    h1 { font-family: var(--display); font-size: clamp(44px, 6.5vw, 84px); font-weight: 800; line-height: 1.02; letter-spacing: -0.02em; margin-bottom: 26px; }
+    .lede { font-size: clamp(17px, 2vw, 21px); font-weight: 300; color: var(--text-muted); max-width: 660px; line-height: 1.65; }
+    .lede strong { color: var(--text); font-weight: 400; }
+    .jump { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+    .jump a { font-family: var(--mono); font-size: 12px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-dim); border: 1px solid var(--border); padding: 9px 16px; border-radius: 2px; text-decoration: none; transition: all 0.2s; }
+    .jump a:hover { color: var(--text); border-color: var(--border-active); }
+
+    section { padding: 56px 0; border-top: 1px solid var(--border); scroll-margin-top: 96px; }
+    .section-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; }
+    h2 { font-family: var(--display); font-size: clamp(26px, 3vw, 34px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
+    h3 { font-family: var(--display); font-size: 18px; font-weight: 700; line-height: 1.3; }
+    .cat-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: 26px; flex-wrap: wrap; }
+    .cat-more { font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; color: var(--accent); text-decoration: none; }
+    .cat-more:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+    .card { display: flex; flex-direction: column; background: var(--bg-card); border: 1px solid var(--border); border-radius: 3px; overflow: hidden; text-decoration: none; color: inherit; transition: border-color 0.2s, transform 0.2s; }
+    .card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .card-img { display: block; background: #e9e7e2; border-bottom: 1px solid var(--border); }
+    .card-img img { display: block; width: 100%; height: 180px; object-fit: contain; }
+    .card-mark { height: 180px; display: flex; align-items: center; justify-content: center; padding: 0 16px; text-align: center; background: var(--bg-1); border-bottom: 1px solid var(--border); font-family: var(--mono); font-size: 13px; letter-spacing: 0.18em; color: var(--text-dim); }
+    .card-body { padding: 20px 22px 22px; display: flex; flex-direction: column; flex: 1; }
+    .card-top { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+    .price { font-family: var(--mono); font-size: 14px; color: var(--accent); }
+    .price-quiet { color: var(--text-dim); }
+    .card p { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px; }
+    .more { margin-top: auto; font-family: var(--mono); font-size: 12px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-dim); }
+    .card:hover .more { color: var(--accent); }
+
+    .small { font-family: var(--mono); font-size: 12px; color: var(--text-muted); }
+    .small a { color: var(--text-dim); text-underline-offset: 2px; }
+
+    footer { border-top: 1px solid var(--border); padding: 44px 0 60px; }
+    .foot { display: flex; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
+    .foot-brand { font-family: var(--display); font-size: 17px; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 10px; }
+    .foot-meta { font-size: 12.5px; color: var(--text-muted); line-height: 1.8; }
+    .foot-meta a { color: var(--text-muted); }
+    .foot-links { display: flex; flex-direction: column; gap: 9px; }
+    .foot-links a { font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; color: var(--text-muted); text-decoration: none; }
+    .foot-links a:hover { color: var(--text); }
+
+    @media (max-width: 880px) {
+      .wrap { padding: 0 20px; }
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .hero { padding-block: 120px 44px; }
+    }
+  </style>
+<style id="proto-strip-css">
+  /* Prototype + founder-support strip — every page, 2026-10-14 operator ruling. */
+  body{padding-top:32px}
+  nav{top:32px!important}
+  .proto-strip{position:fixed;top:0;left:0;right:0;z-index:101;height:32px;display:flex;align-items:center;justify-content:center;gap:10px;padding:0 16px;background:#0c1d2b;border-bottom:1px solid rgba(56,189,248,.35);font-family:'DM Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.06em;color:#bae6fd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .proto-strip a{color:#38bdf8;text-decoration:none}
+  .proto-strip a:hover{text-decoration:underline}
+  .proto-strip .ps-short{display:none}
+  @media(max-width:720px){.proto-strip .ps-long{display:none}.proto-strip .ps-short{display:inline}}
+</style>
+</head>
+<body>
+<div class="proto-strip" role="note"><span class="ps-long">PROTOTYPES · hand-built in small runs · every buyer gets founder-level one-on-one support: custom hardware, firmware &amp; software</span><span class="ps-short">PROTOTYPES · founder 1:1 support</span> <a href="/support#founder">How it works →</a></div>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <svg class="nav-logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="2" fill="#111318"/>
+      <path d="M8 8L16 16L24 8" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M8 24L16 16L24 24" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/>
+      <circle cx="16" cy="16" r="2.5" fill="#38bdf8"/>
+    </svg>
+    <span class="nav-logo-text">ZKNOT<sup>™</sup></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/shop" class="here">Shop</a></li>
+    <li><a href="/verifiables">Verifiables</a></li>
+    <li><a href="/attestation">Attestation</a></li>
+    <li><a href="/rails">Rails</a></li>
+    <li><a href="/docs">Docs</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="/services">Services</a></li>
+    <li><a href="/contact">Contact</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <div class="wrap hero">
+    <div class="eyebrow">ZKNOT Shop</div>
+    <h1>Everything we sell.</h1>
+    <p class="lede">Every article, device and service on one page. <strong>Pick one to see the full details</strong> — what it does, what it doesn't, and the buy button.</p>
+    <div class="jump">
+      <a href="#verifiables">Verifiables</a>
+      <a href="#attestation">Attestation devices</a>
+      <a href="#elements">Secure elements</a>
+      <a href="#rails">Rails &amp; services</a>
+    </div>
+  </div>
+
+  <!-- Prices on this page are checked by check-price-sources.sh: every data-sku figure
+       must equal `expected` in stripe-links.psv, and every SKU in that file must appear
+       here, so a new offering can't be added to the site without reaching the shop. -->
+
+  <section id="verifiables"><div class="wrap">
+    <div class="cat-head">
+      <div>
+        <div class="section-label">Verifiables · passive, no electronics to trust</div>
+        <h2>Proof by inspection</h2>
+      </div>
+      <a class="cat-more" href="/verifiables">About the line →</a>
+    </div>
+    <div class="grid">
+      <a class="card" href="/verifiables#powerverify-cable">
+        <picture class="card-img"><source srcset="/img/products/powerverify-cable/hero.avif" type="image/avif"><source srcset="/img/products/powerverify-cable/hero.webp" type="image/webp"><img src="/img/products/powerverify-cable/hero.jpg" alt="PowerVerify Cable in clear resin with a USB-C pigtail" loading="lazy"></picture>
+        <div class="card-body">
+          <div class="card-top"><h3>PowerVerify Cable</h3><span class="price"><span data-sku="POWERVERIFY-CBL">$39</span></span></div>
+          <p>Power-only USB-C link. The data lines were never laid.</p>
+          <span class="more">Details →</span>
+        </div>
+      </a>
+      <a class="card" href="/verifiables#powerverify-coupler">
+        <picture class="card-img"><source srcset="/img/products/powerverify-coupler/hero.avif" type="image/avif"><source srcset="/img/products/powerverify-coupler/hero.webp" type="image/webp"><img src="/img/products/powerverify-coupler/hero.jpg" alt="PowerVerify Coupler, a clear resin block with a USB-C receptacle at each end" loading="lazy"></picture>
+        <div class="card-body">
+          <div class="card-top"><h3>PowerVerify Coupler</h3><span class="price"><span data-sku="POWERVERIFY-CPL">$29</span></span></div>
+          <p>The same claim as an inline female-to-female block, for your own cable.</p>
+          <span class="more">Details →</span>
+        </div>
+      </a>
+      <a class="card" href="/verifiables#tamperverify">
+        <picture class="card-img"><source srcset="/img/products/tamperverify/hero.avif" type="image/avif"><source srcset="/img/products/tamperverify/hero.webp" type="image/webp"><img src="/img/products/tamperverify/hero.jpg" alt="An intact TamperVerify seal with its code and QR" loading="lazy"></picture>
+        <div class="card-body">
+          <div class="card-top"><h3>TamperVerify seals</h3><span class="price"><span data-sku="TAMPERVERIFY-10">$20</span> / <span data-sku="TAMPERVERIFY-20">$30</span> / <span data-sku="TAMPERVERIFY-50">$60</span></span></div>
+          <p>Serialized tamper-evident seals, packs of 10, 20 or 50. Each one looks up on the public rail.</p>
+          <span class="more">Details →</span>
+        </div>
+      </a>
+    </div>
+  </div></section>
+
+  <section id="attestation"><div class="wrap">
+    <div class="cat-head">
+      <div>
+        <div class="section-label">Attestation devices · the device signs, not us</div>
+        <h2>Hardware that signs</h2>
+      </div>
+      <a class="cat-more" href="/attestation">About the line →</a>
+    </div>
+    <div class="grid">
+      <a class="card" href="/attestation#selfknot">
+        <picture class="card-img"><source srcset="/img/products/selfknot/hero.avif" type="image/avif"><source srcset="/img/products/selfknot/hero.webp" type="image/webp"><img src="/img/products/selfknot/hero.jpg" alt="SelfKnot, a small potted board with a secure element and one button" loading="lazy"></picture>
+        <div class="card-body">
+          <div class="card-top"><h3>SelfKnot</h3><span class="price"><span data-sku="SELFKNOT">$59</span></span></div>
+          <p>The open on-ramp. Open, replaceable firmware; a key that can't be extracted.</p>
+          <span class="more">Details →</span>
+        </div>
+      </a>
+      <a class="card" href="/attestation#vitni">
+        <picture class="card-img"><source srcset="/img/products/vitni/hero.avif" type="image/avif"><source srcset="/img/products/vitni/hero.webp" type="image/webp"><img src="/img/products/vitni/hero.jpg" alt="Vitni, a slim potted board with five indicators and a button" loading="lazy"></picture>
+        <div class="card-body">
+          <div class="card-top"><h3>Vitni</h3><span class="price"><span data-sku="VITNI">$79</span></span></div>
+          <p>The workhorse. Firmware locked in silicon, so a record can't be blamed on replaceable software.</p>
+          <span class="more">Details →</span>
+        </div>
+      </a>
+      <a class="card" href="/attestation#vitni-plus">
+        <picture class="card-img"><source srcset="/img/products/vitni-plus/hero.avif" type="image/avif"><source srcset="/img/products/vitni-plus/hero.webp" type="image/webp"><img src="/img/products/vitni-plus/hero.jpg" alt="Vitni Plus, a potted board with a column of indicators and a button" loading="lazy"></picture>
+        <div class="card-body">
+          <div class="card-top"><h3>Vitni Plus</h3><span class="price"><span data-sku="VITNI-PLUS">$99</span></span></div>
+          <p>Press-gated: nothing is signed without a physical press. Also as a starter kit with 20 seals for <span data-sku="STARTER-VPLUS-TV20">$119</span>.</p>
+          <span class="more">Details →</span>
+        </div>
+      </a>
+      <a class="card" href="/attestation#ostensor">
+        <picture class="card-img"><source srcset="/img/products/ostensor/hero.avif" type="image/avif"><source srcset="/img/products/ostensor/hero.webp" type="image/webp"><img src="/img/products/ostensor/hero.jpg" alt="Ostensor, a potted board with a small display beside its button" loading="lazy"></picture>
+        <div class="card-body">
+          <div class="card-top"><h3>Ostensor</h3><span class="price"><span data-sku="OSTENSOR-BARE">$179</span> / <span data-sku="OSTENSOR-POTTED">$199</span></span></div>
+          <p>The flagship, with a screen. What you were shown is what gets signed. Bare board or potted.</p>
+          <span class="more">Details →</span>
+        </div>
+      </a>
+      <a class="card card-text" href="/attestation#devices">
+        <div class="card-mark">MONSTRANCE</div>
+        <div class="card-body">
+          <div class="card-top"><h3>Monstrance</h3><span class="price price-quiet">By contract</span></div>
+          <p>The hardened tier, request-only. No hardware exists yet.</p>
+          <span class="more">Details →</span>
+        </div>
+      </a>
+    </div>
+  </div></section>
+
+  <section id="elements"><div class="wrap">
+    <div class="cat-head">
+      <div>
+        <div class="section-label">Secure elements · for people building their own hardware</div>
+        <h2>The part inside, registered</h2>
+      </div>
+      <a class="cat-more" href="/attestation#elements">About the elements →</a>
+    </div>
+    <div class="grid">
+      <a class="card card-text" href="/attestation#atecc608b">
+        <div class="card-mark">ATECC608B</div>
+        <div class="card-body">
+          <div class="card-top"><h3>ATECC608B, ZKNOT-provisioned</h3><span class="price"><span data-sku="ELEMENT-ATECC-IC">$15</span> / <span data-sku="ELEMENT-ATECC-BRK">$25</span></span></div>
+          <p>Microchip element, locked, key generated on-chip and enrolled on the rail. Bare chip or breakout board.</p>
+          <span class="more">Details →</span>
+        </div>
+      </a>
+      <a class="card card-text" href="/attestation#optiga">
+        <div class="card-mark">OPTIGA TRUST M</div>
+        <div class="card-body">
+          <div class="card-top"><h3>OPTIGA Trust M, rail-registered</h3><span class="price"><span data-sku="ELEMENT-OPTIGA-IC">$25</span> / <span data-sku="ELEMENT-OPTIGA-BRK">$39</span></span></div>
+          <p>The Infineon element inside Vitni Plus and Ostensor, its key enrolled on the rail. Bare chip or breakout board.</p>
+          <span class="more">Details →</span>
+        </div>
+      </a>
+    </div>
+  </div></section>
+
+  <section id="rails"><div class="wrap">
+    <div class="cat-head">
+      <div>
+        <div class="section-label">Rails, services and what's next</div>
+        <h2>Beyond the hardware</h2>
+      </div>
+      <a class="cat-more" href="/rails">About the rails →</a>
+    </div>
+    <div class="grid">
+      <a class="card card-text" href="/rails">
+        <div class="card-mark">VERIFYKNOT.IO</div>
+        <div class="card-body">
+          <div class="card-top"><h3>verifyknot.io</h3><span class="price">Free</span></div>
+          <p>The public rail. Check any record in your browser. No account, no login.</p>
+          <span class="more">Details →</span>
+        </div>
+      </a>
+      <a class="card card-text" href="/rails">
+        <div class="card-mark">HASHSTAMP</div>
+        <div class="card-body">
+          <div class="card-top"><h3>HashStamp</h3><span class="price price-quiet">One payment</span></div>
+          <p>Timestamp a document's fingerprint. The file never leaves your device.</p>
+          <span class="more">Details →</span>
+        </div>
+      </a>
+      <a class="card card-text" href="/ciborium">
+        <div class="card-mark">CIBORIUM</div>
+        <div class="card-body">
+          <div class="card-top"><h3>Ciborium</h3><span class="price"><span data-sku="CIBORIUM-DEPOSIT">$49</span> deposit</span></div>
+          <p>A hardware wallet whose build you can check. In design; a refundable deposit reserves one.</p>
+          <span class="more">Details →</span>
+        </div>
+      </a>
+      <a class="card card-text" href="/services">
+        <div class="card-mark">SERVICES</div>
+        <div class="card-body">
+          <div class="card-top"><h3>Asset lifecycle services</h3><span class="price price-quiet">Scoped</span></div>
+          <p>End-of-lease cataloguing and reuse mapping for autonomous and industrial equipment.</p>
+          <span class="more">Details →</span>
+        </div>
+      </a>
+    </div>
+  </div></section>
+
+  <section><div class="wrap">
+    <p class="small">Card checkout by Stripe · US shipping $5 flat · <a href="/shipping">shipping</a> · <a href="/returns">returns</a> · <a href="/support#founder">founder support</a> · <a href="/contact">questions</a></p>
+  </div></section>
+
+</main>
+
+<footer><div class="wrap foot">
+  <div>
+    <div class="foot-brand">ZKNOT™</div>
+    <div class="foot-meta">
+      ZKNOT, Inc. — Utah-based SDVOSB<br/>
+      UEI: C4SKW13JPEL5 · EIN: 36-5165991<br/>
+      William Shane Wilkinson, Founder &amp; CEO<br/>
+      <a href="mailto:ops@zknot.io">ops@zknot.io</a>
+    </div>
+  </div>
+  <div class="foot-links">
+    <a href="/verifiables">Verifiables</a>
+    <a href="/attestation">Attestation Devices</a>
+    <a href="/rails">Verification Rails</a>
+    <a href="https://verifyknot.io">verifyknot.io</a>
+    <a href="/docs">Docs</a>
+    <a href="/about">About</a>
+    <a href="/contact">Contact</a>
+    <a href="/terms">Terms</a>
+    <a href="/privacy">Privacy</a>
+    <a href="/shipping">Shipping</a>
+    <a href="/returns">Returns</a>
+  </div>
+</div></footer>
+
+</body>
+</html>

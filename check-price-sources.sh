@@ -44,6 +44,23 @@ while IFS='|' read -r sku page shopify_handle link_id link_url expected; do
   if [ $ok = 1 ]; then echo "  PASS  $line"; else echo "  FAIL  $line"; FAIL=$((FAIL+1)); fi
 done < "$MANIFEST"
 
+# The /shop overview repeats every price as data-sku="SKU">$N, with no Buy button.
+# Each figure must equal `expected`, and every SKU in the manifest must appear there,
+# so an offering can't be added to the site without reaching the shop page.
+SHOP="public/shop.html"
+if [ ! -f "$SHOP" ]; then echo "  INCONCLUSIVE shop: $SHOP missing"; INC=$((INC+1)); else
+while IFS='|' read -r sku page shopify_handle link_id link_url expected; do
+  [[ "$sku" =~ ^#|^sku ]] && continue
+  shown=$(grep -o "data-sku=\"$sku\">\\\$[0-9]*" "$SHOP" | grep -o '[0-9]*$' | sort -u)
+  if [ -z "$shown" ]; then echo "  FAIL  shop: $sku not listed on /shop"; FAIL=$((FAIL+1))
+  elif [ "$shown" != "$expected" ]; then echo "  FAIL  shop: $sku shows \$$(echo $shown) expected=\$$expected"; FAIL=$((FAIL+1))
+  else echo "  PASS  shop: $sku \$$shown"; fi
+done < "$MANIFEST"
+for sku in $(grep -o 'data-sku="[^"]*"' "$SHOP" | cut -d'"' -f2 | sort -u); do
+  grep -q "^$sku|" "$MANIFEST" || { echo "  FAIL  shop: data-sku=$sku is not in $MANIFEST"; FAIL=$((FAIL+1)); }
+done
+fi
+
 if [ $FAIL -gt 0 ]; then echo "✗ $FAIL price disagreement(s) — a customer can be charged a figure the site does not show"; exit 1; fi
 if [ $INC -gt 0 ]; then echo "? $INC source(s) unreadable — INCONCLUSIVE, not a pass"; exit 2; fi
 echo "✓ every rendered price equals what Stripe charges"

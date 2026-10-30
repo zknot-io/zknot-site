@@ -36,6 +36,12 @@ const ROUTES = {
   "/attestation":                  "/attestation.html",
   "/rails":                        "/rails.html",
 
+  // Shop — added 2026-10-30 with its asset in the same change. One page listing
+  // every offering, each card linking to its section on the category page. The
+  // nav "Shop" used to land on /verifiables#products, which showed three articles
+  // and read as the whole catalogue (operator 2026-10-30).
+  "/shop":                         "/shop.html",
+
   // Protocol
   "/protocol":                     "/protocol.html",
   "/evidence-protocol":            "/protocol.html",
@@ -99,10 +105,8 @@ const ROUTES = {
 // points at /products/powerverify, and our own pages now link to the category pages
 // directly. /shop and /buy stay: they are typed or spoken entry points, not old URLs.
 const REDIRECTS = {
-  // Storefront entry points. The buy buttons live on the category pages; these
-  // exist so "zknot.io/shop" typed from a label or said aloud lands somewhere.
-  "/shop":                   "/verifiables#products",
-  "/buy":                    "/verifiables#products",
+  // Storefront entry point, typed or spoken. /shop is a real page since 2026-10-30.
+  "/buy":                    "/shop",
 };
 
 // FallDawn — a sign-in-gated client demo, added 2026-10-29. The pages live in
