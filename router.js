@@ -124,6 +124,21 @@ function fdSame(a, b) {
   return d === 0;
 }
 
+// Access log (added 2026-10-31): one JSON line per FallDawn event, tagged FALLDAWN so it
+// can be filtered in Workers Logs (observability is on) or live with
+// `npx wrangler tail zknot-site --search FALLDAWN`. Never logs the password.
+function fdLog(event, request, extra = {}) {
+  const cf = request.cf || {};
+  console.log(JSON.stringify({
+    tag: "FALLDAWN", event, at: new Date().toISOString(),
+    ip: request.headers.get("CF-Connecting-IP") || "",
+    country: cf.country || "", region: cf.region || "", city: cf.city || "",
+    org: cf.asOrganization || "", asn: cf.asn || "",
+    ua: (request.headers.get("User-Agent") || "").slice(0, 200),
+    ...extra,
+  }));
+}
+
 async function fallDawn(request, env, url, pathname) {
   const page = async (asset) => {
     const r = await env.ASSETS.fetch(new Request(new URL(asset, url.origin).toString()));
@@ -151,14 +166,20 @@ async function fallDawn(request, env, url, pathname) {
     const ok = !!form && !!session && !!env.FALLDAWN_PASSWORD &&
       String(form.get("username") || "").trim().toLowerCase() === FD_USER &&
       fdSame(String(form.get("password") || ""), env.FALLDAWN_PASSWORD);
+    fdLog(ok ? "login_ok" : "login_fail", request,
+      ok ? {} : { username: String((form && form.get("username")) || "").slice(0, 60) });
     return ok
       ? go("/FallDawn", `${FD_COOKIE}=${session}; Path=/FallDawn; HttpOnly; Secure; SameSite=Lax; Max-Age=43200`)
       : go("/FallDawn?e=1");
   }
   if (pathname === "/FallDawn/logout") {
+    fdLog("logout", request);
     return go("/FallDawn", `${FD_COOKIE}=; Path=/FallDawn; HttpOnly; Secure; SameSite=Lax; Max-Age=0`);
   }
-  if (pathname === "/FallDawn") return page(signedIn ? "/_falldawn/app.html" : "/_falldawn/login.html");
+  if (pathname === "/FallDawn") {
+    fdLog(signedIn ? "view_app" : "view_login", request);
+    return page(signedIn ? "/_falldawn/app.html" : "/_falldawn/login.html");
+  }
   return withSecurityHeaders(new Response("Not found", { status: 404 }));
 }
 
