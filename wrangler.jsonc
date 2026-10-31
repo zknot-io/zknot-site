@@ -17,6 +17,11 @@
     "binding": "ASSETS",
     "run_worker_first": true
   },
+  // FallDawn permanent log: access events + AI questions (created 2026-10-31).
+  // Schema: migrations/. Query: npx wrangler d1 execute falldawn --remote --command "..."
+  "d1_databases": [
+    { "binding": "FD_DB", "database_name": "falldawn", "database_id": "4f36e17c-714f-40a3-b6f1-f673fe4815de" }
+  ],
   "compatibility_flags": [
     "nodejs_compat"
   ]

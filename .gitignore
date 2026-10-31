@@ -2,3 +2,4 @@
 .wrangler/state/
 .wrangler/cache/cf.json
 public/_falldawn/
+node_modules/
