@@ -17,6 +17,12 @@
     "binding": "ASSETS",
     "run_worker_first": true
   },
+  // Custom domains, set in the dashboard; listed here so a deploy matches the remote
+  // config instead of prompting to "override" it (2026-10-31).
+  "routes": [
+    { "pattern": "zknot.io", "custom_domain": true },
+    { "pattern": "www.zknot.io", "custom_domain": true }
+  ],
   // FallDawn permanent log: access events + AI questions (created 2026-10-31).
   // Schema: migrations/. Query: npx wrangler d1 execute falldawn --remote --command "..."
   "d1_databases": [
