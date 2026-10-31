@@ -23,6 +23,9 @@
     { "pattern": "zknot.io", "custom_domain": true },
     { "pattern": "www.zknot.io", "custom_domain": true }
   ],
+  // Listing routes flips these defaults to false; keep them as the dashboard has them.
+  "workers_dev": true,
+  "preview_urls": true,
   // FallDawn permanent log: access events + AI questions (created 2026-10-31).
   // Schema: migrations/. Query: npx wrangler d1 execute falldawn --remote --command "..."
   "d1_databases": [
