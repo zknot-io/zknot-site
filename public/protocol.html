@@ -568,14 +568,26 @@
   keys: publishing them is what makes independent verification possible, and
   they confer no ability to sign.</p>
 
-  <p>Both are ECDSA P-256, given as uncompressed <code>X&nbsp;||&nbsp;Y</code>
+  <p>All are ECDSA P-256, given as uncompressed <code>X&nbsp;||&nbsp;Y</code>
   hex with the SEC1 <code>04</code> prefix omitted.</p>
 
   <h3>Current signer</h3>
-  <p><code style="word-break:break-all">b423b883c01941f5f869af30847f35b1079b744274615ade593a1c1c037f177bad7d479ae8ca24223c1c58a31ac4522166ca70439c518c9795d887c9482db198</code></p>
-  <p>Signs registry-asserted records today. Unbounded.</p>
+  <p><code style="word-break:break-all">f1d720ffa5846af0fca522020c9a2374e4254f0e08fd37d501ba6ab1023f2a83447ca2551a4624e0ca475f358ebcf3f6baad7d18be46dec77f9fe481ea572396</code></p>
+  <p>Signs registry-asserted records since 2026-10-22. Unbounded.</p>
 
-  <h3>Retired signer — still valid, but bounded</h3>
+  <h3>Retired signer — still valid, but bounded (2026-10-22)</h3>
+  <p><code style="word-break:break-all">b423b883c01941f5f869af30847f35b1079b744274615ade593a1c1c037f177bad7d479ae8ca24223c1c58a31ac4522166ca70439c518c9795d887c9482db198</code></p>
+  <p>This key was retired on 2026-10-22, after our hosting provider disclosed
+  a security incident and advised every customer to treat the secrets stored
+  with it as exposed. This key's private half was one of them. We found no
+  record it signed after 2026-09-18, and we retired it anyway, because a
+  stolen key that has not been used yet leaves no trace. It is
+  <strong>bounded</strong> the same way as the key below: the rail accepts it
+  only for chain <code>default</code> at position <strong>133 or below</strong>,
+  the last entry it legitimately signed. A record signed with it at any later
+  position, or on any other chain, is refused.</p>
+
+  <h3>Retired signer — still valid, but bounded (2026-08-01)</h3>
   <p><code style="word-break:break-all">ea5c3036983ff57034c7caccc37754995e1185e764e6e22a226b99d7065f11dfd08ff0019a8d1fedee9e498e9888f107d2eefb424a0af2d4bd6c401344735a7d</code></p>
   <p>This key was retired on 2026-08-01 after its private half was exposed in a
   session transcript. It was replaced the same day. Because the records it had
@@ -595,7 +607,7 @@
     <li>Fetch the record: <code>GET https://api.zknot.io/v1/verify/&lt;code&gt;</code>.</li>
     <li>Check its signature against the public key the record carries, using any
         ECDSA P-256 verifier.</li>
-    <li>Confirm that key is one of the two above — that is the step this section
+    <li>Confirm that key is one of the keys above — that is the step this section
         exists to make possible. <code>key_anchored</code> in the response is
         ZKNOT asserting it; the hex above is what lets you check the assertion
         rather than take it.</li>
